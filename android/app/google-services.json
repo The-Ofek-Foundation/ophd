@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "1010354726289",
+    "project_id": "ophd-53b5e",
+    "storage_bucket": "ophd-53b5e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1010354726289:android:cd1c2383e71cdcc7c96630",
+        "android_client_info": {
+          "package_name": "com.example.ophd"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1010354726289-o6sgs19p8l6454btnthvtcn19l89homg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDCvo2oeXQMxXVPnap0alLBCltN-0i39a8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1010354726289-o6sgs19p8l6454btnthvtcn19l89homg.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1010354726289-00t6dl5hiip4e6g6vg40s35nv2k3h07g.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.ophd.RunnerTests"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

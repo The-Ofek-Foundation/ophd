@@ -3,14 +3,14 @@ const MANIFEST = 'flutter-app-manifest';
 const TEMP = 'flutter-temp-cache';
 const CACHE_NAME = 'flutter-app-cache';
 
-const RESOURCES = {"main.dart.js": "f9aaa0e2a24f435ecebede7b08b1c77e",
+const RESOURCES = {"main.dart.js": "a8853cf199863bcaad885fbbbc09921d",
 "flutter.js": "6fef97aeca90b426343ba6c5c9dc5d4a",
 "icons/Icon-maskable-192.png": "c457ef57daa1d16f64b27b786ec2ea3c",
 "icons/Icon-192.png": "ac9a721a12bbc803b44f645561ecb1e1",
 "icons/Icon-512.png": "96e752610906ba2a93c65f8abe1645f1",
 "icons/Icon-maskable-512.png": "301a7604d45b3e739efc881eb04896ea",
-"index.html": "e4ffff0fa487ed89de06742f2578271e",
-"/": "e4ffff0fa487ed89de06742f2578271e",
+"index.html": "de90a5299b127595beaef5034b0b55ea",
+"/": "de90a5299b127595beaef5034b0b55ea",
 "favicon.png": "5dcef449791fa27946b3d35ad8803796",
 "version.json": "213efd76f191f918a92ec8c2ed027be9",
 "canvaskit/skwasm.worker.js": "19659053a277272607529ef87acf9d8a",
@@ -22,10 +22,10 @@ const RESOURCES = {"main.dart.js": "f9aaa0e2a24f435ecebede7b08b1c77e",
 "canvaskit/chromium/canvaskit.js": "8c8392ce4a4364cbb240aa09b5652e05",
 "assets/shaders/ink_sparkle.frag": "f8b80e740d33eb157090be4e995febdf",
 "assets/packages/cupertino_icons/assets/CupertinoIcons.ttf": "57d849d738900cfd590e9adc7e208250",
-"assets/NOTICES": "9316606e6d563be33f7430654470c8e5",
+"assets/NOTICES": "3d7c94dd422c39a0e38c8ed3b5fff7ad",
 "assets/AssetManifest.json": "2efbb41d7877d10aac9d091f58ccd7b9",
 "assets/FontManifest.json": "dc3d03800ccca4601324923c0b1d6d57",
-"assets/fonts/MaterialIcons-Regular.otf": "52fc34a70b225832e47b13c384bc9b3e",
+"assets/fonts/MaterialIcons-Regular.otf": "ebee0b6dd57a48ea14f7c362e04727c6",
 "assets/AssetManifest.bin": "693635b5258fe5f1cda720cf224f158c",
 "manifest.json": "81e5a26d1f23b2d97bad25bcb2c76392"};
 // The application shell files that are downloaded before a service worker can

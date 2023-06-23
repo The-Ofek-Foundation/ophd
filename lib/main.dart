@@ -1,246 +1,217 @@
-import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
-import 'package:ophd/theme/dark_theme_provider.dart';
-import 'package:provider/provider.dart';
+import 'package:theme_provider/theme_provider.dart';
+import 'color_schemes.g.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+void main() => runApp(const MyApp());
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
-  State<MyApp> createState() => _MyAppState();
+  Widget build(BuildContext context) {
+    return ThemeProvider(
+      saveThemesOnChange: true,
+      loadThemeOnInit: false,
+      onInitCallback: (controller, previouslySavedThemeFuture) async {
+        final view = View.of(context);
+        String? savedTheme = await previouslySavedThemeFuture;
+        if (savedTheme != null) {
+          controller.setTheme(savedTheme);
+        } else {
+          Brightness platformBrightness =
+              // ignore: use_build_context_synchronously
+              view.platformDispatcher.platformBrightness;
+          if (platformBrightness == Brightness.dark) {
+            controller.setTheme('dark');
+          } else {
+            controller.setTheme('light');
+          }
+          controller.forgetSavedTheme();
+        }
+      },
+      themes: <AppTheme>[
+        AppTheme(
+          id: 'light',
+          description: 'Light Theme',
+          data: ThemeData(
+            useMaterial3: true,
+            colorScheme: lightColorScheme,
+          ),
+        ),
+        AppTheme(
+          id: 'dark',
+          description: 'Dark Theme',
+          data: ThemeData(
+            useMaterial3: true,
+            colorScheme: darkColorScheme,
+          ),
+        ),
+      ],
+      child: ThemeConsumer(
+        child: Builder(
+          builder: (themeContext) => MaterialApp(
+            theme: ThemeProvider.themeOf(themeContext).data,
+            title: 'Ofek PhD Portfolio',
+            home: const MyLayout(),
+          ),
+        ),
+      ),
+    );
+  }
 }
 
-class _MyAppState extends State<MyApp> {
-  DarkThemeProvider themeChangeProvider = DarkThemeProvider();
+class MyLayout extends StatefulWidget {
+  const MyLayout({super.key});
 
   @override
-  void initState() {
-    super.initState();
-    getCurrentAppTheme();
+  State<MyLayout> createState() => _MyLayoutState();
+}
+
+class _MyLayoutState extends State<MyLayout> {
+  int _selectedIndex = 0;
+  bool _isDarkMode = false;
+
+  final List<dynamic> pageIconsAndLabels = [
+    {
+      'icon': const Icon(Icons.account_circle),
+      'label': const Text('About'),
+      'page': const AboutPage(),
+    },
+    {
+      'icon': const Icon(Icons.school),
+      'label': const Text('Education'),
+      'page': const EducationPage(),
+    },
+    {
+      'icon': const Icon(Icons.contact_mail),
+      'label': const Text('Contact'),
+      'page': const ContactPage(),
+    },
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
   }
 
-  void getCurrentAppTheme() async {
-    themeChangeProvider.darkTheme =
-        await themeChangeProvider.darkThemePreference.getTheme();
+  void _toggleThemeMode(bool isDarkTheme) {
+    var controller = ThemeProvider.controllerOf(context);
+
+    controller.setTheme(isDarkTheme ? 'dark' : 'light');
+    setState(() {
+      _isDarkMode = isDarkTheme;
+    });
+  }
+
+  Widget _getThemeSwitch() {
+    _isDarkMode = ThemeProvider.themeOf(context).id == 'dark';
+
+    return Switch(
+      value: _isDarkMode,
+      onChanged: _toggleThemeMode,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => MyAppState(),
-      builder: (context, child) {
-        return MaterialApp(
-          title: 'Ofek PhD',
-          theme: ThemeData(
-            useMaterial3: true,
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.pink),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth > 600) {
+          // if screen width is more than 600, render a left navigation drawer
+          return Scaffold(
+            body: Row(
+              children: [
+                Column(
+                  children: [
+                    Expanded(
+                      child: NavigationRail(
+                        selectedIndex: _selectedIndex,
+                        onDestinationSelected: _onItemTapped,
+                        labelType: NavigationRailLabelType.selected,
+                        destinations: [
+                          for (var iconAndLabel in pageIconsAndLabels)
+                            NavigationRailDestination(
+                              icon: iconAndLabel['icon'],
+                              label: iconAndLabel['label'],
+                            ),
+                        ],
+                      ),
+                    ),
+                    _getThemeSwitch(),
+                    const SizedBox(height: 10),
+                  ],
+                ),
+                const VerticalDivider(thickness: 1, width: 1),
+                Expanded(
+                  child: Center(child: _getPageAtIndex(_selectedIndex)),
+                )
+              ],
+            ),
+          );
+        } else {
+          // else render a bottom navigation bar
+          return Scaffold(
+            appBar: AppBar(
+            title: const Text('Ofek PhD Portfolio'),
+            // add color
+            backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
+            actions: <Widget>[
+              _getThemeSwitch()
+            ],
           ),
-          darkTheme: ThemeData.dark().copyWith(
-            useMaterial3: true,
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-          ),
-          themeMode: ThemeMode.system,
-          home: MyHomePage(),
-        );
+            body: Center(
+              child: _getPageAtIndex(_selectedIndex),
+            ),
+            bottomNavigationBar: BottomNavigationBar(
+              items: <BottomNavigationBarItem>[
+                for (var iconAndLabel in pageIconsAndLabels)
+                  BottomNavigationBarItem(
+                    icon: iconAndLabel['icon'],
+                    label: iconAndLabel['label'].data,
+                  ),
+              ],
+              currentIndex: _selectedIndex,
+              onTap: _onItemTapped,
+            ),
+          );
+        }
       },
     );
   }
-}
 
-class MyAppState extends ChangeNotifier {
-  var current = WordPair.random();
-  
-  void getNext() {
-    current = WordPair.random();
-    notifyListeners();
-  }
-
-  var favorites = <WordPair>{};
-
-  void toggleFavorite() {
-    if (favorites.contains(current)) {
-      favorites.remove(current);
+  Widget _getPageAtIndex(int index) {
+    if (index < pageIconsAndLabels.length) {
+      return pageIconsAndLabels[index]['page'];
     } else {
-      favorites.add(current);
+      return const Text('Page not found');
     }
-    notifyListeners();
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  var selectedIndex = 0;
+class AboutPage extends StatelessWidget {
+  const AboutPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    Widget page;
-    switch (selectedIndex) {
-      case 0:
-        page = GeneratorPage();
-        break;
-      case 1:
-        page = FavoritesPage();
-        break;
-      default:
-        throw UnimplementedError('No page for index $selectedIndex');
-    }
-
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return Scaffold(
-          body: Row(
-            children: [
-              SafeArea(
-                child: NavigationRail(
-                  extended: constraints.maxWidth >= 600,
-                  destinations: const [
-                    NavigationRailDestination(
-                      icon: Icon(Icons.home),
-                      label: Text('Home'),
-                    ),
-                    NavigationRailDestination(
-                      icon: Icon(Icons.favorite),
-                      label: Text('Favorites'),
-                    ),
-                  ],
-                  selectedIndex: selectedIndex,
-                  onDestinationSelected: (value) {
-                    setState(() {
-                      selectedIndex = value;
-                    });
-                  },
-                ),
-              ),
-              Expanded(
-                child: Container(
-                  color: Theme.of(context).colorScheme.primaryContainer,
-                  child: page,
-                ),
-              ),
-            ],
-          ),
-        );
-      }
-    );
+    return const Text('About');
   }
 }
 
+class EducationPage extends StatelessWidget {
+  const EducationPage({super.key});
 
-class GeneratorPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var appState = context.watch<MyAppState>();
-    var pair = appState.current;
-
-    IconData icon;
-    if (appState.favorites.contains(pair)) {
-      icon = Icons.favorite;
-    } else {
-      icon = Icons.favorite_border;
-    }
-
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          BigCard(pair: pair),
-          const SizedBox(height: 10),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ElevatedButton.icon(
-                onPressed: () {
-                  appState.toggleFavorite();
-                },
-                icon: Icon(icon),
-                label: const Text('Like'),
-              ),
-              const SizedBox(width: 10),
-              ElevatedButton(
-                onPressed: () {
-                  appState.getNext();
-                },
-                child: const Text('Next'),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
+    return const Text('Education');
   }
 }
 
-class FavoritesPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    var appState = context.watch<MyAppState>();
-    var favorites = appState.favorites;
-
-    if (favorites.isEmpty) {
-      return Center(
-        child: Text(
-          'You have no favorites yet',
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
-      );
-    }
-
-    return ListView(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(20),
-          child: Text(
-            'You have ${favorites.length} favorite${favorites.length == 1 ? '' : 's'}',
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
-        ),
-        for (var pair in favorites)
-          ListTile(
-            leading: const Icon(Icons.favorite),
-            title: Text(pair.asLowerCase),
-            onTap: () {
-              appState.toggleFavorite();
-            },
-          ),
-      ],
-    );
-  }
-}
-
-class BigCard extends StatelessWidget {
-  const BigCard({
-    super.key,
-    required this.pair,
-  });
-
-  final WordPair pair;
+class ContactPage extends StatelessWidget {
+  const ContactPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    final style = theme.textTheme.displayMedium!.copyWith(
-      color: theme.colorScheme.onPrimary,
-    );
-
-    return Card(
-      color: theme.colorScheme.primary,
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Text(
-          pair.asLowerCase,
-          style: style,
-          semanticsLabel: "${pair.first} ${pair.second}",
-        ),
-      ),
-    );
+    return const Text('Contact');
   }
 }

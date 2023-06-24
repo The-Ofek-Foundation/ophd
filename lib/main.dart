@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:theme_provider/theme_provider.dart';
 import 'color_schemes.g.dart';
 
+import 'package:ophd/screens/education_screen.dart';
+import 'package:ophd/screens/about_screen.dart';
+
 void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
@@ -78,6 +81,16 @@ class _MyLayoutState extends State<MyLayout> {
       'page': const AboutPage(),
     },
     {
+      'icon': const Icon(Icons.science),
+      'label': const Text('Research'),
+      'page': const AboutPage(),
+    },
+    {
+      'icon': const Icon(Icons.article),
+      'label': const Text('Publications'),
+      'page': const AboutPage(),
+    },
+    {
       'icon': const Icon(Icons.school),
       'label': const Text('Education'),
       'page': const EducationPage(),
@@ -85,7 +98,7 @@ class _MyLayoutState extends State<MyLayout> {
     {
       'icon': const Icon(Icons.contact_mail),
       'label': const Text('Contact'),
-      'page': const ContactPage(),
+      'page': const AboutPage(),
     },
   ];
 
@@ -118,7 +131,6 @@ class _MyLayoutState extends State<MyLayout> {
     return LayoutBuilder(
       builder: (context, constraints) {
         if (constraints.maxWidth > 600) {
-          // if screen width is more than 600, render a left navigation drawer
           return Scaffold(
             body: Row(
               children: [
@@ -150,7 +162,6 @@ class _MyLayoutState extends State<MyLayout> {
             ),
           );
         } else {
-          // else render a bottom navigation bar
           return Scaffold(
             appBar: AppBar(
             title: const Text('Ofek PhD Portfolio'),
@@ -173,6 +184,9 @@ class _MyLayoutState extends State<MyLayout> {
               ],
               currentIndex: _selectedIndex,
               onTap: _onItemTapped,
+              selectedItemColor: Theme.of(context).colorScheme.primary,
+              unselectedItemColor: Theme.of(context).colorScheme.secondary,
+              
             ),
           );
         }
@@ -186,32 +200,5 @@ class _MyLayoutState extends State<MyLayout> {
     } else {
       return const Text('Page not found');
     }
-  }
-}
-
-class AboutPage extends StatelessWidget {
-  const AboutPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Text('About');
-  }
-}
-
-class EducationPage extends StatelessWidget {
-  const EducationPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Text('Education');
-  }
-}
-
-class ContactPage extends StatelessWidget {
-  const ContactPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Text('Contact');
   }
 }

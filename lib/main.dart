@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ophd/screens/research_screen.dart';
 import 'package:theme_provider/theme_provider.dart';
 import 'color_schemes.g.dart';
 
@@ -83,7 +84,7 @@ class _MyLayoutState extends State<MyLayout> {
     {
       'icon': const Icon(Icons.science),
       'label': const Text('Research'),
-      'page': const AboutPage(),
+      'page': const ResearchPage(),
     },
     {
       'icon': const Icon(Icons.article),

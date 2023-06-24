@@ -99,3 +99,12 @@ flutter:
   # see https://flutter.dev/custom-fonts/#from-packages
   assets:
     - assets/images/profile.jpg
+  
+  fonts:
+    - family: RobotoMono
+      fonts:
+        - asset: fonts/Roboto_Mono/RobotoMono-Italic-VariableFont_wght.ttf
+          weight: 400
+          style: italic
+        - asset: fonts/Roboto_Mono/RobotoMono-VariableFont_wght.ttf
+          weight: 400

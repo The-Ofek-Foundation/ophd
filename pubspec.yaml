@@ -44,6 +44,7 @@ dependencies:
   theme_provider: ^0.6.0
   font_awesome_flutter: ^10.4.0
   url_launcher: ^6.1.11
+  flutter_scatter: ^0.2.0
 
 dev_dependencies:
   flutter_test:
@@ -99,6 +100,7 @@ flutter:
   # see https://flutter.dev/custom-fonts/#from-packages
   assets:
     - assets/images/profile.jpg
+    - assets/images/avatar_scholar_256.png
   
   fonts:
     - family: RobotoMono

@@ -82,7 +82,7 @@ class AboutPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: buildCardIfWideEnough(_buildFaceBlock())
+      body: buildCardIfWideEnough(context, _buildFaceBlock())
     );
   }
 }

@@ -59,12 +59,12 @@ IconButton buildIconButton(dynamic icon, String url, String tooltip) {
     icon: icon is IconData ?
       Icon(icon) :
       ClipRRect(borderRadius: BorderRadius.circular(12), child: Image(image: icon, width: 24, height: 24)),
-    onPressed: () => _launchURL(url),
+    onPressed: () => launchURL(url),
     tooltip: tooltip,
   );
 }
 
-Future<void> _launchURL(String url) async {
+Future<void> launchURL(String url) async {
   if (await canLaunchUrlString(url)) {
     await launchUrlString(url);
   } else {

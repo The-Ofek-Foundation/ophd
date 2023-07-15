@@ -86,11 +86,11 @@ class _MyLayoutState extends State<MyLayout> {
       'label': const Text('Research'),
       'page': const ResearchPage(),
     },
-    {
-      'icon': const Icon(Icons.article),
-      'label': const Text('Publications'),
-      'page': const AboutPage(),
-    },
+    // {
+    //   'icon': const Icon(Icons.article),
+    //   'label': const Text('Publications'),
+    //   'page': const AboutPage(),
+    // },
     {
       'icon': const Icon(Icons.school),
       'label': const Text('Education'),

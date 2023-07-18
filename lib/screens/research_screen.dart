@@ -34,6 +34,16 @@ class ResearchPage extends StatelessWidget {
       'url': 'https://orcid.org/0009-0005-5931-771X',
       'label': 'ORCID',
     },
+    {
+      'icon': const AssetImage('assets/images/acm_icon_256.png'),
+      'url': 'https://dl.acm.org/profile/99660168076',
+      'label': 'ACM',
+    },
+    {
+      'icon': const AssetImage('assets/images/arxiv_logo.jpg'),
+      'url': 'https://arxiv.org/search/cs?searchtype=author&query=Gila%2C+O',
+      'label': 'arXiv',
+    },
   ];
 
   Widget _buildPrimaryResearchBlock(context) {
@@ -101,6 +111,12 @@ class ResearchPage extends StatelessWidget {
         ),
         const SizedBox(height: 20),
         WordCloud(contributors),
+        const SizedBox(height: 20),
+        Text(
+          'A special thanks to my advisor, Michael Goodrich, for his continuing mentorship and support.',
+          textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.bodyLarge,
+        )
       ],
     );
   }
@@ -136,7 +152,7 @@ class ResearchPage extends StatelessWidget {
         ),
         _buildPathElement(context, 'Paul Erdős', 'https://en.wikipedia.org/wiki/Paul_Erdős', 'Stephan Hedetniemi', 'On the equality of the Grundy and ochromatic numbers of graphs', 'https://www.sciencedirect.com/science/article/pii/S0012365X03001845'),
         _buildPathElement(context, 'Stephan Hedetniemi', 'https://people.computing.clemson.edu/~hedet/Stephen_Hedetniemi/Stephen_T._Hedetniemi,_Professor.html', 'Bob Tarjan', 'B-matchings in trees', 'https://epubs.siam.org/doi/abs/10.1137/0205009?journalCode=smjcat'),
-        _buildPathElement(context, 'Bob Tarjan', 'https://en.wikipedia.org/wiki/Robert_Tarjan', 'Ofek Gila', 'Zip-zip Trees: Making Zip Trees More Balanced, Biased, Compact, or Persistent', 'https://www.ics.uci.edu/~goodrich/teach/cs165/notes/ZipZipTrees.pdf'),
+        _buildPathElement(context, 'Bob Tarjan', 'https://en.wikipedia.org/wiki/Robert_Tarjan', 'Ofek Gila', 'Zip-zip Trees: Making Zip Trees More Balanced, Biased, Compact, or Persistent', 'https://arxiv.org/abs/2307.07660'),
       ],
     );
   }

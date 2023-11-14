@@ -80,13 +80,18 @@ class ResearchPage extends StatelessWidget {
   static final List<Author> contributors = [
     Author(
       name: 'Michael Goodrich',
-      publicationCount: 2,
+      publicationCount: 3,
       link: 'https://en.wikipedia.org/wiki/Michael_T._Goodrich',
     ),
     Author(
       name: 'Robert Tarjan',
       publicationCount: 1,
       link: 'https://en.wikipedia.org/wiki/Robert_Tarjan',
+    ),
+    Author(
+      name: 'Evrim Ozel',
+      publicationCount: 1,
+      link: 'https://www.ics.uci.edu/~eozel/',
     ),
     Author(
       name: 'Michael Shindler',

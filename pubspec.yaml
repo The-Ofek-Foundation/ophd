@@ -101,6 +101,8 @@ flutter:
   assets:
     - assets/images/profile.jpg
     - assets/images/avatar_scholar_256.png
+    - assets/images/acm_icon_256.png
+    - assets/images/arxiv_logo.jpg
   
   fonts:
     - family: RobotoMono

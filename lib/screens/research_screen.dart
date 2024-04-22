@@ -63,7 +63,7 @@ class ResearchPage extends StatelessWidget {
                 )
               ),
               const TextSpan(
-                text: ', which involves a combination of computer science theory and experiments. My recent work has been in data structures and algorithms, and CS Education.'
+                text: ', which involves a combination of computer science theory and experiments. My recent work has specifically been in graph theory and binary search trees.'
               ),
               const TextSpan(
                 text: ' Find my research at:',

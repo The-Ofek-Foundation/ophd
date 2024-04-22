@@ -5,6 +5,7 @@ import 'color_schemes.g.dart';
 
 import 'package:ophd/screens/education_screen.dart';
 import 'package:ophd/screens/about_screen.dart';
+import 'package:ophd/screens/publication_screen.dart';
 
 void main() => runApp(const MyApp());
 
@@ -86,11 +87,11 @@ class _MyLayoutState extends State<MyLayout> {
       'label': const Text('Research'),
       'page': const ResearchPage(),
     },
-    // {
-    //   'icon': const Icon(Icons.article),
-    //   'label': const Text('Publications'),
-    //   'page': const AboutPage(),
-    // },
+    {
+      'icon': const Icon(Icons.history_edu),
+      'label': const Text('Publications'),
+      'page': const PublicationPage(),
+    },
     {
       'icon': const Icon(Icons.school),
       'label': const Text('Education'),

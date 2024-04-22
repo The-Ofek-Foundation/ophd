@@ -22,10 +22,15 @@ class AboutPage extends StatelessWidget {
       'url': 'mailto:me@ofek.phd',
       'label': 'Email',
     },
+    // {
+    //   'icon': FontAwesomeIcons.whatsapp,
+    //   'url': 'https://wa.me/14087056117',
+    //   'label': 'WhatsApp',
+    // },
     {
-      'icon': FontAwesomeIcons.whatsapp,
-      'url': 'https://wa.me/14087056117',
-      'label': 'WhatsApp',
+      'icon': FontAwesomeIcons.orcid,
+      'url': 'https://orcid.org/0009-0005-5931-771X',
+      'label': 'ORCID',
     },
     {
       'icon': Icons.article,

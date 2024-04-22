@@ -1,7 +1,4 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 
 import '../utils/screen_utils.dart';
 
@@ -29,10 +26,7 @@ class EducationPage extends StatelessWidget {
           leading: const Image(image: AssetImage('assets/images/UCI_logo_256.png')), // To align with the logo above.
           title: const Text('Current Studies'),
           subtitle: const Text('PhD in CS Theory (Algorithms in the Real World), UCI, ongoing'),
-          trailing: IconButton(
-            icon: const Icon(Icons.launch),
-            onPressed: () => launchURL('https://ics.uci.edu/~theory/'),
-          ),
+          trailing: buildIconButton(const AssetImage('assets/images/CATOC.png'), 'https://ics.uci.edu/~theory/', 'UCI Theory Group'),
         ),
         ListTile(
           leading: const SizedBox(width: 110, height: 40),

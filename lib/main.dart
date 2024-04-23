@@ -1,4 +1,6 @@
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ophd/screens/research_screen.dart';
 import 'package:theme_provider/theme_provider.dart';
 import 'color_schemes.g.dart';
@@ -88,7 +90,8 @@ class _MyLayoutState extends State<MyLayout> {
       'page': const ResearchPage(),
     },
     {
-      'icon': const Icon(Icons.history_edu),
+      // 'icon': const Icon(Icons.history_edu),
+      'icon': const Icon(FontAwesomeIcons.scroll),
       'label': const Text('Publications'),
       'page': const PublicationPage(),
     },

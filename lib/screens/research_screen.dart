@@ -47,33 +47,28 @@ class ResearchPage extends StatelessWidget {
   ];
 
   Widget _buildPrimaryResearchBlock(context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        RichText(
-          textAlign: TextAlign.center,
-          text: TextSpan(
-            text: 'My primary research interests are in the field of ',
-            style: Theme.of(context).textTheme.bodyLarge,
-            children: [
-              const TextSpan(
-                text: 'Algorithms in the Real World',
-                style: TextStyle(
-                  fontFamily: 'RobotoMono',
-                )
-              ),
-              const TextSpan(
-                text: ', which involves a combination of computer science theory and experiments. My recent work has specifically been in graph theory and binary search trees.'
-              ),
-              const TextSpan(
-                text: ' Find my research at:',
-              ),
-              for (final link in _researchLinkList)
-                WidgetSpan(child: buildIconButton(link['icon'], link['url'], link['label'])),
-            ]
+    return SelectableText.rich(
+      TextSpan(
+        text: 'My primary research interests are in the field of ',
+        style: Theme.of(context).textTheme.bodyLarge,
+        children: [
+          const TextSpan(
+            text: 'Algorithms in the Real World',
+            style: TextStyle(
+              fontFamily: 'RobotoMono',
+            )
           ),
-        ),
-      ],
+          const TextSpan(
+            text: ', which involves a combination of computer science theory and experiments. My recent work has specifically been in graph theory and binary search trees.'
+          ),
+          const TextSpan(
+            text: ' Find my research at:'
+          ),
+          for (final link in _researchLinkList)
+            WidgetSpan(child: buildIconButton(link['icon'], link['url'], link['label'])),
+        ]
+      ),
+      textAlign: TextAlign.center,
     );
   }
 
@@ -109,7 +104,7 @@ class ResearchPage extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(
+        SelectableText(
           'I have been fortunate to work with some amazing people:',
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.bodyLarge,
@@ -117,7 +112,7 @@ class ResearchPage extends StatelessWidget {
         const SizedBox(height: 20),
         WordCloud(contributors),
         const SizedBox(height: 20),
-        Text(
+        SelectableText(
           'A special thanks to my advisor, Michael Goodrich, for his continuing mentorship and support.',
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.bodyLarge,
@@ -130,9 +125,9 @@ class ResearchPage extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        RichText(
-          textAlign: TextAlign.center,
-          text: TextSpan(
+        SelectableText.rich(
+          // textAlign: TextAlign.center,
+          TextSpan(
             text: 'My ',
             style: Theme.of(context).textTheme.bodyLarge,
             children: [
@@ -165,9 +160,8 @@ class ResearchPage extends StatelessWidget {
   Widget _buildPathElement(BuildContext context, String name1, String personUrl1, String name2, String paper, String paperUrl) {
     return Padding(
       padding: const EdgeInsets.all(4.0),
-      child: RichText(
-        textAlign: TextAlign.center,
-        text: TextSpan(
+      child: SelectableText.rich(
+        TextSpan(
           children: [
             TextSpan(
               text: name1,

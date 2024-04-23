@@ -12,6 +12,7 @@ class EducationPage extends StatelessWidget {
       child: SingleChildScrollView(
         child: Column(
           children: [
+            buildCard(context, _buildOverviewBlock(context)),
             buildCard(context, _buildEducationBlock(context)),
           ],
         ),
@@ -19,22 +20,57 @@ class EducationPage extends StatelessWidget {
     );
   }
 
+  Widget _buildOverviewBlock(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SelectableText.rich(
+          TextSpan(
+            text: 'I was raised in Cupertino, CA, and graduated from ',
+            style: Theme.of(context).textTheme.bodyLarge,
+            children: const [
+              TextSpan(
+                text: 'Monta Vista High School',
+                style: TextStyle(
+                  fontFamily: 'RobotoMono',
+                )
+              ),
+              TextSpan(
+                text: '. My passion for programming ignited during my freshman year with my first programming course. I continued to engage with AP Computer Science A as both a student and teaching assistant. In 2017, I started at ',
+              ),
+              TextSpan(
+                text: 'the University of California, Irvine',
+                style: TextStyle(
+                  fontFamily: 'RobotoMono',
+                )
+              ),
+              TextSpan(
+                text: ', pursuing a double major in Computer Science and Physics, graduating in 2021. Currently, I am pursuing a PhD at UCI.',
+              ),
+            ],
+          ),
+          textAlign: TextAlign.center,
+        ),
+      ],
+    );
+  }
+
   Widget _buildEducationBlock(BuildContext context) {
     return Column(
       children: [
         ListTile(
-          leading: const Image(image: AssetImage('assets/images/UCI_logo_256.png')), // To align with the logo above.
-          title: const Text('Current Studies'),
-          subtitle: const Text('PhD in CS Theory (Algorithms in the Real World), UCI, ongoing'),
+          leading: const Image(image: AssetImage('assets/images/UCI_logo_256.png')),
+          title: const SelectableText('Current Studies'),
+          subtitle: const SelectableText('PhD in CS Theory (Algorithms in the Real World), UCI, ongoing'),
           trailing: buildIconButton(const AssetImage('assets/images/CATOC.png'), 'https://ics.uci.edu/~theory/', 'UCI Theory Group'),
         ),
-        ListTile(
-          leading: const SizedBox(width: 110, height: 40),
-          title: const Text('University of California, Irvine'),
-          subtitle: RichText(
-            text: TextSpan(
-              style: DefaultTextStyle.of(context).style,
-              children: const <TextSpan>[
+        const ListTile(
+          leading: SizedBox(width: 110, height: 40),
+          title: SelectableText('University of California, Irvine'),
+          subtitle: SelectableText.rich(
+            TextSpan(
+              style: TextStyle(fontStyle: FontStyle.italic),
+              children: <TextSpan>[
                 TextSpan(text: 'BS in Physics, 2021', style: TextStyle(fontStyle: FontStyle.italic)),
                 TextSpan(text: ' (Magna Cum Laude)', style: TextStyle(fontWeight: FontWeight.bold)),
                 TextSpan(text: ' and '),

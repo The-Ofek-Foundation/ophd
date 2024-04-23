@@ -61,12 +61,12 @@ class AboutPage extends StatelessWidget {
             height: 250,
           ),
         ),
-        const Text(
+        const SelectableText(
           'Ofek Gila',
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           textAlign: TextAlign.center,
         ),
-        const Text(
+        const SelectableText(
           'Ph.D. Student, Computer Science @ UCI',
           style: TextStyle(fontSize: 18),
           textAlign: TextAlign.center,

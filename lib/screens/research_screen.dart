@@ -178,7 +178,7 @@ class ResearchPage extends StatelessWidget {
               style: Theme.of(context).textTheme.bodyLarge,
             ),
             TextSpan(
-              text: ' - ',
+              text: ' – ',
               style: TextStyle(color: Theme.of(context).textTheme.bodyLarge!.color),
             ),
             TextSpan(

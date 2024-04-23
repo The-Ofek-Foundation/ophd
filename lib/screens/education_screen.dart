@@ -55,32 +55,38 @@ class EducationPage extends StatelessWidget {
     );
   }
 
-  Widget _buildEducationBlock(BuildContext context) {
-    return Column(
-      children: [
-        ListTile(
-          leading: const Image(image: AssetImage('assets/images/UCI_logo_256.png')),
-          title: const SelectableText('Current Studies'),
-          subtitle: const SelectableText('PhD in CS Theory (Algorithms in the Real World), UCI, ongoing'),
-          trailing: buildIconButton(const AssetImage('assets/images/CATOC.png'), 'https://ics.uci.edu/~theory/', 'UCI Theory Group'),
-        ),
-        const ListTile(
-          leading: SizedBox(width: 110, height: 40),
-          title: SelectableText('University of California, Irvine'),
-          subtitle: SelectableText.rich(
-            TextSpan(
-              style: TextStyle(fontStyle: FontStyle.italic),
-              children: <TextSpan>[
-                TextSpan(text: 'BS in Physics, 2021', style: TextStyle(fontStyle: FontStyle.italic)),
-                TextSpan(text: ' (Magna Cum Laude)', style: TextStyle(fontWeight: FontWeight.bold)),
-                TextSpan(text: ' and '),
-                TextSpan(text: 'BS in Computer Science, 2021', style: TextStyle(fontStyle: FontStyle.italic)),
-                TextSpan(text: ' (Summa Cum Laude)', style: TextStyle(fontWeight: FontWeight.bold)),
-              ],
+  Widget _buildEducationBlock(BuildContext context, {double width = 500}) {
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        return Column(
+          children: [
+            if (constraints.maxWidth <= width)
+              const Image(image: AssetImage('assets/images/UCI_logo_256.png')),
+            ListTile(
+              leading: constraints.maxWidth > width ? const Image(image: AssetImage('assets/images/UCI_logo_256.png')) : null,
+              title: const SelectableText('Current Studies'),
+              subtitle: const SelectableText('PhD in CS Theory (Algorithms in the Real World), UCI, ongoing'),
+              trailing: buildIconButton(const AssetImage('assets/images/CATOC.png'), 'https://ics.uci.edu/~theory/', 'UCI Theory Group'),
             ),
-          ),
-        ),
-      ],
+            ListTile(
+              leading: constraints.maxWidth > width ? const SizedBox(width: 110, height: 40) : null,
+              title: const SelectableText('University of California, Irvine'),
+              subtitle: const SelectableText.rich(
+                TextSpan(
+                  style: TextStyle(fontStyle: FontStyle.italic),
+                  children: <TextSpan>[
+                    TextSpan(text: 'BS in Physics, 2021', style: TextStyle(fontStyle: FontStyle.italic)),
+                    TextSpan(text: ' (Magna Cum Laude)', style: TextStyle(fontWeight: FontWeight.bold)),
+                    TextSpan(text: ' and '),
+                    TextSpan(text: 'BS in Computer Science, 2021', style: TextStyle(fontStyle: FontStyle.italic)),
+                    TextSpan(text: ' (Summa Cum Laude)', style: TextStyle(fontWeight: FontWeight.bold)),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

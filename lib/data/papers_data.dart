@@ -19,5 +19,6 @@ final List<Paper> papers = [
     date: DateTime(2022, 4, 1),
     conference: 'Journal of Computing Sciences in Colleges',
     conferenceLink: 'https://www.ccsc.org/publications/journals/SW2022.pdf',
+    awards: ['Best Paper'],
   )
 ];

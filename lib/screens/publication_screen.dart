@@ -42,80 +42,106 @@ class PublicationPage extends StatelessWidget {
     );
   }
 
-  Widget _buildPaperBlock(BuildContext context, Paper paper) {
-  return Column(
-    mainAxisSize: MainAxisSize.min,
-    children: <Widget>[
-      ListTile(
-        title: SelectableText(paper.title, style: const TextStyle(fontWeight: FontWeight.bold)),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Wrap(
-              spacing: 8.0, // space between each author name
-              children: paper.authors.map((Author author) {
-                return InkWell(
-                  onTap: author.link != null ? () => launchURL(author.link!) : null,
-                  child: Text(
-                    author.name,
-                    style: TextStyle(
-                      fontStyle: FontStyle.italic,
-                      color: author.link != null ? Theme.of(context).colorScheme.primary : Theme.of(context).textTheme.bodyMedium!.color!,
-                    ),
+  Widget _buildPaperBlock(BuildContext context, Paper paper, {double width = 600}) {
+    Widget body = SelectableText(paper.description);
+    
+    Widget? image = paper.imagePath != null ? ExpandableImage(
+      imagePath: paper.imagePath!,
+      caption: paper.title,
+    ) : null;
+    
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            ListTile(
+              title: SelectableText(paper.title, style: const TextStyle(fontWeight: FontWeight.bold)),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Wrap(
+                    spacing: 8.0, // space between each author name
+                    children: paper.authors.map((Author author) {
+                      return InkWell(
+                        onTap: author.link != null ? () => launchURL(author.link!) : null,
+                        child: Text(
+                          author.name,
+                          style: TextStyle(
+                            fontStyle: FontStyle.italic,
+                            color: author.link != null ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.tertiary,
+                          ),
+                        ),
+                      );
+                    }).toList(),
                   ),
-                );
-              }).toList(),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 4.0),
-              child: RichText(
-                text: TextSpan(
-                  style: Theme.of(context).textTheme.bodySmall, // Use bodySmall for uniformity in font size and color
-                  children: [
-                    WidgetSpan(
-                      alignment: PlaceholderAlignment.middle, // Aligns the widget with the middle of the text baseline
-                      child: InkWell(
+                  Wrap(
+                    spacing: 8,
+                    children: [
+                      InkWell(
                         child: Text(
                           paper.conference,
                           style: TextStyle(
-                            color: Theme.of(context).textTheme.bodyMedium!.color!, // Make it stand out as clickable
+                            color: Theme.of(context).colorScheme.secondary, // Make it stand out as clickable
                           ),
                         ),
                         onTap: () => launchURL(paper.conferenceLink),
                       ),
+                      InkWell(
+                        child: Text(
+                          _formatDate(paper.date),
+                          style: TextStyle(
+                            color: Theme.of(context).textTheme.bodyMedium!.color!, // Make it stand out as clickable
+                          ),
+                        ),
+                      ),
+                    ]
+                  )
+                ],
+              ),
+              trailing: buildIconButton(FontAwesomeIcons.scroll, paper.link, 'Read Paper')
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: constraints.maxWidth > width || image == null ?
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                      flex: 3,
+                      child: body,
                     ),
-                    TextSpan(
-                      text: ", ${_formatDate(paper.date)}",
-                    ),
+                    if (image != null)
+                      const SizedBox(width: 16.0), // Add some space between the text and the image (if it exists
+                    if (image != null)
+                      Expanded(
+                        flex: 2,
+                        child: image,
+                      ),
                   ],
+                ) : Column(
+                  children: [
+                    body,
+                    const SizedBox(height: 16.0),
+                    image,
+                  ],
+                )
+            ),
+            if (paper.awards != null && paper.awards!.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16.0),
+                child: Wrap(
+                  spacing: 8.0, // space between chips
+                  children: paper.awards!.map((award) => Chip(
+                    label: Text(award),
+                    avatar: Icon(Icons.star, color: Theme.of(context).colorScheme.tertiary),
+                  )).toList(),
                 ),
               ),
-            ),
-          ],
-        ),
-        trailing: buildIconButton(FontAwesomeIcons.scroll, paper.link, 'Read Paper')
-      ),
-      Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Text(paper.description),
-      ),
-      if (paper.imagePath != null)
-        Image.network(paper.imagePath!),
-      if (paper.awards != null && paper.awards!.isNotEmpty)
-        Padding(
-          padding: const EdgeInsets.only(bottom: 16.0),
-          child: Wrap(
-            spacing: 8.0, // space between chips
-            children: paper.awards!.map((award) => Chip(
-              label: Text(award),
-              avatar: Icon(Icons.star, color: Theme.of(context).colorScheme.tertiary),
-            )).toList(),
-          ),
-        ),
-    ]
-  );
-}
-
+          ]
+        );
+      },
+    );
+  }
 }
 
 String _formatDate(DateTime date) {

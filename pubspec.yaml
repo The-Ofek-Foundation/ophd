@@ -106,6 +106,7 @@ flutter:
     - assets/images/arxiv_logo.jpg
     - assets/images/UCI_logo_256.png
     - assets/images/CATOC.png
+    - assets/images/wads_best_paper.jpg
   
   fonts:
     - family: RobotoMono

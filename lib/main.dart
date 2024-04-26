@@ -169,7 +169,6 @@ class _MyLayoutState extends State<MyLayout> {
           return Scaffold(
             appBar: AppBar(
             title: const Text('Ofek PhD Portfolio'),
-            // add color
             backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
             actions: <Widget>[
               _getThemeSwitch()

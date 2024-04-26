@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:ophd/data/papers_data.dart';
@@ -42,12 +43,11 @@ class PublicationPage extends StatelessWidget {
     );
   }
 
-  Widget _buildPaperBlock(BuildContext context, Paper paper, {double width = 600}) {
-    Widget body = SelectableText(paper.description);
+  Widget _buildPaperBlock(BuildContext context, Paper paper, {double width = 800}) {
+    Widget body = MarkdownBody(data: paper.description, selectable: true,);
     
     Widget? image = paper.imagePath != null ? ExpandableImage(
       imagePath: paper.imagePath!,
-      caption: paper.title,
     ) : null;
     
     return LayoutBuilder(
@@ -82,7 +82,7 @@ class PublicationPage extends StatelessWidget {
                         child: Text(
                           paper.conference,
                           style: TextStyle(
-                            color: Theme.of(context).colorScheme.secondary, // Make it stand out as clickable
+                            color: Theme.of(context).colorScheme.secondary,
                           ),
                         ),
                         onTap: () => launchURL(paper.conferenceLink),
@@ -91,7 +91,7 @@ class PublicationPage extends StatelessWidget {
                         child: Text(
                           _formatDate(paper.date),
                           style: TextStyle(
-                            color: Theme.of(context).textTheme.bodyMedium!.color!, // Make it stand out as clickable
+                            color: Theme.of(context).textTheme.bodyMedium!.color!,
                           ),
                         ),
                       ),

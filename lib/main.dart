@@ -58,11 +58,12 @@ class MyApp extends StatelessWidget {
             title: 'Ofek PhD Portfolio',
             initialRoute: '/about',
             routes: {
-              // '/': (context) => MyLayout(pageDetails: pagesMap['/']!),
-              // '/research': (context) => MyLayout(pageDetails: pagesMap['/research']!),
               for (PageDetails pd in pages)
                 pd.pathname: (context) => MyLayout(pageDetails: pd),
-            }
+            },
+            onUnknownRoute: (settings) => MaterialPageRoute(
+              builder: (context) => MyLayout(pageDetails: pages.first),
+            )
           ),
         ),
       ),
@@ -86,29 +87,16 @@ class _MyLayoutState extends State<MyLayout> {
   void initState() {
     super.initState();
     _pd = widget.pageDetails;
-    print(window.location.href);
-    print("Initializing a new state for ${_pd.label}");
-
-    window.onPopState.listen((_) {
-      String route = '/${window.location.hash.substring(2)}';
-      print("Navigating to $route");
-      // var pd = pages.firstWhere((pd) => pd.route == route);
-      // setState(() {
-      //   _pd = pd;
-      // });
-    });
   }
 
   void _onItemTapped(int index) {
     if (_pd.index == index) return;
-    print("Navigating to ${pages[index].label}");
 
     setState(() {
       _pd = pages[index];
     });
 
-    // Navigator.pushNamed(context, _pd.route);
-    window.history.pushState(null, _pd.label, '/#${_pd.pathname}'); 
+    window.history.replaceState(null, _pd.label, '/#${_pd.pathname}'); 
   }
 
   void _toggleThemeMode(bool isDarkTheme) {

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:ophd/screens/research_screen.dart';
+import 'package:flutter_web_plugins/flutter_web_plugins.dart';
+import 'package:ophd/data/pages_data.dart';
+import 'package:ophd/models/page.dart';
 import 'package:theme_provider/theme_provider.dart';
 import 'color_schemes.g.dart';
 
-import 'package:ophd/screens/education_screen.dart';
-import 'package:ophd/screens/about_screen.dart';
-import 'package:ophd/screens/publication_screen.dart';
-
-void main() => runApp(const MyApp());
+void main() {
+  usePathUrlStrategy();
+  runApp(const MyApp());
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -58,7 +58,10 @@ class MyApp extends StatelessWidget {
           builder: (themeContext) => MaterialApp(
             theme: ThemeProvider.themeOf(themeContext).data,
             title: 'Ofek PhD Portfolio',
-            home: const MyLayout(),
+            routes: {
+              for (PageDetails pd in pages)
+                pd.route: (context) => MyLayout(pageDetails: pd),
+            }
           ),
         ),
       ),
@@ -67,49 +70,32 @@ class MyApp extends StatelessWidget {
 }
 
 class MyLayout extends StatefulWidget {
-  const MyLayout({super.key});
+  final PageDetails pageDetails;
+
+  const MyLayout({Key? key, required this.pageDetails}) : super(key: key);
 
   @override
-  State<MyLayout> createState() => _MyLayoutState();
+  State<MyLayout> createState() => _MyLayoutState(); 
 }
 
 class _MyLayoutState extends State<MyLayout> {
-  int _selectedIndex = 0;
+  PageDetails _pd = pages[0];
   bool _isDarkMode = false;
 
-  final List<dynamic> pageIconsAndLabels = [
-    {
-      'icon': const Icon(Icons.account_circle),
-      'label': const Text('About'),
-      'page': const AboutPage(),
-    },
-    {
-      'icon': const Icon(Icons.science),
-      'label': const Text('Research'),
-      'page': const ResearchPage(),
-    },
-    {
-      // 'icon': const Icon(Icons.history_edu),
-      'icon': const Icon(FontAwesomeIcons.scroll),
-      'label': const Text('Publications'),
-      'page': const PublicationPage(),
-    },
-    {
-      'icon': const Icon(Icons.school),
-      'label': const Text('Education'),
-      'page': const EducationPage(),
-    },
-    {
-      'icon': const Icon(Icons.contact_mail),
-      'label': const Text('Contact'),
-      'page': const AboutPage(),
-    },
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _pd = widget.pageDetails;
+  }
 
   void _onItemTapped(int index) {
+    if (_pd.index == index) return;
+
     setState(() {
-      _selectedIndex = index;
+      _pd = pages[index];
     });
+
+    Navigator.pushNamed(context, _pd.route);
   }
 
   void _toggleThemeMode(bool isDarkTheme) {
@@ -142,14 +128,14 @@ class _MyLayoutState extends State<MyLayout> {
                   children: [
                     Expanded(
                       child: NavigationRail(
-                        selectedIndex: _selectedIndex,
+                        selectedIndex: _pd.index,
                         onDestinationSelected: _onItemTapped,
                         labelType: NavigationRailLabelType.selected,
                         destinations: [
-                          for (var iconAndLabel in pageIconsAndLabels)
+                          for (PageDetails pd in pages)
                             NavigationRailDestination(
-                              icon: iconAndLabel['icon'],
-                              label: iconAndLabel['label'],
+                              icon: Icon(pd.icon),
+                              label: Text(pd.label),
                             ),
                         ],
                       ),
@@ -160,7 +146,7 @@ class _MyLayoutState extends State<MyLayout> {
                 ),
                 const VerticalDivider(thickness: 1, width: 1),
                 Expanded(
-                  child: Center(child: _getPageAtIndex(_selectedIndex)),
+                  child: Center(child: _pd.page),
                 )
               ],
             ),
@@ -175,33 +161,24 @@ class _MyLayoutState extends State<MyLayout> {
             ],
           ),
             body: Center(
-              child: _getPageAtIndex(_selectedIndex),
+              child: _pd.page,
             ),
             bottomNavigationBar: BottomNavigationBar(
               items: <BottomNavigationBarItem>[
-                for (var iconAndLabel in pageIconsAndLabels)
+                for (PageDetails pd in pages)
                   BottomNavigationBarItem(
-                    icon: iconAndLabel['icon'],
-                    label: iconAndLabel['label'].data,
+                    icon: Icon(pd.icon),
+                    label: pd.label,
                   ),
               ],
-              currentIndex: _selectedIndex,
+              currentIndex: _pd.index,
               onTap: _onItemTapped,
               selectedItemColor: Theme.of(context).colorScheme.primary,
               unselectedItemColor: Theme.of(context).colorScheme.secondary,
-              
             ),
           );
         }
       },
     );
-  }
-
-  Widget _getPageAtIndex(int index) {
-    if (index < pageIconsAndLabels.length) {
-      return pageIconsAndLabels[index]['page'];
-    } else {
-      return const Text('Page not found');
-    }
   }
 }

@@ -10,7 +10,8 @@ final List<Paper> papers = [
     date: DateTime(2023, 12, 9),
     conference: 'COCOA',
     conferenceLink: 'https://theory.utdallas.edu/COCOA2023/',
-    awards: ['Best Paper']
+    awards: ['Best Paper'],
+    imagePath: 'assets/images/cocoa_nicole.jpg',
   ),
   Paper(
     title: 'Zip-zip Trees: Making Zip Trees More Balanced, Biased, Compact, or Persistent',

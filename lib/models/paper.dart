@@ -9,6 +9,7 @@ class Paper {
   final DateTime date;
   final List<String>? awards;
   final String conference;
+  final String conferenceShort;
   final String conferenceLink;
 
   Paper({
@@ -20,6 +21,7 @@ class Paper {
     required this.date,
     this.awards,
     required this.conference,
+    required this.conferenceShort,
     required this.conferenceLink,
   });
 }

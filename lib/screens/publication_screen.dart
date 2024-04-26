@@ -80,7 +80,7 @@ class PublicationPage extends StatelessWidget {
                     children: [
                       InkWell(
                         child: Text(
-                          paper.conference,
+                          constraints.maxWidth > width ? '${paper.conference} (${paper.conferenceShort})' : (constraints.maxWidth / 2 > width / 3 ? paper.conference : paper.conferenceShort) ,
                           style: TextStyle(
                             color: Theme.of(context).colorScheme.secondary,
                           ),

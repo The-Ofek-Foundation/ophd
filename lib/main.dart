@@ -1,21 +1,19 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:ophd/data/pages_data.dart';
 import 'package:ophd/models/page.dart';
 import 'package:theme_provider/theme_provider.dart';
 import 'color_schemes.g.dart';
 
-void main() {
-  usePathUrlStrategy();
-  runApp(const MyApp());
-}
+void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return ThemeProvider(
+  Widget build(BuildContext context) =>
+    ThemeProvider(
       saveThemesOnChange: true,
       loadThemeOnInit: false,
       onInitCallback: (controller, previouslySavedThemeFuture) async {
@@ -58,6 +56,7 @@ class MyApp extends StatelessWidget {
           builder: (themeContext) => MaterialApp(
             theme: ThemeProvider.themeOf(themeContext).data,
             title: 'Ofek PhD Portfolio',
+            initialRoute: window.location.pathname,
             routes: {
               for (PageDetails pd in pages)
                 pd.route: (context) => MyLayout(pageDetails: pd),
@@ -66,7 +65,6 @@ class MyApp extends StatelessWidget {
         ),
       ),
     );
-  }
 }
 
 class MyLayout extends StatefulWidget {
@@ -86,16 +84,28 @@ class _MyLayoutState extends State<MyLayout> {
   void initState() {
     super.initState();
     _pd = widget.pageDetails;
+    print("Initializing a new state for ${_pd.label}");
+
+    window.onPopState.listen((_) {
+      print("Pop state event triggered with route ${window.location.pathname}");
+      var route = window.location.pathname;
+      var pd = pages.firstWhere((pd) => pd.route == route);
+      // setState(() {
+      //   _pd = pd;
+      // });
+    });
   }
 
   void _onItemTapped(int index) {
     if (_pd.index == index) return;
+    print("Navigating to ${pages[index].label}");
 
     setState(() {
       _pd = pages[index];
     });
 
-    Navigator.pushNamed(context, _pd.route);
+    // Navigator.pushNamed(context, _pd.route);
+    window.history.pushState(null, _pd.label, '/#${_pd.route}'); 
   }
 
   void _toggleThemeMode(bool isDarkTheme) {

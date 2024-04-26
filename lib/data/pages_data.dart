@@ -12,35 +12,39 @@ final List<PageDetails> pages = [
     icon: Icons.account_circle,
     label: 'About',
     page: const AboutPage(),
-    route: '/',
+    pathname: '/about',
     index: 0
   ),
   PageDetails(
     icon: Icons.science,
     label: 'Research',
     page: const ResearchPage(),
-    route: '/research',
+    pathname: '/research',
     index: 1
   ),
   PageDetails(
     icon: FontAwesomeIcons.scroll,
     label: 'Publications',
     page: const PublicationPage(),
-    route: '/publications',
+    pathname: '/publications',
     index: 2
   ),
   PageDetails(
     icon: Icons.school,
     label: 'Education',
     page: const EducationPage(),
-    route: '/education',
+    pathname: '/education',
     index: 3
   ),
   PageDetails(
     icon: Icons.contact_mail,
     label: 'Contact',
     page: const AboutPage(),
-    route: '/contact',
+    pathname: '/contact',
     index: 4
   ),
 ];
+
+final Map<String, PageDetails> pagesMap = Map.fromEntries(
+  pages.map((page) => MapEntry(page.pathname, page))
+);

@@ -56,10 +56,12 @@ class MyApp extends StatelessWidget {
           builder: (themeContext) => MaterialApp(
             theme: ThemeProvider.themeOf(themeContext).data,
             title: 'Ofek PhD Portfolio',
-            initialRoute: window.location.pathname,
+            initialRoute: '/about',
             routes: {
+              // '/': (context) => MyLayout(pageDetails: pagesMap['/']!),
+              // '/research': (context) => MyLayout(pageDetails: pagesMap['/research']!),
               for (PageDetails pd in pages)
-                pd.route: (context) => MyLayout(pageDetails: pd),
+                pd.pathname: (context) => MyLayout(pageDetails: pd),
             }
           ),
         ),
@@ -77,19 +79,20 @@ class MyLayout extends StatefulWidget {
 }
 
 class _MyLayoutState extends State<MyLayout> {
-  PageDetails _pd = pages[0];
+  late PageDetails _pd;
   bool _isDarkMode = false;
 
   @override
   void initState() {
     super.initState();
     _pd = widget.pageDetails;
+    print(window.location.href);
     print("Initializing a new state for ${_pd.label}");
 
     window.onPopState.listen((_) {
-      print("Pop state event triggered with route ${window.location.pathname}");
-      var route = window.location.pathname;
-      var pd = pages.firstWhere((pd) => pd.route == route);
+      String route = '/${window.location.hash.substring(2)}';
+      print("Navigating to $route");
+      // var pd = pages.firstWhere((pd) => pd.route == route);
       // setState(() {
       //   _pd = pd;
       // });
@@ -105,7 +108,7 @@ class _MyLayoutState extends State<MyLayout> {
     });
 
     // Navigator.pushNamed(context, _pd.route);
-    window.history.pushState(null, _pd.label, '/#${_pd.route}'); 
+    window.history.pushState(null, _pd.label, '/#${_pd.pathname}'); 
   }
 
   void _toggleThemeMode(bool isDarkTheme) {

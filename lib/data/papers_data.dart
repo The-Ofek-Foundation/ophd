@@ -1,3 +1,5 @@
+import 'package:ophd/models/author.dart';
+
 import '../models/paper.dart';
 import 'authors_data.dart';
 
@@ -37,3 +39,8 @@ final List<Paper> papers = [
     conferenceLink: 'https://www.ccsc.org/publications/journals/SW2022.pdf',
   )
 ];
+
+final Map<String, List<Paper>> papersWithAuthor = {
+  for (Author author in authors.values)
+    author.name: papers.where((p) => p.authors.contains(author)).toList()
+};

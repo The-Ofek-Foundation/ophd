@@ -64,12 +64,12 @@ class PublicationPage extends StatelessWidget {
                     spacing: 8.0, // space between each author name
                     children: paper.authors.map((Author author) {
                       return InkWell(
-                        onTap: author.link != null ? () => launchURL(author.link!) : null,
+                        onTap: author.isme ? null : () => launchURL(author.link),
                         child: Text(
                           author.name,
                           style: TextStyle(
                             fontStyle: FontStyle.italic,
-                            color: author.link != null ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.tertiary,
+                            color: author.isme ? Theme.of(context).colorScheme.tertiary : Theme.of(context).colorScheme.primary,
                           ),
                         ),
                       );

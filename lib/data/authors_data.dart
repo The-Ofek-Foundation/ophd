@@ -3,7 +3,8 @@ import '../models/author.dart';
 final Map<String, Author> authors = {
   'ofek': Author(
     name: 'Ofek Gila',
-    // link: 'https://ofek.phd',
+    link: 'https://ofek.phd',
+    isme: true,
   ),
   'mikeg': Author(
     name: 'Michael Goodrich',

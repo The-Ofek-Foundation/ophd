@@ -2,7 +2,10 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_scatter/flutter_scatter.dart';
-import 'package:url_launcher/url_launcher_string.dart';
+
+import 'package:ophd/data/authors_data.dart';
+import 'package:ophd/data/papers_data.dart';
+import 'package:ophd/models/author.dart';
 
 import '../utils/screen_utils.dart';
 
@@ -72,34 +75,6 @@ class ResearchPage extends StatelessWidget {
     );
   }
 
-  static final List<Author> contributors = [
-    Author(
-      name: 'Michael Goodrich',
-      publicationCount: 3,
-      link: 'https://en.wikipedia.org/wiki/Michael_T._Goodrich',
-    ),
-    Author(
-      name: 'Robert Tarjan',
-      publicationCount: 1,
-      link: 'https://en.wikipedia.org/wiki/Robert_Tarjan',
-    ),
-    Author(
-      name: 'Evrim Ozel',
-      publicationCount: 1,
-      link: 'https://www.ics.uci.edu/~eozel/',
-    ),
-    Author(
-      name: 'Michael Shindler',
-      publicationCount: 1,
-      link: 'https://www.ics.uci.edu/~mikes/',
-    ),
-    Author(
-      name: 'Michael Dillencourt',
-      publicationCount: 1,
-      link: 'https://www.ics.uci.edu/~dillenco/',
-    ),
-  ];
-
   Widget _buildContributorsBlock(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -110,7 +85,7 @@ class ResearchPage extends StatelessWidget {
           style: Theme.of(context).textTheme.bodyLarge,
         ),
         const SizedBox(height: 20),
-        WordCloud(contributors),
+        const WordCloud(),
         const SizedBox(height: 20),
         SelectableText(
           'A special thanks to my advisor, Michael Goodrich, for his continuing mentorship and support.',
@@ -194,22 +169,8 @@ class ResearchPage extends StatelessWidget {
   }
 }
 
-class Author {
-  final String name;
-  final int publicationCount;
-  final String link;
-
-  Author({
-    required this.name,
-    required this.publicationCount,
-    required this.link,
-  });
-}
-
 class WordCloud extends StatefulWidget {
-  final List<Author> authors;
-
-  const WordCloud(this.authors, {Key? key}) : super(key: key);
+  const WordCloud({Key? key}) : super(key: key);
 
   @override
   WordCloudState createState() => WordCloudState();
@@ -227,40 +188,30 @@ class WordCloudState extends State<WordCloud> {
           return Wrap(
             spacing: 8.0, // gap between adjacent chips
             runSpacing: 4.0, // gap between lines
-            children: widget.authors.map((Author author) {
-              return MouseRegion(
+            children: [
+              for (Author author in authors.values)
+                MouseRegion(
                 onEnter: (event) => setState(() => selectedAuthor = author),
                 onExit: (event) => setState(() => selectedAuthor = null),
                 child: ActionChip(
                   label: AnimatedDefaultTextStyle(
-                    style: TextStyle(fontSize: (author == selectedAuthor ? 12.0 : 10.0) + author.publicationCount * 10, color: author == selectedAuthor ? Theme.of(context).colorScheme.tertiary : Theme.of(context).colorScheme.onSecondaryContainer),
+                    style: TextStyle(fontSize: (author == selectedAuthor ? 12.0 : 10.0) + papersWithAuthor[author.name]!.length * 10, color: author == selectedAuthor ? Theme.of(context).colorScheme.tertiary : Theme.of(context).colorScheme.onSecondaryContainer),
                     duration: const Duration(milliseconds: 200),
                     child: Text(author.name),
                   ),
-                  onPressed: () async {
-                    if (await canLaunchUrlString(author.link)) {
-                      await launchUrlString(author.link);
-                    } else {
-                      throw 'Could not launch ${author.link}';
-                    }
-                  },
+                  onPressed: () async => launchURL(author.link),
                 ),
-              );
-            }).toList(),
+              ),
+            ]
           );
         } else {
           // Use Scatter for larger screen sizes
           return Scatter(
             delegate: ArchimedeanSpiralScatterDelegate(ratio: 0.1),
-            children: widget.authors.map((Author author) {
-              return InkResponse(
-                onTap: () async {
-                  if (await canLaunchUrlString(author.link)) {
-                    await launchUrlString(author.link);
-                  } else {
-                    throw 'Could not launch ${author.link}';
-                  }
-                },
+            children: [
+              for (Author author in authors.values)
+                InkResponse(
+                onTap: () async  => launchURL(author.link),
                 onHover: (hovering) {
                   setState(() {
                     selectedAuthor = hovering ? author : null;
@@ -268,12 +219,13 @@ class WordCloudState extends State<WordCloud> {
                 },
                 hoverColor: Colors.transparent,
                 child: AnimatedDefaultTextStyle(
-                  style: TextStyle(fontSize: (author == selectedAuthor ? 12.0 : 10.0) + author.publicationCount * 10, color: author == selectedAuthor ? Theme.of(context).colorScheme.tertiary : Theme.of(context).colorScheme.onSecondaryContainer),
+                  style: TextStyle(fontSize: (author == selectedAuthor ? 12.0 : 10.0) + papersWithAuthor[author.name]!.length * 10, color: author == selectedAuthor ? Theme.of(context).colorScheme.tertiary : Theme.of(context).colorScheme.onSecondaryContainer),
                   duration: const Duration(milliseconds: 200),
                   child: Text(author.name),
                 ),
-              );
-            }).toList(),
+
+                )
+            ]
           );
         }
       },

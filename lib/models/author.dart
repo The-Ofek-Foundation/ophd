@@ -1,9 +1,11 @@
 class Author {
   final String name;
-  final String? link;
+  final String link;
+  final bool isme;
 
   Author({
     required this.name,
-    this.link,
+    required this.link,
+    this.isme = false,
   });
 }

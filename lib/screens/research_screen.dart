@@ -7,8 +7,9 @@ import 'package:ophd/data/papers_data.dart';
 import 'package:ophd/data/social_links_data.dart';
 import 'package:ophd/models/author.dart';
 import 'package:ophd/models/social_link.dart';
-
-import '../utils/screen_utils.dart';
+import 'package:ophd/utils/screen_utils.dart';
+import 'package:ophd/widgets/launchable_icon_button.dart';
+import 'package:ophd/widgets/standard_card.dart';
 
 class ResearchPage extends StatelessWidget {
   const ResearchPage({Key? key}) : super(key: key);
@@ -19,9 +20,9 @@ class ResearchPage extends StatelessWidget {
       padding: const EdgeInsets.all(20),
       child: SingleChildScrollView(child: Column(
         children: [
-          buildCard(context, _buildPrimaryResearchBlock(context)),
-          buildCard(context, _buildContributorsBlock(context)),
-          buildCard(context, _buildErdosNumberBlock(context)),
+          CardWrapper(child: _buildPrimaryResearchBlock(context)),
+          CardWrapper(child: _buildContributorsBlock(context)),
+          CardWrapper(child: _buildErdosNumberBlock(context)),
         ]
       ))
     );
@@ -46,7 +47,7 @@ class ResearchPage extends StatelessWidget {
             text: ' Find my research at:'
           ),
           for (SocialLink link in socials.where((social) => social.type == SocialType.research))
-            WidgetSpan(child: buildIconButton(link.icon, link.url, link.label)),
+            WidgetSpan(child: LaunchableIconButton(icon: link.icon, url: link.url, tooltip: link.label)),
         ]
       ),
       textAlign: TextAlign.center,
@@ -79,7 +80,6 @@ class ResearchPage extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         SelectableText.rich(
-          // textAlign: TextAlign.center,
           TextSpan(
             text: 'My ',
             style: Theme.of(context).textTheme.bodyLarge,

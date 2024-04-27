@@ -1,8 +1,7 @@
-import 'dart:html';
-
 import 'package:flutter/material.dart';
 import 'package:ophd/data/pages_data.dart';
 import 'package:ophd/models/page.dart';
+import 'package:ophd/widgets/layout.dart';
 import 'package:theme_provider/theme_provider.dart';
 import 'color_schemes.g.dart';
 
@@ -59,10 +58,10 @@ class MyApp extends StatelessWidget {
             initialRoute: '/about',
             routes: {
               for (PageDetails pd in pages)
-                pd.pathname: (context) => MyLayout(pageDetails: pd),
+                pd.pathname: (context) => Layout(pageDetails: pd),
             },
             onUnknownRoute: (settings) => MaterialPageRoute(
-              builder: (context) => MyLayout(pageDetails: pages.first),
+              builder: (context) => Layout(pageDetails: pages.first),
             )
           ),
         ),
@@ -70,116 +69,3 @@ class MyApp extends StatelessWidget {
     );
 }
 
-class MyLayout extends StatefulWidget {
-  final PageDetails pageDetails;
-
-  const MyLayout({Key? key, required this.pageDetails}) : super(key: key);
-
-  @override
-  State<MyLayout> createState() => _MyLayoutState(); 
-}
-
-class _MyLayoutState extends State<MyLayout> {
-  late PageDetails _pd;
-  bool _isDarkMode = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _pd = widget.pageDetails;
-  }
-
-  void _onItemTapped(int index) {
-    if (_pd.index == index) return;
-
-    setState(() {
-      _pd = pages[index];
-    });
-
-    window.history.replaceState(null, _pd.label, '/#${_pd.pathname}'); 
-  }
-
-  void _toggleThemeMode(bool isDarkTheme) {
-    var controller = ThemeProvider.controllerOf(context);
-
-    controller.setTheme(isDarkTheme ? 'dark' : 'light');
-    setState(() {
-      _isDarkMode = isDarkTheme;
-    });
-  }
-
-  Widget _getThemeSwitch() {
-    _isDarkMode = ThemeProvider.themeOf(context).id == 'dark';
-
-    return Switch(
-      value: _isDarkMode,
-      onChanged: _toggleThemeMode,
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        if (constraints.maxWidth > 600) {
-          return Scaffold(
-            body: Row(
-              children: [
-                Column(
-                  children: [
-                    Expanded(
-                      child: NavigationRail(
-                        selectedIndex: _pd.index,
-                        onDestinationSelected: _onItemTapped,
-                        labelType: NavigationRailLabelType.selected,
-                        destinations: [
-                          for (PageDetails pd in pages)
-                            NavigationRailDestination(
-                              icon: Icon(pd.icon),
-                              label: Text(pd.label),
-                            ),
-                        ],
-                      ),
-                    ),
-                    _getThemeSwitch(),
-                    const SizedBox(height: 10),
-                  ],
-                ),
-                const VerticalDivider(thickness: 1, width: 1),
-                Expanded(
-                  child: Center(child: _pd.page),
-                )
-              ],
-            ),
-          );
-        } else {
-          return Scaffold(
-            appBar: AppBar(
-            title: const Text('Ofek PhD Portfolio'),
-            backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
-            actions: <Widget>[
-              _getThemeSwitch()
-            ],
-          ),
-            body: Center(
-              child: _pd.page,
-            ),
-            bottomNavigationBar: BottomNavigationBar(
-              items: <BottomNavigationBarItem>[
-                for (PageDetails pd in pages)
-                  BottomNavigationBarItem(
-                    icon: Icon(pd.icon),
-                    label: pd.label,
-                  ),
-              ],
-              currentIndex: _pd.index,
-              onTap: _onItemTapped,
-              selectedItemColor: Theme.of(context).colorScheme.primary,
-              unselectedItemColor: Theme.of(context).colorScheme.secondary,
-            ),
-          );
-        }
-      },
-    );
-  }
-}

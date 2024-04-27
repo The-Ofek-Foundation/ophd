@@ -5,8 +5,10 @@ import 'package:intl/intl.dart';
 import 'package:ophd/data/papers_data.dart';
 import 'package:ophd/models/author.dart';
 import 'package:ophd/models/paper.dart';
-
-import '../utils/screen_utils.dart';
+import 'package:ophd/utils/screen_utils.dart';
+import 'package:ophd/widgets/expandable_image.dart';
+import 'package:ophd/widgets/launchable_icon_button.dart';
+import 'package:ophd/widgets/standard_card.dart';
 
 class PublicationPage extends StatelessWidget {
   const PublicationPage({Key? key}) : super(key: key);
@@ -20,7 +22,7 @@ class PublicationPage extends StatelessWidget {
           children: [
             // buildCard(context, _buildOverviewBlock(context)),
             for (final paper in papers)
-              buildCard(context, _buildPaperBlock(context, paper)),
+              CardWrapper(child: _buildPaperBlock(context, paper)),
           ],
         ),
       ),
@@ -99,7 +101,12 @@ class PublicationPage extends StatelessWidget {
                   )
                 ],
               ),
-              trailing: buildIconButton(FontAwesomeIcons.scroll, paper.link, 'Read Paper')
+              // trailing: buildIconButton(FontAwesomeIcons.scroll, paper.link, 'Read Paper')
+              trailing: LaunchableIconButton(
+                icon: FontAwesomeIcons.scroll,
+                url: paper.link,
+                tooltip: 'Read Paper',
+              ),
             ),
             Padding(
               padding: const EdgeInsets.all(16.0),

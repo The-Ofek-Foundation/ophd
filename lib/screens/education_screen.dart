@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-
-import '../utils/screen_utils.dart';
+import 'package:ophd/widgets/launchable_icon_button.dart';
+import 'package:ophd/widgets/standard_card.dart';
 
 class EducationPage extends StatelessWidget {
   const EducationPage({Key? key}) : super(key: key);
@@ -12,8 +12,8 @@ class EducationPage extends StatelessWidget {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            buildCard(context, _buildOverviewBlock(context)),
-            buildCard(context, _buildEducationBlock(context)),
+            CardWrapper(child: _buildOverviewBlock(context)),
+            CardWrapper(child: _buildEducationBlock(context)),
           ],
         ),
       ),
@@ -66,7 +66,12 @@ class EducationPage extends StatelessWidget {
               leading: constraints.maxWidth > width ? const Image(image: AssetImage('assets/images/UCI_logo_256.png')) : null,
               title: const SelectableText('Current Studies'),
               subtitle: const SelectableText('PhD in CS Theory (Algorithms in the Real World), UCI, ongoing'),
-              trailing: buildIconButton(const AssetImage('assets/images/CATOC.png'), 'https://ics.uci.edu/~theory/', 'UCI Theory Group'),
+              // trailing: buildIconButton(const AssetImage('assets/images/CATOC.png'), 'https://ics.uci.edu/~theory/', 'UCI Theory Group'),
+              trailing: const LaunchableIconButton(
+                icon: AssetImage('assets/images/CATOC.png'),
+                url: 'https://ics.uci.edu/~theory/',
+                tooltip: 'UCI Theory Group',
+              ),
             ),
             ListTile(
               leading: constraints.maxWidth > width ? const SizedBox(width: 110, height: 40) : null,

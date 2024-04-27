@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:ophd/models/social_link.dart';
-
-import '../utils/screen_utils.dart';
+import 'package:ophd/widgets/launchable_icon_button.dart';
+import 'package:ophd/widgets/standard_card.dart';
 
 class AboutPage extends StatelessWidget {
   final List<SocialLink> socials;
@@ -37,7 +37,11 @@ class AboutPage extends StatelessWidget {
           spacing: 10,
           children: [
             for (SocialLink link in socials)
-              buildIconButton(link.icon, link.url, link.label),
+              LaunchableIconButton(
+                icon: link.icon,
+                url: link.url,
+                tooltip: link.label,
+              )
           ],
         ),
       ],
@@ -47,7 +51,7 @@ class AboutPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: buildCardIfWideEnough(context, _buildFaceBlock())
+      body: StandardCard(child: _buildFaceBlock())
     );
   }
 }

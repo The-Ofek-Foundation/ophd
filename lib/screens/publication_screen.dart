@@ -20,28 +20,11 @@ class PublicationPage extends StatelessWidget {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            // buildCard(context, _buildOverviewBlock(context)),
             for (final paper in papers)
               CardWrapper(child: _buildPaperBlock(context, paper)),
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildOverviewBlock(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        SelectableText.rich(
-          TextSpan(
-            text: 'I have published several papers in the field of computer science. My most recent publication is titled "A Novel Approach to Computer Science" and was published in the Journal of Computer Science in 2021. You can find a list of my publications below:',
-            style: Theme.of(context).textTheme.bodyLarge,
-          ),
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 20),
-      ],
     );
   }
 
@@ -137,7 +120,7 @@ class PublicationPage extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(bottom: 16.0),
                 child: Wrap(
-                  spacing: 8.0, // space between chips
+                  spacing: 8.0,
                   children: paper.awards!.map((award) => Chip(
                     label: Text(award),
                     avatar: Icon(Icons.star, color: Theme.of(context).colorScheme.tertiary),

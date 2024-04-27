@@ -1,11 +1,12 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_scatter/flutter_scatter.dart';
 
 import 'package:ophd/data/authors_data.dart';
 import 'package:ophd/data/papers_data.dart';
+import 'package:ophd/data/social_links_data.dart';
 import 'package:ophd/models/author.dart';
+import 'package:ophd/models/social_link.dart';
 
 import '../utils/screen_utils.dart';
 
@@ -26,29 +27,6 @@ class ResearchPage extends StatelessWidget {
     );
   }
 
-  static final List<dynamic> _researchLinkList = [
-    {
-      'icon': const AssetImage('assets/images/avatar_scholar_256.png'),
-      'url': 'https://scholar.google.com/citations?hl=en&user=t9s-uKcAAAAJ',
-      'label': 'Google Scholar',
-    },
-    {
-      'icon': FontAwesomeIcons.orcid,
-      'url': 'https://orcid.org/0009-0005-5931-771X',
-      'label': 'ORCID',
-    },
-    {
-      'icon': const AssetImage('assets/images/acm_icon_256.png'),
-      'url': 'https://dl.acm.org/profile/99660168076',
-      'label': 'ACM',
-    },
-    {
-      'icon': const AssetImage('assets/images/arxiv_logo.jpg'),
-      'url': 'https://arxiv.org/search/cs?searchtype=author&query=Gila%2C+O',
-      'label': 'arXiv',
-    },
-  ];
-
   Widget _buildPrimaryResearchBlock(context) {
     return SelectableText.rich(
       TextSpan(
@@ -67,8 +45,8 @@ class ResearchPage extends StatelessWidget {
           const TextSpan(
             text: ' Find my research at:'
           ),
-          for (final link in _researchLinkList)
-            WidgetSpan(child: buildIconButton(link['icon'], link['url'], link['label'])),
+          for (SocialLink link in socials.where((social) => social.type == SocialType.research))
+            WidgetSpan(child: buildIconButton(link.icon, link.url, link.label)),
         ]
       ),
       textAlign: TextAlign.center,

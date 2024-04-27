@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:ophd/data/social_links_data.dart';
 
 import 'package:ophd/models/page.dart';
+import 'package:ophd/models/social_link.dart';
 import 'package:ophd/screens/about_screen.dart';
 import 'package:ophd/screens/education_screen.dart';
 import 'package:ophd/screens/publication_screen.dart';
@@ -11,7 +13,7 @@ final List<PageDetails> pages = [
   PageDetails(
     icon: Icons.account_circle,
     label: 'About',
-    page: const AboutPage(),
+    page: AboutPage(socials: socials.where((social) => social.isMain).toList()),
     pathname: '/about',
     index: 0
   ),
@@ -39,7 +41,7 @@ final List<PageDetails> pages = [
   PageDetails(
     icon: Icons.contact_mail,
     label: 'Contact',
-    page: const AboutPage(),
+    page: AboutPage(socials: socials.where((social) => social.type == SocialType.contact).toList()),
     pathname: '/contact',
     index: 4
   ),

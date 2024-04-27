@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:ophd/data/social_links_data.dart';
-
+import 'package:ophd/data/social_links.dart';
 import 'package:ophd/models/page.dart';
 import 'package:ophd/models/social_link.dart';
 import 'package:ophd/screens/about_screen.dart';

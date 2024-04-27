@@ -2,9 +2,9 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_scatter/flutter_scatter.dart';
 
-import 'package:ophd/data/authors_data.dart';
-import 'package:ophd/data/papers_data.dart';
-import 'package:ophd/data/social_links_data.dart';
+import 'package:ophd/data/authors.dart';
+import 'package:ophd/data/papers.dart';
+import 'package:ophd/data/social_links.dart';
 import 'package:ophd/models/author.dart';
 import 'package:ophd/models/social_link.dart';
 import 'package:ophd/utils/screen_utils.dart';

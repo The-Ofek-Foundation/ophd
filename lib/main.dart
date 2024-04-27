@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:ophd/data/pages_data.dart';
+import 'package:ophd/data/app_themes.dart';
+import 'package:ophd/data/pages.dart';
 import 'package:ophd/models/page.dart';
 import 'package:ophd/widgets/layout.dart';
 import 'package:theme_provider/theme_provider.dart';
-import 'color_schemes.g.dart';
 
 void main() => runApp(const MyApp());
 
@@ -32,24 +32,7 @@ class MyApp extends StatelessWidget {
           controller.forgetSavedTheme();
         }
       },
-      themes: <AppTheme>[
-        AppTheme(
-          id: 'light',
-          description: 'Light Theme',
-          data: ThemeData(
-            useMaterial3: true,
-            colorScheme: lightColorScheme,
-          ),
-        ),
-        AppTheme(
-          id: 'dark',
-          description: 'Dark Theme',
-          data: ThemeData(
-            useMaterial3: true,
-            colorScheme: darkColorScheme,
-          ),
-        ),
-      ],
+      themes: themes,
       child: ThemeConsumer(
         child: Builder(
           builder: (themeContext) => MaterialApp(
@@ -68,4 +51,3 @@ class MyApp extends StatelessWidget {
       ),
     );
 }
-

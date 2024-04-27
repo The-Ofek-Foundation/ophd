@@ -3,7 +3,7 @@
 import 'dart:html';
 
 import 'package:flutter/material.dart';
-import 'package:ophd/data/pages_data.dart';
+import 'package:ophd/data/pages.dart';
 import 'package:ophd/models/page.dart';
 import 'package:theme_provider/theme_provider.dart';
 

@@ -1,7 +1,7 @@
+import 'package:ophd/data/authors.dart';
 import 'package:ophd/models/author.dart';
+import 'package:ophd/models/paper.dart';
 
-import '../models/paper.dart';
-import 'authors_data.dart';
 
 final List<Paper> papers = [
   Paper(

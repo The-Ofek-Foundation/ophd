@@ -81,11 +81,13 @@ class EducationPage extends StatelessWidget {
                 children: [
                   DegreeWidget(
                     degree: 'BS in Physics, 2021',
-                    honors: 'Magna Cum Laude',
+                    honors: 'Summa Cum Laude',
+                    GPA: 3.92,
                   ),
                   DegreeWidget(
                     degree: 'BS in Computer Science, 2021',
-                    honors: 'Summa Cum Laude',
+                    honors: 'Magna Cum Laude',
+                    GPA: 3.98,
                   ),
                 ]
               )
@@ -100,8 +102,9 @@ class EducationPage extends StatelessWidget {
 class DegreeWidget extends StatelessWidget {
   final String degree;
   final String honors;
+  final double GPA;
 
-  const DegreeWidget({Key? key, required this.degree, required this.honors}) : super(key: key);
+  const DegreeWidget({Key? key, required this.degree, required this.honors, required this.GPA}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -110,6 +113,7 @@ class DegreeWidget extends StatelessWidget {
         children: [
           TextSpan(text: '$degree '),
           TextSpan(text: '($honors)', style: const TextStyle(fontWeight: FontWeight.bold)),
+          TextSpan(text: ' – GPA: $GPA'),
         ],
       ),
       style: const TextStyle(fontStyle: FontStyle.italic),

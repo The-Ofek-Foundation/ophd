@@ -32,7 +32,7 @@ final List<Paper> papers = [
     title: 'Beyond Big O: Teaching Experimental Algorithmics',
     authors: ['mikes', 'mikeg', 'ofek', 'miked'].map((a) => authors[a]!).toList(),
     link: 'https://www.ccsc.org/publications/journals/SW2022.pdf#page=23',
-    description: "This is the first paper I helped write. I was the TA for an experimental algorithmics course at UCI while Mike Shindler was working on this paper. I helped create questions to evaluate students\' understanding, where we discussed how supplementing traditional algorithms courses with experimental algorithmics could lead to positive practical outcomes. The ongoing joke is that I was only added so that the authors would be able to say that they don't discriminate against non-Mikes. The conference was the first I attended, and was conveniently held at UCI that year.",
+    description: "This is the first paper I helped write. I was the TA for an experimental algorithmics course at UCI while Mike Shindler was working on this paper. I helped create questions to evaluate students' understanding, where we discussed how supplementing traditional algorithms courses with experimental algorithmics could lead to positive practical outcomes. The ongoing joke is that I was only added so that the authors would be able to say that they don't discriminate against non-Mikes. The conference was the first I attended, and was conveniently held at UCI that year.",
     date: DateTime(2022, 4, 1),
     conference: 'Journal of Computing Sciences in Colleges',
     conferenceShort: 'CCSC',

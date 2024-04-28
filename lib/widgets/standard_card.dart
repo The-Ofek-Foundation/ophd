@@ -73,7 +73,7 @@ class StandardCard extends StatelessWidget {
       builder: (context, constraints) {
         return Center(
           child: SingleChildScrollView(
-            child: constraints.maxWidth > width ? CardWrapper(child: child) : ContentWrapper(child: child, withinCard: false),
+            child: constraints.maxWidth > width ? CardWrapper(child: child) : ContentWrapper(withinCard: false, child: child),
           ),
         );
       },

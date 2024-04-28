@@ -80,4 +80,11 @@ final List<SocialLink> socials = [
     isMain: false,
     type: SocialType.research,
   ),
+  SocialLink(
+    icon: const AssetImage('assets/images/dblp_icon_256.png'),
+    url: 'https://dblp.org/pid/352/4182.html',
+    label: 'dblp',
+    isMain: false,
+    type: SocialType.research,
+  ),
 ];

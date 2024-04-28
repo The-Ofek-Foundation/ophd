@@ -111,6 +111,7 @@ flutter:
     - assets/images/CATOC.png
     - assets/images/wads_best_paper.jpg
     - assets/images/cocoa_nicole.jpg
+    - assets/images/dblp_icon_256.png
   
   fonts:
     - family: RobotoMono

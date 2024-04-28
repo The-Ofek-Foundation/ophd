@@ -29,28 +29,42 @@ class ResearchPage extends StatelessWidget {
   }
 
   Widget _buildPrimaryResearchBlock(context) {
-    return SelectableText.rich(
-      TextSpan(
-        text: 'My primary research interests are in the field of ',
-        style: Theme.of(context).textTheme.bodyLarge,
-        children: [
+    const TextSpan researchInterest = TextSpan(
+      text: 'Algorithms in the Real World',
+        style: TextStyle(
+          fontFamily: 'RobotoMono',
+        )
+    );
+
+    return Column(
+      children: [
+        SelectableText.rich(
           const TextSpan(
-            text: 'Algorithms in the Real World',
-            style: TextStyle(
-              fontFamily: 'RobotoMono',
-            )
+            text: 'My primary research interests are in the field of ',
+            children: [
+              researchInterest,
+              TextSpan(
+                text: ', which involves a combination of computer science theory and experiments.',
+              ),
+              TextSpan(
+                text: ' My recent work has specifically been in randomized data structures, including randomized graph models and randomized binary search trees.'
+              ),
+              TextSpan(
+                text: ' View my work in any of my links below, or in the publications tab on this website.',
+              )
+            ]
           ),
-          const TextSpan(
-            text: ', which involves a combination of computer science theory and experiments. My recent work has specifically been in graph theory and binary search trees.'
-          ),
-          const TextSpan(
-            text: ' Find my research at:'
-          ),
-          for (SocialLink link in socials.where((social) => social.type == SocialType.research))
-            WidgetSpan(child: LaunchableIconButton(icon: link.icon, url: link.url, tooltip: link.label)),
-        ]
-      ),
-      textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.bodyLarge,
+          textAlign: TextAlign.center,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            for (SocialLink link in socials.where((social) => social.type == SocialType.research))
+              LaunchableIconButton(icon: link.icon, url: link.url, tooltip: link.label),
+          ],
+        )
+      ],
     );
   }
 
@@ -164,10 +178,10 @@ class WordCloudState extends State<WordCloud> {
         if (constraints.maxWidth < 600) {
           // Use Wrap for smaller screen sizes
           return Wrap(
-            spacing: 8.0, // gap between adjacent chips
-            runSpacing: 4.0, // gap between lines
+            spacing: 8.0,
+            runSpacing: 4.0,
             children: [
-              for (Author author in authors.values)
+              for (Author author in authors.values.where((author) => !author.isme))
                 MouseRegion(
                 onEnter: (event) => setState(() => selectedAuthor = author),
                 onExit: (event) => setState(() => selectedAuthor = null),
@@ -187,7 +201,7 @@ class WordCloudState extends State<WordCloud> {
           return Scatter(
             delegate: ArchimedeanSpiralScatterDelegate(ratio: 0.1),
             children: [
-              for (Author author in authors.values)
+              for (Author author in authors.values.where((author) => !author.isme))
                 InkResponse(
                 onTap: () async  => launchURL(author.link),
                 onHover: (hovering) {

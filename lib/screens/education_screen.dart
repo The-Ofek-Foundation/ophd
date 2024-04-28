@@ -75,23 +75,44 @@ class EducationPage extends StatelessWidget {
             ),
             ListTile(
               leading: constraints.maxWidth > width ? const SizedBox(width: 110, height: 40) : null,
-              title: const SelectableText('University of California, Irvine'),
-              subtitle: const SelectableText.rich(
-                TextSpan(
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                  children: <TextSpan>[
-                    TextSpan(text: 'BS in Physics, 2021', style: TextStyle(fontStyle: FontStyle.italic)),
-                    TextSpan(text: ' (Magna Cum Laude)', style: TextStyle(fontWeight: FontWeight.bold)),
-                    TextSpan(text: ' and '),
-                    TextSpan(text: 'BS in Computer Science, 2021', style: TextStyle(fontStyle: FontStyle.italic)),
-                    TextSpan(text: ' (Summa Cum Laude)', style: TextStyle(fontWeight: FontWeight.bold)),
-                  ],
-                ),
-              ),
+              title: const SelectableText('Undergraduate Studies'),
+              subtitle: const Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  DegreeWidget(
+                    degree: 'BS in Physics, 2021',
+                    honors: 'Magna Cum Laude',
+                  ),
+                  DegreeWidget(
+                    degree: 'BS in Computer Science, 2021',
+                    honors: 'Summa Cum Laude',
+                  ),
+                ]
+              )
             ),
           ],
         );
       },
+    );
+  }
+}
+
+class DegreeWidget extends StatelessWidget {
+  final String degree;
+  final String honors;
+
+  const DegreeWidget({Key? key, required this.degree, required this.honors}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SelectableText.rich(
+      TextSpan(
+        children: [
+          TextSpan(text: '$degree '),
+          TextSpan(text: '($honors)', style: const TextStyle(fontWeight: FontWeight.bold)),
+        ],
+      ),
+      style: const TextStyle(fontStyle: FontStyle.italic),
     );
   }
 }

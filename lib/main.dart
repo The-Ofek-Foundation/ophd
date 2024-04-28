@@ -5,10 +5,10 @@ import 'package:ophd/models/page.dart';
 import 'package:ophd/widgets/layout.dart';
 import 'package:theme_provider/theme_provider.dart';
 
-void main() => runApp(const MyApp());
+void main() => runApp(const App());
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class App extends StatelessWidget {
+  const App({super.key});
 
   @override
   Widget build(BuildContext context) =>

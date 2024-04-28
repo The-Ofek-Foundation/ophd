@@ -48,9 +48,20 @@ class _LayoutState extends State<Layout> {
   Widget _getThemeSwitch() {
     _isDarkMode = ThemeProvider.themeOf(context).id == 'dark';
 
+    final MaterialStateProperty<Icon?> thumbIcon =
+      MaterialStateProperty.resolveWith<Icon?>(
+        (Set<MaterialState> states) {
+          if (states.contains(MaterialState.selected)) {
+            return const Icon(Icons.dark_mode);
+          }
+          return const Icon(Icons.light_mode);
+        },
+      );
+
     return Switch(
       value: _isDarkMode,
       onChanged: _toggleThemeMode,
+      thumbIcon: thumbIcon,
     );
   }
 

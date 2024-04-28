@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_scatter/flutter_scatter.dart';
 
 import 'package:ophd/data/authors.dart';
@@ -181,7 +182,7 @@ class WordCloudState extends State<WordCloud> {
             spacing: 8.0,
             runSpacing: 4.0,
             children: [
-              for (Author author in authors.values.where((author) => !author.isme))
+              for (Author author in authors.values.where((author) => !author.isMe))
                 MouseRegion(
                 onEnter: (event) => setState(() => selectedAuthor = author),
                 onExit: (event) => setState(() => selectedAuthor = null),
@@ -201,7 +202,7 @@ class WordCloudState extends State<WordCloud> {
           return Scatter(
             delegate: ArchimedeanSpiralScatterDelegate(ratio: 0.1),
             children: [
-              for (Author author in authors.values.where((author) => !author.isme))
+              for (Author author in authors.values.where((author) => !author.isMe))
                 InkResponse(
                 onTap: () async  => launchURL(author.link),
                 onHover: (hovering) {
@@ -213,7 +214,7 @@ class WordCloudState extends State<WordCloud> {
                 child: AnimatedDefaultTextStyle(
                   style: TextStyle(fontSize: (author == selectedAuthor ? 12.0 : 10.0) + papersWithAuthor[author.name]!.length * 10, color: author == selectedAuthor ? Theme.of(context).colorScheme.tertiary : Theme.of(context).colorScheme.onSecondaryContainer),
                   duration: const Duration(milliseconds: 200),
-                  child: Text(author.name),
+                  child: Text(AppLocalizations.of(context)!.name(author.i10nKey)),
                 ),
 
                 )

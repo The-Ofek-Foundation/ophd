@@ -3,6 +3,7 @@
 import 'dart:html';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:ophd/data/pages.dart';
 import 'package:ophd/models/page.dart';
 import 'package:theme_provider/theme_provider.dart';
@@ -84,7 +85,8 @@ class _LayoutState extends State<Layout> {
                           for (PageDetails pd in pages)
                             NavigationRailDestination(
                               icon: Icon(pd.icon),
-                              label: Text(pd.label),
+                              // label: Text(pd.label),
+                              label: Text(AppLocalizations.of(context)!.page(pd.label)),
                             ),
                         ],
                       ),
@@ -103,7 +105,7 @@ class _LayoutState extends State<Layout> {
         } else {
           return Scaffold(
             appBar: AppBar(
-            title: const Text('Ofek PhD Portfolio'),
+            title: Text(AppLocalizations.of(context)!.title),
             backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
             actions: <Widget>[
               _getThemeSwitch()

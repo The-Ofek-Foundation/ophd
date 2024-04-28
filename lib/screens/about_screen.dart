@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:ophd/models/social_link.dart';
 import 'package:ophd/widgets/launchable_icon_button.dart';
@@ -9,7 +10,7 @@ class AboutPage extends StatelessWidget {
 
   const AboutPage({Key? key, required this.socials}) : super(key: key);
 
-  Widget _buildFaceBlock() {
+  Widget _buildFaceBlock(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -21,14 +22,14 @@ class AboutPage extends StatelessWidget {
             height: 250,
           ),
         ),
-        const SelectableText(
-          'Ofek Gila',
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+        SelectableText(
+          AppLocalizations.of(context)!.ofekGila,
+          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           textAlign: TextAlign.center,
         ),
-        const SelectableText(
-          'Ph.D. Student, Computer Science @ UCI',
-          style: TextStyle(fontSize: 18),
+        SelectableText(
+          AppLocalizations.of(context)!.mySubtitle,
+          style: const TextStyle(fontSize: 18),
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 10),
@@ -51,7 +52,7 @@ class AboutPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: StandardCard(child: _buildFaceBlock())
+      body: StandardCard(child: _buildFaceBlock(context))
     );
   }
 }

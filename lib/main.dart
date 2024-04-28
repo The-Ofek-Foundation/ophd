@@ -4,6 +4,7 @@ import 'package:ophd/data/pages.dart';
 import 'package:ophd/models/page.dart';
 import 'package:ophd/widgets/layout.dart';
 import 'package:theme_provider/theme_provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() => runApp(const App());
 
@@ -37,7 +38,7 @@ class App extends StatelessWidget {
         child: Builder(
           builder: (themeContext) => MaterialApp(
             theme: ThemeProvider.themeOf(themeContext).data,
-            title: 'Ofek PhD Portfolio',
+            title: "Ofek PhD Portfolio",
             initialRoute: '/about',
             routes: {
               for (PageDetails pd in pages)
@@ -45,7 +46,9 @@ class App extends StatelessWidget {
             },
             onUnknownRoute: (settings) => MaterialPageRoute(
               builder: (context) => Layout(pageDetails: pages.first),
-            )
+            ),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
           ),
         ),
       ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:ophd/utils/screen_utils.dart';
 
 class LaunchableIconButton extends StatelessWidget {
@@ -24,7 +25,8 @@ class LaunchableIconButton extends StatelessWidget {
               borderRadius: BorderRadius.circular(iconSize / 2),
               child: Image(image: icon, width: iconSize, height: iconSize)),
       onPressed: () => launchURL(url),
-      tooltip: tooltip,
+      // tooltip: tooltip,
+      tooltip: AppLocalizations.of(context)!.label(tooltip),
     );
   }
 }

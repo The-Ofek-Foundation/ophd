@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:ophd/data/papers.dart';
@@ -49,12 +50,12 @@ class PublicationPage extends StatelessWidget {
                     spacing: 8.0, // space between each author name
                     children: paper.authors.map((Author author) {
                       return InkWell(
-                        onTap: author.isme ? null : () => launchURL(author.link),
+                        onTap: author.isMe ? null : () => launchURL(author.link),
                         child: Text(
-                          author.name,
+                          AppLocalizations.of(context)!.name(author.i10nKey),
                           style: TextStyle(
                             fontStyle: FontStyle.italic,
-                            color: author.isme ? Theme.of(context).colorScheme.tertiary : Theme.of(context).colorScheme.primary,
+                            color: author.isMe ? Theme.of(context).colorScheme.tertiary : Theme.of(context).colorScheme.primary,
                           ),
                         ),
                       );
@@ -84,11 +85,10 @@ class PublicationPage extends StatelessWidget {
                   )
                 ],
               ),
-              // trailing: buildIconButton(FontAwesomeIcons.scroll, paper.link, 'Read Paper')
               trailing: LaunchableIconButton(
                 icon: FontAwesomeIcons.scroll,
                 url: paper.link,
-                tooltip: 'Read Paper',
+                tooltip: 'Paper',
               ),
             ),
             Padding(

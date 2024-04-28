@@ -1,0 +1,9 @@
+{
+	"@@locale": "en",
+	"ofekGila": "Ofek Gila",
+	"title": "Ofek PhD Portfolio",
+	"mySubtitle": "Ph.D. Student, Computer Science @ UCI",
+	"label": "{key, select, other {{key}}}",
+	"name": "{key, select, ofek {Ofek Gila} mikeg {Michael Goodrich} bob {Robert Tarjan} evrim {Evrim Ozel} mikes {Michael Shindler} miked {Michael Dillencourt} other {{key}}}",
+	"page": "{key, select, other {{key}}}"
+}

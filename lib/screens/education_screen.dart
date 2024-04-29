@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:ophd/widgets/clickable_image.dart';
 import 'package:ophd/widgets/launchable_icon_button.dart';
+import 'package:ophd/widgets/leading_trailing_mid.dart';
 import 'package:ophd/widgets/standard_card.dart';
 
 class EducationPage extends StatelessWidget {
@@ -56,41 +58,53 @@ class EducationPage extends StatelessWidget {
   }
 
   Widget _buildEducationBlock(BuildContext context, {double width = 500}) {
+    // ignore: non_constant_identifier_names
+    UCILogo({double? width}) => ClickableImage(
+      image: const AssetImage('assets/images/UCI_logo_256.png'),
+      link: "https://uci.edu/",
+      tooltip: "UCI Homepage",
+      width: width,
+    );
+
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         return Column(
           children: [
             if (constraints.maxWidth <= width)
-              const Image(image: AssetImage('assets/images/UCI_logo_256.png')),
-            ListTile(
-              leading: constraints.maxWidth > width ? const Image(image: AssetImage('assets/images/UCI_logo_256.png')) : null,
-              title: const SelectableText('Current Studies'),
-              subtitle: const SelectableText('PhD in CS Theory (Algorithms in the Real World), UCI, ongoing'),
-              // trailing: buildIconButton(const AssetImage('assets/images/CATOC.png'), 'https://ics.uci.edu/~theory/', 'UCI Theory Group'),
+              UCILogo(),
+            if (constraints.maxWidth <= width)
+              const SizedBox(height: 8),
+            LeadingTrailingMid(
+              leading: constraints.maxWidth > width ? UCILogo(width: 100) : null,
               trailing: const LaunchableIconButton(
                 icon: AssetImage('assets/images/CATOC.png'),
                 url: 'https://ics.uci.edu/~theory/',
                 tooltip: 'UCI Theory Group',
               ),
-            ),
-            ListTile(
-              leading: constraints.maxWidth > width ? const SizedBox(width: 110, height: 40) : null,
-              title: const SelectableText('Undergraduate Studies'),
-              subtitle: const Column(
+              title: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  DegreeWidget(
+                  SelectableText('Current Studies', style: Theme.of(context).textTheme.bodyLarge),
+                  const SelectableText('PhD in CS Theory (Algorithms in the Real World), UCI, ongoing'),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 15),
+                  SelectableText('Undergraduate Studies', style: Theme.of(context).textTheme.bodyLarge),
+                  const DegreeWidget(
                     degree: 'BS in Physics, 2021',
                     honors: 'Summa Cum Laude',
                     GPA: 3.92,
                   ),
-                  DegreeWidget(
+                  const DegreeWidget(
                     degree: 'BS in Computer Science, 2021',
                     honors: 'Magna Cum Laude',
                     GPA: 3.98,
                   ),
-                ]
-              )
+                ],
+              ),
             ),
           ],
         );

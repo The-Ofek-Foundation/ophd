@@ -47,7 +47,7 @@ class PublicationPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Wrap(
-                    spacing: 8.0, // space between each author name
+                    spacing: 8.0,
                     children: paper.authors.map((Author author) {
                       return InkWell(
                         onTap: author.isMe ? null : () => launchURL(author.link),

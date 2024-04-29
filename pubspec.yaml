@@ -112,6 +112,12 @@ flutter:
     - assets/images/wads_best_paper.jpg
     - assets/images/cocoa_nicole.jpg
     - assets/images/dblp_icon_256.png
+    - assets/images/snowflake_logo.png
+    - assets/images/cloudera_logo.jpeg
+    - assets/images/optical_research_associates_logo.jpeg
+    - assets/images/recruiter_ai.jpeg
+    - assets/images/trueskills_logo.jpeg
+    - assets/images/snowflake_intern.jpg
   
   fonts:
     - family: RobotoMono

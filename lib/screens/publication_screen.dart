@@ -30,7 +30,11 @@ class PublicationPage extends StatelessWidget {
   }
 
   Widget _buildPaperBlock(BuildContext context, Paper paper, {double width = 800}) {
-    Widget body = MarkdownBody(data: paper.description, selectable: true,);
+    Widget body = MarkdownBody(
+      data: paper.description,
+      selectable: true,
+      onTapLink: (text, href, title) => launchURL(href!),
+    );
     
     Widget? image = paper.imagePath != null ? ExpandableImage(
       imagePath: paper.imagePath!,
@@ -101,7 +105,7 @@ class PublicationPage extends StatelessWidget {
                       child: body,
                     ),
                     if (image != null)
-                      const SizedBox(width: 16.0), // Add some space between the text and the image (if it exists
+                      const SizedBox(width: 16.0),
                     if (image != null)
                       Expanded(
                         flex: 2,

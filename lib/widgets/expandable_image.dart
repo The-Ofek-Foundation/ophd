@@ -15,10 +15,13 @@ class ExpandableImage extends StatelessWidget {
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
         onTap: () => _showModal(context, imagePath, caption),
-        child: Tooltip(
-          message: tooltip ?? 'Click to expand', // Default tooltip
-          preferBelow: true,
-          child: Image.asset(imagePath),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10), // Set the clip radius
+          child: Tooltip(
+            message: tooltip ?? 'Click to expand', // Default tooltip
+            preferBelow: true,
+            child: Image.asset(imagePath),
+          ),
         ),
       ),
     );

@@ -66,12 +66,12 @@ class PublicationPage extends StatelessWidget {
                     children: [
                       InkWell(
                         child: Text(
-                          constraints.maxWidth > width ? '${paper.conference} (${paper.conferenceShort})' : (constraints.maxWidth / 2 > width / 3 ? paper.conference : paper.conferenceShort) ,
+                          constraints.maxWidth > width ? '${paper.conference.fullName} (${paper.conference.shortName})' : (constraints.maxWidth / 2 > width / 3 ? paper.conference.fullName : paper.conference.shortName) ,
                           style: TextStyle(
                             color: Theme.of(context).colorScheme.secondary,
                           ),
                         ),
-                        onTap: () => launchURL(paper.conferenceLink),
+                        onTap: () => launchURL(paper.conference.link),
                       ),
                       InkWell(
                         child: Text(

@@ -1,3 +1,5 @@
+import 'package:ophd/models/conference.dart';
+
 import 'author.dart';
 
 class Paper {
@@ -8,9 +10,7 @@ class Paper {
   final String? imagePath;
   final DateTime date;
   final List<String>? awards;
-  final String conference;
-  final String conferenceShort;
-  final String conferenceLink;
+  final Conference conference;
 
   Paper({
     required this.title,
@@ -21,7 +21,5 @@ class Paper {
     required this.date,
     this.awards,
     required this.conference,
-    required this.conferenceShort,
-    required this.conferenceLink,
   });
 }

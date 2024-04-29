@@ -86,6 +86,7 @@ class EducationPage extends StatelessWidget {
                 children: [
                   SelectableText('Current Studies', style: Theme.of(context).textTheme.bodyLarge),
                   const SelectableText('PhD in CS Theory (Algorithms in the Real World), UCI, ongoing'),
+                  const SelectableText('Masters attained on the way'),
                 ],
               ),
               child: Column(

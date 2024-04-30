@@ -75,6 +75,26 @@ final List<Job> jobs = [
       'assets/images/amp_patent.png',
     ]
   ),
+  Job(
+    company: Cloudera,
+    team: 'Control Plane',
+    location: 'Palo Alto, CA',
+    dateRange: 'Summer\n2019',
+    keywords: ['kubernetes', 'go', 'vault', 'terraform', 'helm'],
+    hourlyRate: 55,
+    description: Cloudera2019Description,
+    keyDetails: [
+      const Chip(
+        avatar: Icon(Icons.attach_money),
+        label: Text('Saving >\$2M Annually'),
+      ),
+      const Chip(
+        avatar: Icon(Icons.people),
+        label: Text('100+ Active Users'),
+      ),
+    ],
+    isSelected: true,
+  ),
 ];
 
 const String Snowflake2022Description = '''
@@ -119,4 +139,19 @@ When I came back for my second internship at Cloudera, we had a slight problemâ€
 [patent]: https://www.patentguru.com/inventor/gila-ofek
 
 [can be used directly as AMPS]: https://community.cloudera.com/t5/Community-Articles/Hugging-Face-Spaces-AMPs-Accelerate-ML-Projects/ta-p/384685
+''';
+
+const String Cloudera2019Description = '''
+This was my first internship at Cloudera, and the first time I worked in a large high-tech office. When I joined, Cloudera engineers, whenever they made even the most minute changes to the code, needed to spin up a new Kubernetes cluster just to test their changes. This was very expensive! The problem was that even if they made a change to only one service, since each service is interconnected to other services, spinning up a new cluster was the only way to ensure isolation.
+
+* I worked with another employee to build an internal tool that allows developers to easily deploy their own mix of modified services into a Kubernetes environment. While developers in reality deployed services to a shared environment (**significantly minimizing costs**), they were given the _illusion of isolation_. This involved a lot of behind-the-scenes pipelining. The tool could do the following:
+  * Differentiate Vault policies and Terraform modules per developer configuration
+  * Apply relevant and customized secrets, service accounts, and other resources in a Kubernetes namespace
+  * Allow developers to provide **customized services** and **automatically configure** them to depend on default, un-customized services when necessary
+  * Annotate all Kubernetes resources in deployments to allow blame
+  * With a single `update` command, efficiently handle all the resource, Vault, and Terraform customization when a developer modifies their environment
+* I also used the Kubernetes Go API directly with concurrency when applicable for _major performance improvements_
+* As of 2021, this tool was being used by **100+** weekly active developers, and saving Cloudera well over **\$2 million** annually. It was growing in usage, so these numbers are likely very conservative for now.
+
+Unfortunately since this was an internal tool, I am very limited in what else I can share.
 ''';

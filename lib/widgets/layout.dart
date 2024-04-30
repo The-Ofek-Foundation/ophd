@@ -32,8 +32,7 @@ class _LayoutState extends State<Layout> {
       _pd = pages[index];
     });
 
-    // window.history.replaceState(null, _pd.label, '/#${_pd.pathname}');
-    replaceHistoryState(_pd.label, _pd.pathname);
+    replaceHistoryState(_pd.label, '/#${_pd.pathname}');
   }
 
   void _toggleThemeMode(bool isDarkTheme) {
@@ -84,7 +83,6 @@ class _LayoutState extends State<Layout> {
                           for (PageDetails pd in pages)
                             NavigationRailDestination(
                               icon: Icon(pd.icon),
-                              // label: Text(pd.label),
                               label: Text(AppLocalizations.of(context)!.page(pd.label)),
                             ),
                         ],

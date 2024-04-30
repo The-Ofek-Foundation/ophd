@@ -38,6 +38,23 @@ class ContentWrapper extends StatelessWidget {
   }
 }
 
+class CardItself extends StatelessWidget {
+  final Widget child;
+
+  const CardItself({Key? key, required this.child}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 5,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: ContentWrapper(withinCard: true, child: child),
+    );
+  }
+}
+
 class CardWrapper extends StatelessWidget {
   final Widget child;
 
@@ -46,13 +63,35 @@ class CardWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return OuterPadding( 
-      child: Card(
-        elevation: 5,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: ContentWrapper(withinCard: true, child: child) // Pass through
-      )
+      child: CardItself(child: child),
+    );
+  }
+}
+
+class HighlightedCard extends StatelessWidget {
+  final Widget child;
+  final bool highlighted;
+
+  const HighlightedCard({Key? key, required this.child, required this.highlighted}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return OuterPadding(
+      child: Container(
+        decoration: highlighted ? BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Theme.of(context).brightness == Brightness.light ?
+                Theme.of(context).colorScheme.secondary :
+                Theme.of(context).colorScheme.tertiary,
+              blurRadius: 16,
+              spreadRadius: 1,
+              offset: const Offset(0, 0),
+            ),
+          ],
+        ) : null,
+        child: CardItself(child: child),
+      ),
     );
   }
 }

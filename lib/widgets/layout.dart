@@ -1,11 +1,9 @@
 
-// ignore: avoid_web_libraries_in_flutter
-import 'dart:html';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:ophd/data/pages.dart';
 import 'package:ophd/models/page.dart';
+import 'package:ophd/utils/replace_history_state.dart';
 import 'package:theme_provider/theme_provider.dart';
 
 class Layout extends StatefulWidget {
@@ -34,7 +32,8 @@ class _LayoutState extends State<Layout> {
       _pd = pages[index];
     });
 
-    window.history.replaceState(null, _pd.label, '/#${_pd.pathname}'); 
+    // window.history.replaceState(null, _pd.label, '/#${_pd.pathname}');
+    replaceHistoryState(_pd.label, _pd.pathname);
   }
 
   void _toggleThemeMode(bool isDarkTheme) {

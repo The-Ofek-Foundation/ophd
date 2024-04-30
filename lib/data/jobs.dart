@@ -67,6 +67,7 @@ final List<Job> jobs = [
         onPressed: () => launchURL('https://docs.cloudera.com/machine-learning/cloud/applied-ml-prototypes/topics/ml-amp-project-spec.html'),
       ),
     ],
+    isSelected: true,
     imagePaths: [
       'assets/images/amp_catalog.png',
       'assets/images/amp_steps.png',

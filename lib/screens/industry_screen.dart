@@ -34,17 +34,20 @@ class JobCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CardWrapper(
-      child: Column(
-        children: [
-          CollapsibleLeading(
-            initiallyExpanded: job.isSelected,
-            leading: JobLeading(job: job),
-            header: JobHeader(job: job),
-            footer: JobFooter(job: job),
-            child: JobBody(job: job),
-          ),
-        ],
+    return HighlightedCard(
+      highlighted: job.isSelected,
+      child: CardItself(
+        child: Column(
+          children: [
+            CollapsibleLeading(
+              initiallyExpanded: false,
+              leading: JobLeading(job: job),
+              header: JobHeader(job: job),
+              footer: JobFooter(job: job),
+              child: JobBody(job: job),
+            ),
+          ],
+        ),
       ),
     );
   }

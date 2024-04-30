@@ -9,18 +9,20 @@ class Job {
   final List<String> keywords;
   final int hourlyRate; 
   final String description;
-  final String? imagePath; 
-  final List<Widget>? keyDetails; 
+  final List<Widget> keyDetails;
+  final bool isSelected;
+  final List<String>? imagePaths; 
 
   Job({
     required this.team,
     required this.company,
     required this.location,
-    required this.description,
     required this.dateRange,
     required this.keywords,
-    this.imagePath,
     required this.hourlyRate,
-    this.keyDetails,
+    required this.description,
+    required this.keyDetails,
+    this.isSelected = false,
+    this.imagePaths,
   });
 }

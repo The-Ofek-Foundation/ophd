@@ -4,8 +4,8 @@ import 'package:ophd/data/jobs.dart';
 import 'package:ophd/models/job.dart';
 import 'package:ophd/utils/screen_utils.dart';
 import 'package:ophd/widgets/clickable_image.dart';
+import 'package:ophd/widgets/collapsible_leading.dart';
 import 'package:ophd/widgets/expandable_image.dart';
-import 'package:ophd/widgets/leading_trailing_mid.dart';
 import 'package:ophd/widgets/standard_card.dart';
 
 class IndustryPage extends StatelessWidget {
@@ -37,13 +37,29 @@ class JobCard extends StatelessWidget {
     return CardWrapper(
       child: Column(
         children: [
-          LeadingTrailingMid(
+          CollapsibleLeading(
+            initiallyExpanded: job.isSelected,
             leading: JobLeading(job: job),
-            title: JobTitle(job: job),
+            header: JobHeader(job: job),
+            footer: JobFooter(job: job),
             child: JobBody(job: job),
           ),
         ],
       ),
+    );
+  }
+}
+
+class JobFooter extends StatelessWidget {
+  final Job job;
+
+  const JobFooter({Key? key, required this.job}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      spacing: 16,
+      children: job.keyDetails,
     );
   }
 }
@@ -61,14 +77,19 @@ class JobBody extends StatelessWidget {
       selectable: true,
       onTapLink: (text, href, title) => launchURL(href!),
     );
-    
-    Widget? image = job.imagePath != null ? ExpandableImage(
-      imagePath: job.imagePath!,
-    ) : null;
 
-    Widget? keyDetails = job.keyDetails != null ? Wrap(
-      spacing: 16,
-      children: job.keyDetails!,
+    List<Widget> imagesAndSpacers = [];
+    if (job.imagePaths != null) {
+      for (int i = 0; i < job.imagePaths!.length; i++) {
+        if (i > 0) imagesAndSpacers.add(const SizedBox(height: 16));
+        imagesAndSpacers.add(ExpandableImage(
+          imagePath: job.imagePaths![i],
+        ));
+      }
+    }
+    
+    Widget? images = job.imagePaths != null ? Column(
+      children: imagesAndSpacers,
     ) : null;
 
     return Padding(
@@ -77,36 +98,28 @@ class JobBody extends StatelessWidget {
         builder: (BuildContext context, BoxConstraints constraints) {
           return Column(
             children: [
-              constraints.maxWidth > width || image == null ?
+              constraints.maxWidth > width || images == null ?
                 Row(
                   children: [
                     Expanded(
                       flex: 3,
                       child: body,
                     ),
-                    if (image != null)
+                    if (images != null)
                       const SizedBox(width: 16.0),
-                    if (image != null)
+                    if (images != null)
                       Expanded(
                         flex: 2,
-                        child: image,
+                        child: images,
                       ),
                   ],
                 ) : Column(
                     children: [
                       body,
                       const SizedBox(height: 16.0),
-                      if (keyDetails != null)
-                        keyDetails,
-                      if (keyDetails != null)
-                        const SizedBox(height: 16.0),
-                      image,
+                      images,
                     ],
                   ),
-              if (keyDetails != null && constraints.maxWidth > width)
-                const SizedBox(height: 16.0),
-              if (keyDetails != null && constraints.maxWidth > width)
-                keyDetails,
             ],
           );
         },
@@ -115,10 +128,10 @@ class JobBody extends StatelessWidget {
   }
 }
 
-class JobTitle extends StatelessWidget {
+class JobHeader extends StatelessWidget {
   final Job job;
 
-  const JobTitle({Key? key, required this.job}) : super(key: key);
+  const JobHeader({Key? key, required this.job}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

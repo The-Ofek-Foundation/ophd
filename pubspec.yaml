@@ -118,6 +118,10 @@ flutter:
     - assets/images/recruiter_ai.jpeg
     - assets/images/trueskills_logo.jpeg
     - assets/images/snowflake_intern.jpg
+    - assets/images/amp_steps.png
+    - assets/images/amp_catalog.png
+    - assets/images/amp_documentation.png
+    - assets/images/amp_patent.png
   
   fonts:
     - family: RobotoMono

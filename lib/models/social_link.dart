@@ -13,7 +13,7 @@ class SocialLink {
   final String label;
   final bool isMain;
   final Set<SocialType> types;
-  final bool isFile;
+  final String? fileType;
 
   SocialLink({
     required this.icon,
@@ -21,6 +21,6 @@ class SocialLink {
     required this.label,
     required this.isMain,
     required this.types,
-    this.isFile = false,
+    this.fileType,
   });
 }

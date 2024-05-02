@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:open_app_file/open_app_file.dart';
 import 'package:ophd/models/social_link.dart';
 import 'package:ophd/utils/screen_utils.dart';
 
@@ -9,7 +8,7 @@ class LaunchableIconButton extends StatelessWidget {
   final String url;
   final String tooltip;
   final double iconSize;
-  final bool isFile;
+  final String? fileType;
 
   const LaunchableIconButton({
     Key? key,
@@ -17,7 +16,7 @@ class LaunchableIconButton extends StatelessWidget {
     required this.url,
     required this.tooltip,
     this.iconSize = 24,
-    this.isFile = false,
+    this.fileType,
   }) : super(key: key);
 
   @override
@@ -28,7 +27,7 @@ class LaunchableIconButton extends StatelessWidget {
           : ClipRRect(
               borderRadius: BorderRadius.circular(iconSize / 2),
               child: Image(image: icon, width: iconSize, height: iconSize)),
-      onPressed: () => isFile ? OpenAppFile.open(url) : launchURL(url),
+      onPressed: () => fileType != null ? launchAssetInNewTab(url, fileType!) : launchURL(url),
       tooltip: AppLocalizations.of(context)!.label(tooltip),
     );
   }
@@ -51,7 +50,7 @@ class LaunchableSocialButton extends StatelessWidget {
       url: social.url,
       tooltip: social.label,
       iconSize: iconSize,
-      isFile: social.isFile,
+      fileType: social.fileType,
     );
   }
 }

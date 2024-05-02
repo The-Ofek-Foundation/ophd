@@ -62,6 +62,9 @@ class JobFooter extends StatelessWidget {
   Widget build(BuildContext context) {
     return Wrap(
       spacing: 16,
+      runSpacing: 16,
+      alignment: WrapAlignment.center,
+      runAlignment: WrapAlignment.center,
       children: job.keyDetails,
     );
   }
@@ -123,6 +126,7 @@ class JobBody extends StatelessWidget {
                       images,
                     ],
                   ),
+              const SizedBox(height: 8.0),
             ],
           );
         },

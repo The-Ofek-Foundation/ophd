@@ -95,6 +95,30 @@ final List<Job> jobs = [
     ],
     isSelected: true,
   ),
+  Job(
+    company: SynopsysOpticalSolutions,
+    team: 'Optical Solutions',
+    location: 'Pasadena, CA',
+    dateRange: 'Summer\n2018',
+    keywords: ['c++', 'boost'],
+    hourlyRate: 23,
+    description: Synopsys2018Description,
+    keyDetails: [
+      const Chip(
+        avatar: Icon(Icons.bolt),
+        label: Text('95% Speedup'),
+      ),
+      const Chip(
+        avatar: Icon(Icons.people),
+        label: Text('Presented to Executives & Customers'),
+      ),
+      const Chip(
+        avatar: Icon(Icons.code),
+        label: Text('100+ Tests'),
+      ),
+    ],
+    imagePaths: [ 'assets/images/synopsys_team.jpg', ],
+  )
 ];
 
 const String Snowflake2022Description = '''
@@ -155,3 +179,29 @@ This was my first internship at Cloudera, and the first time I worked in a large
 
 Unfortunately since this was an internal tool, I am very limited in what else I can share.
 ''';
+const String Synopsys2018Description = '''
+This was the first internship I held in college, with a relatively small and new branch of Synopsys in Pasadena. This team was formerly known as [Optical Research Associates] (ORA), and they developed [LightTools], a leading light illumination design software. It was an incredible experience working with them, and since many of them had been working together for 20/30+ years, I almost felt like I was joining their family.
+
+One problem in the industry was that the top 3 leading softwares each stored their ray data in a different format, meaning that light companies would need to share their data in all 3 formats to be compatible with all clients. A new standard, [TM-25] (invented by many experts in the field including Groot, my coworker), was created to solve this issue, although it was so new that no software had implemented it yet.
+
+- I extracted out file formatting logic to a new, standalone, API to be shared with other groups and released
+
+- I added _3 new file formats_ to this shared API, and implemented very efficient parsing methods, with one format seeing a **95% speedup**
+
+- I presented new functionality directly to both Synopsys executives and to top customers
+
+- I added support for **3 previously unhandled forms** of ray file color data (the way that color for a set of rays is stored)
+
+- I wrote extensive unit tests (**over 100**) and system tests using the Optical Research Associates Test System (ORATS) written in a proprietary language
+
+- I added a feature that allows loading particular sections of the file independently, facilitating parallelism
+
+- I wrote _extensive documentation_
+
+All my programming here was done in C++
+
+[Optical Research Associates]: https://news.synopsys.com/home?item=123203
+[LightTools]: https://www.synopsys.com/optical-solutions/lighttools.html
+[TM-25]: https://opg.optica.org/abstract.cfm?uri=Freeform-2013-FM1B.3#
+''';
+

@@ -123,6 +123,7 @@ flutter:
     - assets/images/amp_catalog.png
     - assets/images/amp_documentation.png
     - assets/images/amp_patent.png
+    - assets/images/synopsys_team.jpg
   
   fonts:
     - family: RobotoMono

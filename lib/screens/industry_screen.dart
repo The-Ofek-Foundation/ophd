@@ -160,7 +160,7 @@ class JobHeader extends StatelessWidget {
                 style: const TextStyle(fontStyle: FontStyle.italic),
               ),
               if (job.team != null)
-                const TextSpan(text: "'s "),
+                TextSpan(text: job.company.name.endsWith('s') ? "' " : "'s "),
               if (job.team != null)
                 TextSpan(text: '${job.team} Team'),
             ],

@@ -82,7 +82,11 @@ class _LayoutState extends State<Layout> {
                         destinations: [
                           for (PageDetails pd in pages)
                             NavigationRailDestination(
-                              icon: Icon(pd.icon),
+                              icon: pd.index == _pd.index ? Icon(pd.icon)
+                              : Tooltip(
+                                message: AppLocalizations.of(context)!.page(pd.label),
+                                child: Icon(pd.icon)
+                              ),
                               label: Text(AppLocalizations.of(context)!.page(pd.label)),
                             ),
                         ],

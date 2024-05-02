@@ -33,5 +33,4 @@ final Company TrueSkills = Company(
   name: 'TrueSkills',
   logo: 'assets/images/trueskills_logo.jpeg',
   tooltip: 'No Longer in Business',
-  url: 'https://www.trueskills.com/',
 );

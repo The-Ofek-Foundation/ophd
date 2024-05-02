@@ -113,7 +113,7 @@ final List<Job> jobs = [
         label: Text('Presented to Executives & Customers'),
       ),
       const Chip(
-        avatar: Icon(Icons.code),
+        avatar: Icon(Icons.bug_report),
         label: Text('100+ Tests'),
       ),
     ],
@@ -128,7 +128,7 @@ final List<Job> jobs = [
     description: RecruiterAI2016Description,
     keyDetails: [
       const Chip(
-        avatar: Icon(Icons.code),
+        avatar: Icon(Icons.settings_input_component),
         label: Text('Custom Components'),
       ),
       const Chip(
@@ -138,6 +138,24 @@ final List<Job> jobs = [
       const Chip(
         avatar: Icon(Icons.analytics),
         label: Text('User Behavior Tracking'),
+      ),
+    ],
+  ),
+  Job(
+    company: TrueSkills,
+    location: 'Palo Alto, CA',
+    dateRange: 'Summer\n2015',
+    keywords: ['fullstack', 'web development', 'liquid'],
+    hourlyRate: 15,
+    description: TrueSkills2015Description,
+    keyDetails: [
+      const Chip(
+        avatar: Icon(Icons.code),
+        label: Text('Online IDE'),
+      ),
+      const Chip(
+        avatar: Icon(Icons.save),
+        label: Text('Persistent State'),
       ),
     ],
   ),
@@ -242,4 +260,14 @@ This was between my junior and senior years of high school, when I decided to re
 * I integrated with a third party (mixpanel) to measure user behavior and dropoffs
 
 * I built both unit tests and UI tests for the above
+''';
+
+const String TrueSkills2015Description = '''
+This was my first internship ever, right after I finished taking (and TA'ing) my school's AP Computer Science A course (between my sophomore and junior years of high school). I joined as the 8th employee of this small startup with a successful CEO (Amir Ashkenazi). Sadly this specific company ultimately failed, changing its name to Recruiter.AI and then shutting down (there may have been some other names as well). I am still very close to the CEO. The idea behind this startup was to use advanced online assessments that accurately mimic real-world programming scenarios to help recruiters filter candidates.
+
+* I built a text editor up to an **online IDE** with a _working file system_
+
+* I made the IDE state persistent (for example which tabs are open)
+
+* I integrated with another tool to create an _adaptive joyride_ for new users
 ''';

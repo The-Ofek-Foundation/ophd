@@ -41,7 +41,7 @@ final List<SocialLink> socials = [
   SocialLink(
     icon: FontAwesomeIcons.orcid,
     url: 'https://orcid.org/0009-0005-5931-771X',
-    label: 'ORCID',
+    label: 'ORCiD',
     isMain: true,
     type: SocialType.research,
   ),

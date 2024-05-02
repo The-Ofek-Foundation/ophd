@@ -122,7 +122,7 @@ class PublicationPage extends StatelessWidget {
             ),
             if (paper.awards != null && paper.awards!.isNotEmpty)
               Padding(
-                padding: const EdgeInsets.only(bottom: 16.0),
+                padding: const EdgeInsets.only(bottom: 8.0),
                 child: Wrap(
                   spacing: 8.0,
                   children: paper.awards!.map((award) => Chip(

@@ -159,8 +159,10 @@ class JobHeader extends StatelessWidget {
                 text: job.company.name,
                 style: const TextStyle(fontStyle: FontStyle.italic),
               ),
-              const TextSpan(text: "'s "),
-              TextSpan(text: '${job.team} Team'),
+              if (job.team != null)
+                const TextSpan(text: "'s "),
+              if (job.team != null)
+                TextSpan(text: '${job.team} Team'),
             ],
           ),
         ),
@@ -191,21 +193,21 @@ class JobLeading extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        if (job.company.url != null)
-          ClickableImage(
+        ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: job.company.url != null ? ClickableImage(
             image: AssetImage(job.company.logo),
             link: job.company.url!,
             tooltip: job.company.tooltip,
             width: 64,
-          )
-        else
-          Tooltip(
+          ) : Tooltip(
             message: job.company.tooltip,
             child: Image(
               image: AssetImage(job.company.logo),
               width: 64,
             ),
           ),
+        ),
         const SizedBox(height: 8),
         SelectableText(
           job.dateRange,

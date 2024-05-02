@@ -118,7 +118,29 @@ final List<Job> jobs = [
       ),
     ],
     imagePaths: [ 'assets/images/synopsys_team.jpg', ],
-  )
+  ),
+  Job(
+    company: RecruiterAI,
+    location: 'Palo Alto, CA',
+    dateRange: 'Summer\n2016',
+    keywords: ['fullstack', 'web development', 'django', 'backbone', 'mongodb', 'mixpanel', 'selenium', 'pytest'],
+    hourlyRate: 18,
+    description: RecruiterAI2016Description,
+    keyDetails: [
+      const Chip(
+        avatar: Icon(Icons.code),
+        label: Text('Custom Components'),
+      ),
+      const Chip(
+        avatar: Icon(Icons.chat),
+        label: Text('Chatbot Implementation'),
+      ),
+      const Chip(
+        avatar: Icon(Icons.analytics),
+        label: Text('User Behavior Tracking'),
+      ),
+    ],
+  ),
 ];
 
 const String Snowflake2022Description = '''
@@ -186,9 +208,11 @@ One problem in the industry was that the top 3 leading softwares each stored the
 
 - I extracted out file formatting logic to a new, standalone, API to be shared with other groups and released
 
-- I added _3 new file formats_ to this shared API, and implemented very efficient parsing methods, with one format seeing a **95% speedup**
+- I added _3 new file formats_ to this shared API, and implemented very efficient parsing methods, with one format seeing a **95% speedup**. Needless to say this is much faster than open sourced libraries such as [this much more recent one]
 
-- I presented new functionality directly to both Synopsys executives and to top customers
+- Designed to be both _backwards_ and _forwards_ compatible
+
+- I presented new functionality directly to both Synopsys _executives_ and to **top customers**
 
 - I added support for **3 previously unhandled forms** of ray file color data (the way that color for a set of rays is stored)
 
@@ -203,5 +227,19 @@ All my programming here was done in C++
 [Optical Research Associates]: https://news.synopsys.com/home?item=123203
 [LightTools]: https://www.synopsys.com/optical-solutions/lighttools.html
 [TM-25]: https://opg.optica.org/abstract.cfm?uri=Freeform-2013-FM1B.3#
+[this much more recent one]: https://github.com/JuliusMuschaweck/TM25RaySetTools
 ''';
 
+const String RecruiterAI2016Description = '''
+This was between my junior and senior years of high school, when I decided to return to work at TrueSkills. By this point, they had changed their name to Recruiter.AI, and scrapped the entire code base I had worked on the past summer. Their vision (which in hindsight was a bit ahead of its time) was to create a platform where recruiters could find qualified candidates for specific roles by communicating with an AI chatbot.
+
+* I made a single page app where every component was **custom-implemented** (including autocompletes, input fields, etc.)
+
+* I contributed to the chatbot's implementation, both in the frontend and backend
+
+* I designed _database schemas_ and I _optimized_ many of the _queries_
+
+* I integrated with a third party (mixpanel) to measure user behavior and dropoffs
+
+* I built both unit tests and UI tests for the above
+''';

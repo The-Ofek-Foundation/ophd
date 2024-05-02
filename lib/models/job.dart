@@ -3,7 +3,7 @@ import 'package:ophd/models/company.dart';
 
 class Job {
   final Company company;
-  final String team;
+  final String? team;
   final String location;
   final String dateRange;
   final List<String> keywords;
@@ -14,7 +14,7 @@ class Job {
   final List<String>? imagePaths; 
 
   Job({
-    required this.team,
+    this.team,
     required this.company,
     required this.location,
     required this.dateRange,

@@ -61,8 +61,8 @@ class ResearchPage extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            for (SocialLink link in socials.where((social) => social.type == SocialType.research))
-              LaunchableIconButton(icon: link.icon, url: link.url, tooltip: link.label),
+            for (SocialLink social in socials.where((social) => social.types.contains(SocialType.research)))
+              LaunchableSocialButton(social: social),
           ],
         )
       ],

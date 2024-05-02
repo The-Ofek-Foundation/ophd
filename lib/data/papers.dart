@@ -8,7 +8,7 @@ final List<Paper> papers = [
     title: 'Highway Preferential Attachment Models for Geographic Routing',
     authors: ['ofek', 'evrim', 'mikeg'].map((a) => authors[a]!).toList(),
     link: 'https://arxiv.org/pdf/2403.08105.pdf',
-    description: "Evrim Ozel, a fellow PhD student in my UCI lab, had recently published an experimental paper on a great geographical routing idea that combines elements of _preferential attachment_ (where people prefer to befriend popular people over nobodies), and a geographic model called _Kleinberg's model_, where people prefer to befriend people who are located closer to them. They showed that such a paper produces great empirical results, but were unable to either provide theoretical guarantees nor provide an efficient way to construct such a graph. I joined the team, and for around a year we were unable to make much progress. After nearly giving up hope (on several occasions), I had a breakthrough and was able to prove great theoretical results on a very closely related model. Our decision to submit to COCOA was in no way influenced by our desire to take a vacation in Hawaii. My girlfriend and I had a great time there, also with Mike and his wife, and we won the best paper award from over 70 accepted papers.",
+    description: highwayPreferentialAttachmentDescription,
     date: DateTime(2023, 12, 9),
     conference: COCOA2023,
     awards: ['Best Paper'],
@@ -38,3 +38,9 @@ final Map<String, List<Paper>> papersWithAuthor = {
   for (Author author in authors.values)
     author.name: papers.where((p) => p.authors.contains(author)).toList()
 };
+
+const String highwayPreferentialAttachmentDescription = '''
+[Evrim Ozel], a fellow PhD student in my UCI lab, had recently published an experimental paper on a great geographical routing idea that combines elements of _preferential attachment_ (where people prefer to befriend popular people over nobodies), and a geographic model called _Kleinberg's model_, where people prefer to befriend people who are located closer to them. They showed that such a paper produces great empirical results, but were unable to either provide theoretical guarantees nor provide an efficient way to construct such a graph. I joined the team, and for around a year we were unable to make much progress. After nearly giving up hope (on several occasions), I had a breakthrough and was able to prove great theoretical results on a very closely related model. Our decision to submit to COCOA was in no way influenced by our desire to take a vacation in Hawaii. My girlfriend and I had a great time there, also with Mike and his wife, and we won the best paper award from over 70 accepted papers.
+
+[Evrim Ozel]: https://ics.uci.edu/~eozel/
+''';

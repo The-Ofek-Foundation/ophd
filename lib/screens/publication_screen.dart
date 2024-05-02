@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
@@ -7,6 +6,7 @@ import 'package:ophd/data/papers.dart';
 import 'package:ophd/models/author.dart';
 import 'package:ophd/models/paper.dart';
 import 'package:ophd/utils/screen_utils.dart';
+import 'package:ophd/widgets/clickable_markdown.dart';
 import 'package:ophd/widgets/expandable_image.dart';
 import 'package:ophd/widgets/launchable_icon_button.dart';
 import 'package:ophd/widgets/standard_card.dart';
@@ -30,11 +30,7 @@ class PublicationPage extends StatelessWidget {
   }
 
   Widget _buildPaperBlock(BuildContext context, Paper paper, {double width = 800}) {
-    Widget body = MarkdownBody(
-      data: paper.description,
-      selectable: true,
-      onTapLink: (text, href, title) => launchURL(href!),
-    );
+    Widget body = ClickableMarkdown(data: paper.description);
     
     Widget? image = paper.imagePath != null ? ExpandableImage(
       imagePath: paper.imagePath!,

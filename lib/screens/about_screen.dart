@@ -37,12 +37,8 @@ class AboutPage extends StatelessWidget {
           alignment: WrapAlignment.center,
           spacing: 10,
           children: [
-            for (SocialLink link in socials)
-              LaunchableIconButton(
-                icon: link.icon,
-                url: link.url,
-                tooltip: link.label,
-              )
+            for (SocialLink social in socials)
+              LaunchableSocialButton(social: social)
           ],
         ),
       ],

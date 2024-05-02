@@ -48,7 +48,7 @@ final List<PageDetails> pages = [
   PageDetails(
     icon: Icons.contact_mail,
     label: 'Contact',
-    page: AboutPage(socials: socials.where((social) => social.type == SocialType.contact).toList()),
+    page: AboutPage(socials: socials.where((social) => social.types.contains(SocialType.contact)).toList()),
     pathname: '/contact',
     index: 5
   ),

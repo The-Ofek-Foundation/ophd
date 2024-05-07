@@ -90,7 +90,7 @@ final List<SocialLink> socials = [
   // resume
   SocialLink(
     icon: FontAwesomeIcons.filePdf,
-    url: 'pdfs/resume.pdf',
+    url: 'assets/pdfs/resume.pdf',
     label: 'Resume',
     isMain: false,
     types: { SocialType.industry },

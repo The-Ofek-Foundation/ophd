@@ -12,7 +12,6 @@ Future<void> launchURL(String url) async {
 
 Future<void> launchAssetInNewTab(String assetPath, String fileType) async {
   final bytes = await rootBundle.load(assetPath);
-  print('Loaded asset bytes: $bytes');
 
   final blob = Blob([bytes], fileType);
   final url = Url.createObjectUrlFromBlob(blob);

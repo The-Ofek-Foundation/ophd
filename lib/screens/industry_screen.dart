@@ -20,7 +20,7 @@ class IndustryPage extends StatelessWidget {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            JobOverviewCard(),
+            const JobOverviewCard(),
             for (Job job in jobs)
               JobCard(job: job),
           ],

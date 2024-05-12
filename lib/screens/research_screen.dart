@@ -2,11 +2,14 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_scatter/flutter_scatter.dart';
+import 'package:graphview/GraphView.dart';
+import 'package:ophd/api/fetch_researchers.dart';
 
 import 'package:ophd/data/authors.dart';
 import 'package:ophd/data/papers.dart';
 import 'package:ophd/data/social_links.dart';
 import 'package:ophd/models/author.dart';
+import 'package:ophd/models/researcher.dart';
 import 'package:ophd/models/social_link.dart';
 import 'package:ophd/utils/screen_utils.dart';
 import 'package:ophd/widgets/launchable_icon_button.dart';
@@ -24,6 +27,7 @@ class ResearchPage extends StatelessWidget {
           CardWrapper(child: _buildPrimaryResearchBlock(context)),
           CardWrapper(child: _buildContributorsBlock(context)),
           CardWrapper(child: _buildErdosNumberBlock(context)),
+          CardWrapper(child: LabGraph(context)),
         ]
       ))
     );
@@ -222,6 +226,107 @@ class WordCloudState extends State<WordCloud> {
           );
         }
       },
+    );
+  }
+}
+
+class LabGraph extends StatelessWidget {
+  final BuildContext context;
+
+  const LabGraph(this.context, {super.key});
+
+  Graph _getGraph(context, AllResearchers researchers) {
+    final Graph graph = Graph();
+
+    // Create map from researcher to node
+    final Map<Researcher, Node> researcherToNode = {};
+
+    // List<Researcher> allResearcherList = [...researchers.students, ...researchers.professors];
+    List<Researcher> allResearcherList = [...researchers.students];
+
+    // Add nodes for each researcher
+    for (final Researcher researcher in allResearcherList) {
+      final Node node = Node.Id(researcher);
+      graph.addNode(node);
+      researcherToNode[researcher] = node;
+    }
+
+    // Add edges for each collaborator
+    for (final Researcher researcher in allResearcherList) {
+      final Node source = researcherToNode[researcher]!;
+      for (final Researcher collaborator in researcher.collaborators) {
+        final Node? target = researcherToNode[collaborator];
+        if (target != null) {
+          graph.addEdge(source, target,
+            paint: Paint()
+              ..color = Theme.of(context).colorScheme.primary
+              ..strokeWidth = 1.5
+              ..style = PaintingStyle.stroke
+          
+          );
+        }
+      }
+    }
+
+    return graph;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text('Graph of Lab Members', style: Theme.of(context).textTheme.headlineLarge),
+        const SizedBox(height: 16),
+        FutureBuilder(
+          future: fetchResearchers(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const CircularProgressIndicator();
+            } else if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            } else {
+              return SizedBox(
+                height: 1000,
+                child: InteractiveViewer(
+                  constrained: false,
+                  minScale: 0.01,
+                  maxScale: 10.0,
+                  child: GraphView(
+                    graph: _getGraph(context, snapshot.data!),
+                    algorithm: FruchtermanReingoldAlgorithm(),
+                    animated: true,
+                    builder: (Node node) {
+                      // I can decide what widget should be shown here based on the id
+                      return displayResearcher(context, node.key!.value as Researcher);
+                    },
+                  ),
+                ),
+              );
+            }
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget displayResearcher(context, Researcher i) {
+    final shadowColor = i.name == 'Ofek Gila' ? Theme.of(context).colorScheme.tertiary : Theme.of(context).colorScheme.tertiaryContainer;
+    final textColor = i.name == 'Ofek Gila' ? Theme.of(context).colorScheme.onTertiary : Theme.of(context).colorScheme.onTertiaryContainer;
+
+    return Container(
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(4),
+        boxShadow: [
+          BoxShadow(color: shadowColor, spreadRadius: 1),
+        ],
+      ),
+      child: Center(
+        child: Text(
+          i.name,
+          style: TextStyle(color: textColor),
+        ),
+      )
     );
   }
 }

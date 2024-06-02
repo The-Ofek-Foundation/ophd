@@ -51,8 +51,13 @@ dependencies:
     sdk: flutter
   universal_html: ^2.2.4
   http: ^1.1.0
-  graphview: ^1.2.0
+  graphview:
+    # path: ../graphview
+    git:
+      url: https://github.com/The-Ofek-Foundation/graphview.git
+      ref: master
   json_annotation: ^4.9.0
+  collection: ^1.18.0
 
 dev_dependencies:
   flutter_test:

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -27,7 +29,7 @@ class ResearchPage extends StatelessWidget {
           CardWrapper(child: _buildPrimaryResearchBlock(context)),
           CardWrapper(child: _buildContributorsBlock(context)),
           CardWrapper(child: _buildErdosNumberBlock(context)),
-          CardWrapper(child: LabGraph(context)),
+          CardItself(child: LabGraph(context)),
         ]
       ))
     );
@@ -220,8 +222,7 @@ class WordCloudState extends State<WordCloud> {
                   duration: const Duration(milliseconds: 200),
                   child: Text(AppLocalizations.of(context)!.name(author.i10nKey)),
                 ),
-
-                )
+              )
             ]
           );
         }
@@ -242,28 +243,42 @@ class LabGraph extends StatelessWidget {
     final Map<Researcher, Node> researcherToNode = {};
 
     // List<Researcher> allResearcherList = [...researchers.students, ...researchers.professors];
-    List<Researcher> allResearcherList = [...researchers.students];
+    Set<Researcher> allResearcherSetWithDups = <Researcher>{...researchers.students};
+    Set<Researcher> allResearcherSet = {};
+
+    for (final Researcher researcher in allResearcherSetWithDups) {
+      // skip researchers who have no collaborators with other researchers
+      // loop over collaborators and check if they are in the set
+      for (final Researcher collaborator in researcher.collaborators) {
+        if (allResearcherSetWithDups.contains(collaborator)) {
+          allResearcherSet.add(researcher);
+        }
+      }
+    }
 
     // Add nodes for each researcher
-    for (final Researcher researcher in allResearcherList) {
+    for (final Researcher researcher in allResearcherSet) {
       final Node node = Node.Id(researcher);
       graph.addNode(node);
       researcherToNode[researcher] = node;
+      // break;
     }
 
     // Add edges for each collaborator
-    for (final Researcher researcher in allResearcherList) {
+    for (final Researcher researcher in allResearcherSet) {
       final Node source = researcherToNode[researcher]!;
       for (final Researcher collaborator in researcher.collaborators) {
         final Node? target = researcherToNode[collaborator];
         if (target != null) {
-          graph.addEdge(source, target,
-            paint: Paint()
-              ..color = Theme.of(context).colorScheme.primary
-              ..strokeWidth = 1.5
-              ..style = PaintingStyle.stroke
-          
-          );
+          // only add edge if source is alphabetically less than target
+          if (source.key!.value.name.compareTo(target.key!.value.name) < 0) {
+            graph.addEdge(source, target,
+              paint: Paint()
+                ..color = Theme.of(context).colorScheme.primary
+                ..strokeWidth = 1.5
+                ..style = PaintingStyle.stroke
+            );
+          }
         }
       }
     }
@@ -275,7 +290,13 @@ class LabGraph extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text('Graph of Lab Members', style: Theme.of(context).textTheme.headlineLarge),
+        Center(
+          child: Text(
+            'Graph of Lab Members',
+            style: Theme.of(context).textTheme.headlineLarge,
+            textAlign: TextAlign.center,
+          ),
+        ),
         const SizedBox(height: 16),
         FutureBuilder(
           future: fetchResearchers(),
@@ -285,22 +306,30 @@ class LabGraph extends StatelessWidget {
             } else if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');
             } else {
-              return SizedBox(
-                height: 1000,
-                child: InteractiveViewer(
-                  constrained: false,
-                  minScale: 0.01,
-                  maxScale: 10.0,
-                  child: GraphView(
-                    graph: _getGraph(context, snapshot.data!),
-                    algorithm: FruchtermanReingoldAlgorithm(),
-                    animated: true,
-                    builder: (Node node) {
-                      // I can decide what widget should be shown here based on the id
-                      return displayResearcher(context, node.key!.value as Researcher);
-                    },
-                  ),
-                ),
+              return LayoutBuilder(
+                builder:(context, constraints) {
+                  var width = max(constraints.maxWidth, 1000.0);
+                  var height = 1000.0;
+                  return SizedBox(
+                    height: height,
+                    child: InteractiveViewer(
+                      constrained: false,
+                      minScale: 1,
+                      maxScale: 1,
+                      child: GraphView(
+                        graph: _getGraph(context, snapshot.data!),
+                        algorithm: FruchtermanReingoldAlgorithm(repulsionRate: 2),
+                        animated: true,
+                        width: width,
+                        height: height,
+                        builder: (Node node) {
+                          // I can decide what widget should be shown here based on the id
+                          return displayResearcher(context, node.key!.value as Researcher);
+                        },
+                      ),
+                    ),
+                  );
+                },
               );
             }
           },

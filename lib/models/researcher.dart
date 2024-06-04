@@ -92,7 +92,6 @@ class ProfessorResearcher extends Researcher {
 
   @override
   Map<String, dynamic> toJson() => _$ProfessorResearcherToJson(this);
-
 }
 
 @JsonSerializable()

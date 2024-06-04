@@ -287,15 +287,16 @@ const updateLabStudents = async () => {
 		const updatedRecently = docSnap.exists() && (docSnap.data().lastUpdate as Timestamp).toDate() > new Date(Date.now() - 1000 * 60 * 60 * 24 * 30 * 6);
 		const dblpPid = docSnap.exists() ? docSnap.data().dblpPid : updatedData.dblpPid;
 
-		if (dblpPid && (!docSnap.exists() || (!updatedRecently && Math.random() < 0.2))) {
+		if (dblpPid && (!docSnap.exists() || !updatedRecently)) {
 			const existingCollaborators = docSnap.exists() ? docSnap.data().collaborators || [] : [];
 			const newCollaborators = await fetchNewCollaborators(dblpPid, docRef, existingCollaborators);
 
 			if (newCollaborators.length > 0) {
 				logger.log("Adding collaborators", newCollaborators.map(collaborator => collaborator.id));
 				updatedData.collaborators = [...existingCollaborators, ...newCollaborators];
-				shouldUpdateMember = true;
 			}
+
+			shouldUpdateMember = true;
 		}
 
 		if (shouldUpdateMember) {
@@ -362,15 +363,16 @@ const updateLabProfessors = async () => {
 		const updatedRecently = docSnap.exists() && (docSnap.data().lastUpdate as Timestamp).toDate() > new Date(Date.now() - 1000 * 60 * 60 * 24 * 30 * 6);
 		const dblpPid = docSnap.exists() ? docSnap.data().dblpPid : updatedData.dblpPid;
 
-		if (dblpPid && (!docSnap.exists() || (!updatedRecently && Math.random() < 0.1))) {
+		if (dblpPid && (!docSnap.exists() || (!updatedRecently && Math.random() < 0.5))) {
 			const existingCollaborators = docSnap.exists() ? docSnap.data().collaborators || [] : [];
 			const newCollaborators = await fetchNewCollaborators(dblpPid, docRef, existingCollaborators);
 
 			if (newCollaborators.length > 0) {
 				logger.log("Adding collaborators", newCollaborators.map(collaborator => collaborator.id));
 				updatedData.collaborators = [...existingCollaborators, ...newCollaborators];
-				shouldUpdateAdvisor = true;
 			}
+
+			shouldUpdateAdvisor = true;
 		}
 
 		if (shouldUpdateAdvisor) {
@@ -417,8 +419,9 @@ export const fetchAllResearchers = onRequest(async (request, response) => {
 	});
 });
 
-
-export const updateDatabase = onRequest(async (request, response) => {
+export const updateDatabase = onRequest({
+	timeoutSeconds: 540,
+}, async (request, response) => {
 	corsHandler(request, response, async () => {
 		try {
 			await updateLabProfessors();

@@ -16,6 +16,7 @@ import 'package:ophd/models/researcher.dart';
 import 'package:ophd/models/social_link.dart';
 import 'package:ophd/utils/screen_utils.dart';
 import 'package:ophd/widgets/launchable_icon_button.dart';
+import 'package:ophd/widgets/refresh.dart';
 import 'package:ophd/widgets/standard_card.dart';
 
 class ResearchPage extends StatelessWidget {
@@ -246,6 +247,7 @@ class _LabGraphState extends State<LabGraph> {
   Map<ProfessorResearcher, Color> professorColors = {};
   Set<Color> remainingColors = okabe.toSet();
   AllResearchers? allResearchers;
+  Set<StudentResearcher> unconnectedStudents = {};
   bool isLoading = true;
   String? errorMessage;
   Graph? graph;
@@ -253,10 +255,20 @@ class _LabGraphState extends State<LabGraph> {
   @override
   void initState() {
     super.initState();
+    refetchResearchers();
+  }
+
+  void refetchResearchers() {
+    setState(() {
+      isLoading = true;
+      errorMessage = null;
+    });
+
     fetchResearchers().then((data) {
       setState(() {
         allResearchers = data;
         graph = _getGraph(widget.context, allResearchers!);
+        unconnectedStudents = _getUnconnectedStudents(graph!, allResearchers!);
         isLoading = false;
       });
     }).catchError((error) {
@@ -318,9 +330,22 @@ class _LabGraphState extends State<LabGraph> {
     return graph;
   }
 
+  Set<StudentResearcher> _getUnconnectedStudents(Graph graph, AllResearchers researchers) {
+    final Set<StudentResearcher> unconnectedStudents = researchers.students.toSet();
+
+    for (var node in graph.nodes) {
+      if (node.key!.value is StudentResearcher) {
+        unconnectedStudents.remove(node.key!.value);
+      }
+    }
+
+    return unconnectedStudents;
+  }
+
   void _updateGraph() {
     setState(() {
       graph = _getGraph(widget.context, allResearchers!);
+      unconnectedStudents = _getUnconnectedStudents(graph!, allResearchers!);
     });
   }
 
@@ -328,12 +353,22 @@ class _LabGraphState extends State<LabGraph> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Center(
-          child: SelectableText(
-            'Graph of Lab Members',
-            style: Theme.of(context).textTheme.headlineLarge,
-            textAlign: TextAlign.center,
-          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SelectableText(
+              'Graph of Lab Members',
+              style: Theme.of(context).textTheme.headlineLarge,
+              textAlign: TextAlign.center,
+            ),
+            RefreshButton(
+              tooltip: AppLocalizations.of(context)!.label("Sync"),
+              onPressed: () async  {
+                await updateDatabase();
+                refetchResearchers();
+              }
+            ),
+          ],
         ),
         const SizedBox(height: 16),
         ConstrainedBox(
@@ -342,7 +377,7 @@ class _LabGraphState extends State<LabGraph> {
           ),
           child: Center(
             child: SelectableText(
-              'Here is a graph of all the members of my lab, the theory lab, at UCI. Edges correspond to co-authorship on research papers. And lab members who have not collaborated with any other lab members are unfortunately not shown below.',
+              'Here is a graph of all the members of my lab, the theory lab, at UCI. Edges correspond to co-authorship on research papers. Feel free to select faculty members to see their collaborations.',
               style: Theme.of(context).textTheme.bodyLarge,
               textAlign: TextAlign.center,
             ),
@@ -352,7 +387,7 @@ class _LabGraphState extends State<LabGraph> {
         if (isLoading)
           const CircularProgressIndicator()
         else if (errorMessage != null)
-          Text('Error: $errorMessage')
+          SelectableText('Error: $errorMessage')
         else
           Column(
             children: [
@@ -426,6 +461,28 @@ class _LabGraphState extends State<LabGraph> {
                     ),
                   );
                 },
+              ),
+              const SizedBox(height: 16),
+              ConstrainedBox(
+                constraints: const BoxConstraints(
+                  maxWidth: 800,
+                ),
+                child: SelectableText(
+                  'The ${unconnectedStudents.length} lab members who have not (yet) collaborated with any other lab members or shown faculty are unfortunately not shown above, and are instead listed below.',
+                  style: Theme.of(context).textTheme.bodyLarge,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              const SizedBox(height: 16),
+              Wrap(
+                spacing: 10,
+                runSpacing: 10,
+                alignment: WrapAlignment.center,
+                runAlignment: WrapAlignment.center,
+                children: [
+                  for (StudentResearcher student in unconnectedStudents)
+                    Chip(label: Text(student.name)),
+                ],
               ),
             ],
           ),

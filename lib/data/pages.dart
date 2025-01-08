@@ -46,11 +46,18 @@ final List<PageDetails> pages = [
     index: 4
   ),
   PageDetails(
+    icon: Icons.psychology,
+    label: 'Riddles',
+    page: const ResearchPage(),
+    pathname: '/riddles',
+    index: 5
+  ),
+  PageDetails(
     icon: Icons.contact_mail,
     label: 'Contact',
     page: AboutPage(socials: socials.where((social) => social.types.contains(SocialType.contact)).toList()),
     pathname: '/contact',
-    index: 5
+    index: 6
   ),
 ];
 

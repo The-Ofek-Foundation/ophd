@@ -377,7 +377,7 @@ class _LabGraphState extends State<LabGraph> {
           ),
           child: Center(
             child: SelectableText(
-              'Here is a graph of all the members of my lab, the theory lab, at UCI. Edges correspond to co-authorship on research papers. Feel free to select faculty members to see their collaborations.',
+              'Here is a graph of all the members of my lab, the theory lab, at UCI. Edges correspond to co-authorship on research papers. Feel free to select professors to see their collaborations.',
               style: Theme.of(context).textTheme.bodyLarge,
               textAlign: TextAlign.center,
             ),
@@ -468,7 +468,7 @@ class _LabGraphState extends State<LabGraph> {
                   maxWidth: 800,
                 ),
                 child: SelectableText(
-                  'The ${unconnectedStudents.length} lab members who have not (yet) collaborated with any other lab members or shown faculty are unfortunately not shown above, and are instead listed below.',
+                  'The ${unconnectedStudents.length} lab members who have not (yet) collaborated with any other lab members or selected professors are unfortunately not shown above, and are instead listed below.',
                   style: Theme.of(context).textTheme.bodyLarge,
                   textAlign: TextAlign.center,
                 ),

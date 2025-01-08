@@ -370,7 +370,7 @@ packages:
     description:
       path: "."
       ref: master
-      resolved-ref: d7b7e19210921c8d66039297fe02993e73c8accf
+      resolved-ref: fe3e18863a28f4a6b0db5cf6f4eff26788051557
       url: "https://github.com/The-Ofek-Foundation/graphview.git"
     source: git
     version: "1.2.0"

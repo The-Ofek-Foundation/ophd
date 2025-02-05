@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class OuterPadding extends StatelessWidget {
   final Widget child;
 
-  const OuterPadding({Key? key, required this.child}) : super(key: key);
+  const OuterPadding({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,7 @@ class ContentWrapper extends StatelessWidget {
   final Widget child;
   final bool withinCard;
 
-  const ContentWrapper({Key? key, required this.child, required this.withinCard}) : super(key: key);
+  const ContentWrapper({super.key, required this.child, required this.withinCard});
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +41,7 @@ class ContentWrapper extends StatelessWidget {
 class CardItself extends StatelessWidget {
   final Widget child;
 
-  const CardItself({Key? key, required this.child}) : super(key: key);
+  const CardItself({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +58,7 @@ class CardItself extends StatelessWidget {
 class CardWrapper extends StatelessWidget {
   final Widget child;
 
-  const CardWrapper({Key? key, required this.child}) : super(key: key);
+  const CardWrapper({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +72,7 @@ class HighlightedCard extends StatelessWidget {
   final Widget child;
   final bool highlighted;
 
-  const HighlightedCard({Key? key, required this.child, required this.highlighted}) : super(key: key);
+  const HighlightedCard({super.key, required this.child, required this.highlighted});
 
   @override
   Widget build(BuildContext context) {

@@ -9,7 +9,7 @@ import 'package:theme_provider/theme_provider.dart';
 class Layout extends StatefulWidget {
   final PageDetails pageDetails;
 
-  const Layout({Key? key, required this.pageDetails}) : super(key: key);
+  const Layout({super.key, required this.pageDetails});
 
   @override
   State<Layout> createState() => _LayoutState(); 
@@ -47,10 +47,10 @@ class _LayoutState extends State<Layout> {
   Widget _getThemeSwitch() {
     _isDarkMode = ThemeProvider.themeOf(context).id == 'dark';
 
-    final MaterialStateProperty<Icon?> thumbIcon =
-      MaterialStateProperty.resolveWith<Icon?>(
-        (Set<MaterialState> states)  => 
-          states.contains(MaterialState.selected) ? const Icon(Icons.dark_mode)
+    final WidgetStateProperty<Icon?> thumbIcon =
+      WidgetStateProperty.resolveWith<Icon?>(
+        (Set<WidgetState> states)  => 
+          states.contains(WidgetState.selected) ? const Icon(Icons.dark_mode)
           : const Icon(Icons.light_mode),
     );
 

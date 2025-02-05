@@ -11,7 +11,7 @@ import 'package:ophd/widgets/launchable_icon_button.dart';
 import 'package:ophd/widgets/standard_card.dart';
 
 class IndustryPage extends StatelessWidget {
-  const IndustryPage({Key? key}) : super(key: key);
+  const IndustryPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +31,7 @@ class IndustryPage extends StatelessWidget {
 }
 
 class JobOverviewCard extends StatelessWidget {
-  const JobOverviewCard({Key? key}) : super(key: key);
+  const JobOverviewCard({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +69,7 @@ Below I list out all my internships (with select internships highlighted), and I
 class JobCard extends StatelessWidget {
   final Job job;
 
-  const JobCard({Key? key, required this.job}) : super(key: key);
+  const JobCard({super.key, required this.job});
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +95,7 @@ class JobCard extends StatelessWidget {
 class JobFooter extends StatelessWidget {
   final Job job;
 
-  const JobFooter({Key? key, required this.job}) : super(key: key);
+  const JobFooter({super.key, required this.job});
 
   @override
   Widget build(BuildContext context) {
@@ -113,7 +113,7 @@ class JobBody extends StatelessWidget {
   final Job job;
   final double width = 800;
 
-  const JobBody({Key? key, required this.job}) : super(key: key);
+  const JobBody({super.key, required this.job});
 
   @override
   Widget build(BuildContext context) {
@@ -173,7 +173,7 @@ class JobBody extends StatelessWidget {
 class JobHeader extends StatelessWidget {
   final Job job;
 
-  const JobHeader({Key? key, required this.job}) : super(key: key);
+  const JobHeader({super.key, required this.job});
 
   @override
   Widget build(BuildContext context) {
@@ -222,7 +222,7 @@ class JobHeader extends StatelessWidget {
 class JobLeading extends StatelessWidget {
   final Job job;
 
-  const JobLeading({Key? key, required this.job}) : super(key: key);
+  const JobLeading({super.key, required this.job});
 
   @override
   Widget build(BuildContext context) {

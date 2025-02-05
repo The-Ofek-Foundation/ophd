@@ -7,7 +7,7 @@ class ClickableMarkdown extends StatelessWidget {
   final bool selectable;
   final WrapAlignment textAlign;
 
-  const ClickableMarkdown({Key? key, required this.data, this.selectable = true, this.textAlign = WrapAlignment.start}) : super(key: key);
+  const ClickableMarkdown({super.key, required this.data, this.selectable = true, this.textAlign = WrapAlignment.start});
 
   @override
   Widget build(BuildContext context) {

@@ -4,7 +4,7 @@ class RefreshButton extends StatefulWidget {
   final Future<void> Function() onPressed;
   final String tooltip;
 
-  const RefreshButton({Key? key, required this.onPressed, required this.tooltip}) : super(key: key);
+  const RefreshButton({super.key, required this.onPressed, required this.tooltip});
 
   @override
   RefreshButtonState createState() => RefreshButtonState();

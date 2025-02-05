@@ -11,13 +11,13 @@ class LaunchableIconButton extends StatelessWidget {
   final String? fileType;
 
   const LaunchableIconButton({
-    Key? key,
+    super.key,
     required this.icon,
     required this.url,
     required this.tooltip,
     this.iconSize = 24,
     this.fileType,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -38,10 +38,10 @@ class LaunchableSocialButton extends StatelessWidget {
   final double iconSize;
 
   const LaunchableSocialButton({
-    Key? key,
+    super.key,
     required this.social,
     this.iconSize = 24,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

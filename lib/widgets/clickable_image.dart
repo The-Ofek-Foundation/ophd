@@ -9,13 +9,13 @@ class ClickableImage extends StatelessWidget {
   final String? tooltip;
 
   const ClickableImage({
-    Key? key,
+    super.key,
     required this.image,
     required this.link,
     this.width,
     this.height,
     this.tooltip,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

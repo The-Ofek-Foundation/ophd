@@ -20,7 +20,7 @@ import 'package:ophd/widgets/refresh.dart';
 import 'package:ophd/widgets/standard_card.dart';
 
 class ResearchPage extends StatelessWidget {
-  const ResearchPage({Key? key}) : super(key: key);
+  const ResearchPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -171,7 +171,7 @@ class ResearchPage extends StatelessWidget {
 }
 
 class WordCloud extends StatefulWidget {
-  const WordCloud({Key? key}) : super(key: key);
+  const WordCloud({super.key});
 
   @override
   WordCloudState createState() => WordCloudState();

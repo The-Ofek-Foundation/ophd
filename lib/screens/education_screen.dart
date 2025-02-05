@@ -5,7 +5,7 @@ import 'package:ophd/widgets/leading_trailing_mid.dart';
 import 'package:ophd/widgets/standard_card.dart';
 
 class EducationPage extends StatelessWidget {
-  const EducationPage({Key? key}) : super(key: key);
+  const EducationPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -119,7 +119,7 @@ class DegreeWidget extends StatelessWidget {
   final String honors;
   final double GPA;
 
-  const DegreeWidget({Key? key, required this.degree, required this.honors, required this.GPA}) : super(key: key);
+  const DegreeWidget({super.key, required this.degree, required this.honors, required this.GPA});
 
   @override
   Widget build(BuildContext context) {

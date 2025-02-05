@@ -8,13 +8,13 @@ class CollapsibleLeading extends StatelessWidget {
   final bool initiallyExpanded;
 
   const CollapsibleLeading({
-    Key? key,
+    super.key,
     required this.leading,
     required this.header,
     required this.child,
     this.footer,
     this.initiallyExpanded = true,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

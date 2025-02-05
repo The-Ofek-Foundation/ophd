@@ -7,12 +7,12 @@ class LeadingTrailingMid extends StatelessWidget {
   final Widget child;
 
   const LeadingTrailingMid({
-    Key? key,
+    super.key,
     this.leading,
     this.trailing,
     required this.title,
     required this.child,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

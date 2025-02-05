@@ -43,6 +43,7 @@ class StudentResearcher extends Researcher {
   @JsonKey(name: 'advisors')
   List<String>? advisorNames;
 
+  @override
   bool hasDoctorate;
 
   int? year;
@@ -50,19 +51,15 @@ class StudentResearcher extends Researcher {
   String? thesisTitle;
 
   StudentResearcher({
-    required String name,
-    String? url,
-    required String dblpPid,
-    required List<String> collaboratorNames,
+    required super.name,
+    super.url,
+    required super.dblpPid,
+    required super.collaboratorNames,
     required List<String> this.advisorNames,
     required this.hasDoctorate,
     this.year,
     this.thesisTitle,
   }) : super(
-    name: name,
-    url: url,
-    dblpPid: dblpPid,
-    collaboratorNames: collaboratorNames,
     hasDoctorate: hasDoctorate,
   );
 
@@ -81,16 +78,12 @@ class ProfessorResearcher extends Researcher {
   List<String>? studentNames;
 
   ProfessorResearcher({
-    required String name,
-    String? url,
-    required String dblpPid,
-    required List<String> collaboratorNames,
+    required super.name,
+    super.url,
+    required super.dblpPid,
+    required super.collaboratorNames,
     List<String>? studentNames,
   }) : super(
-    name: name,
-    url: url,
-    dblpPid: dblpPid,
-    collaboratorNames: collaboratorNames,
     hasDoctorate: true,
   );
 

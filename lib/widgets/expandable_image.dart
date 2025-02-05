@@ -6,8 +6,7 @@ class ExpandableImage extends StatelessWidget {
   final String? tooltip;
 
   const ExpandableImage(
-      {Key? key, required this.imagePath, this.caption, this.tooltip})
-      : super(key: key);
+      {super.key, required this.imagePath, this.caption, this.tooltip});
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +55,7 @@ class ExpandableImage extends StatelessWidget {
                     right: 0,
                     child: Container(
                       color:
-                          Theme.of(context).colorScheme.background.withOpacity(0.8),
+                          Theme.of(context).colorScheme.surface.withOpacity(0.8),
                       padding: const EdgeInsets.all(8.0),
                       child: SelectableText(
                         caption,

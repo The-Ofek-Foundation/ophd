@@ -8,7 +8,7 @@ import 'package:ophd/widgets/standard_card.dart';
 class AboutPage extends StatelessWidget {
   final List<SocialLink> socials;
 
-  const AboutPage({Key? key, required this.socials}) : super(key: key);
+  const AboutPage({super.key, required this.socials});
 
   Widget _buildFaceBlock(BuildContext context) {
     return Column(

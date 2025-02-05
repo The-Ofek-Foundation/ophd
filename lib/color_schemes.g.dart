@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
-const lightColorScheme = ColorScheme(
+var lightColorScheme = ColorScheme.fromSeed(
+  seedColor: Color(0xFFE1ECF1),
   brightness: Brightness.light,
   primary: Color(0xFF006685),
   onPrimary: Color(0xFFFFFFFF),
-  primaryContainer: Color(0xFFBEE9FF),
+  primaryContainer: Color.fromARGB(255, 76, 116, 137),
   onPrimaryContainer: Color(0xFF001F2A),
   secondary: Color(0xFF4D616C),
   onSecondary: Color(0xFFFFFFFF),
@@ -18,15 +19,7 @@ const lightColorScheme = ColorScheme(
   errorContainer: Color(0xFFFFDAD6),
   onError: Color(0xFFFFFFFF),
   onErrorContainer: Color(0xFF410002),
-  background: Color(0xFFFBFCFE),
-  onBackground: Color(0xFF191C1E),
-  surface: Color(0xFFFBFCFE),
-  onSurface: Color(0xFF191C1E),
-  surfaceVariant: Color(0xFFDCE4E9),
-  onSurfaceVariant: Color(0xFF40484C),
   outline: Color(0xFF70787D),
-  onInverseSurface: Color(0xFFF0F1F3),
-  inverseSurface: Color(0xFF2E3133),
   inversePrimary: Color(0xFF6AD3FF),
   shadow: Color(0xFF000000),
   surfaceTint: Color(0xFF006685),
@@ -34,7 +27,8 @@ const lightColorScheme = ColorScheme(
   scrim: Color(0xFF000000),
 );
 
-const darkColorScheme = ColorScheme(
+var darkColorScheme = ColorScheme.fromSeed(
+  seedColor: Color(0xFF212E34),
   brightness: Brightness.dark,
   primary: Color(0xFF6AD3FF),
   onPrimary: Color(0xFF003546),
@@ -52,15 +46,7 @@ const darkColorScheme = ColorScheme(
   errorContainer: Color(0xFF93000A),
   onError: Color(0xFF690005),
   onErrorContainer: Color(0xFFFFDAD6),
-  background: Color(0xFF191C1E),
-  onBackground: Color(0xFFE1E2E5),
-  surface: Color(0xFF191C1E),
-  onSurface: Color(0xFFE1E2E5),
-  surfaceVariant: Color(0xFF40484C),
-  onSurfaceVariant: Color(0xFFC0C8CD),
   outline: Color(0xFF8A9297),
-  onInverseSurface: Color(0xFF191C1E),
-  inverseSurface: Color(0xFFE1E2E5),
   inversePrimary: Color(0xFF006685),
   shadow: Color(0xFF000000),
   surfaceTint: Color(0xFF6AD3FF),

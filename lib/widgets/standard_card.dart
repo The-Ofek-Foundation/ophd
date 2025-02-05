@@ -101,10 +101,10 @@ class StandardCard extends StatelessWidget {
   final double width;
 
   const StandardCard({
-    Key? key,
+    super.key,
     required this.child,
     this.width = 500,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

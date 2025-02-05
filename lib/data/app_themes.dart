@@ -7,7 +7,6 @@ final List<AppTheme> themes = [
     id: 'light',
     description: 'Light Theme',
     data: ThemeData(
-      useMaterial3: true,
       colorScheme: lightColorScheme,
     ),
   ),
@@ -15,7 +14,6 @@ final List<AppTheme> themes = [
     id: 'dark',
     description: 'Dark Theme',
     data: ThemeData(
-      useMaterial3: true,
       colorScheme: darkColorScheme,
     ),
   ),

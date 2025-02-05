@@ -9,7 +9,7 @@ final List<Paper> papers = [
     authors: ['ofek', 'mikeg', 'abraham', 'vinesh'].map((a) => authors[a]!).toList(),
     link: 'tbd',
     description: 'placeholder',
-    date: DateTime(2025, 6, 1),
+    date: DateTime(2025, 6, 1), // not correct
     conference: CIAC2025,
     show: false,
   ),

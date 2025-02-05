@@ -190,7 +190,7 @@ class WordCloudState extends State<WordCloud> {
             spacing: 8.0,
             runSpacing: 4.0,
             children: [
-              for (Author author in authors.values.where((author) => !author.isMe))
+              for (Author author in authors.values.where((author) => !author.isMe && author.show))
                 MouseRegion(
                 onEnter: (event) => setState(() => selectedAuthor = author),
                 onExit: (event) => setState(() => selectedAuthor = null),

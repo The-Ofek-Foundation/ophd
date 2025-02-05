@@ -11,6 +11,7 @@ class Paper {
   final DateTime date;
   final List<String>? awards;
   final Conference conference;
+  final bool show;
 
   Paper({
     required this.title,
@@ -21,5 +22,6 @@ class Paper {
     required this.date,
     this.awards,
     required this.conference,
+    this.show = true,
   });
 }

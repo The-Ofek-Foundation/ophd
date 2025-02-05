@@ -210,7 +210,7 @@ class WordCloudState extends State<WordCloud> {
           return Scatter(
             delegate: ArchimedeanSpiralScatterDelegate(ratio: 0.1),
             children: [
-              for (Author author in authors.values.where((author) => !author.isMe))
+              for (Author author in authors.values.where((author) => !author.isMe && author.show))
                 InkResponse(
                 onTap: () async  => launchURL(author.link),
                 onHover: (hovering) {

@@ -4,6 +4,21 @@
 	"title": "פורטפוליו לדוקטורט של אופק",
 	"mySubtitle": "סטודנט דוקטורט, מדעי המחשב @ UCI",
 	"label": "{key, select, Family {משפחה} Website {אתר אישי} Blog {בלוג} LinkedIn {לינקדאין} Email {אימייל} Paper {מאמר} WhatsApp {וואטסאפ} Resume {קורות החיים} Sync {אחזר שיתופי פעולה חדשים} other {{key}}}",
-	"name": "{key, select, ofek {אופק גילה} mikeg {מייקל גודריץ'} bob {רוברט טרג'אן} evrim {אברים אוזל} mikes {מייקל שינדלר} miked {מייקל דילנקורט} other {{key}}}",
-	"page": "{key, select, About {אודות} Research {מחקר} Publications {פרסומים} Education {השכלה} Contact {צור קשר} Industry {תעשייה} other {{key}}}"
+	"@label": {
+		"placeholders": {
+			"key": {}
+		}
+	},
+	"name": "{key, select, ofek {אופק גילה} mikeg {מייקל גודריץ'} bob {רוברט טרג'אן} evrim {אברים אוזל} mikes {מייקל שינדלר} miked {מייקל דילנקורט} nero {נירו לי} shahar {שחר ברונר} yubin {יובין קים} katrina {קתרינה מיזאו} elijah {אליהו סאדר} claire {קלייר טו} albert {אלברט וואנג} abraham {אברהם איליקן} vinesh {וינש סרידהאר} other {{key}}}",
+	"@name": {
+		"placeholders": {
+			"key": {}
+		}
+	},
+	"page": "{key, select, About {אודות} Research {מחקר} Publications {פרסומים} Education {השכלה} Contact {צור קשר} Industry {תעשייה} other {{key}}}",
+	"@page": {
+		"placeholders": {
+			"key": {}
+		}
+	}
 }

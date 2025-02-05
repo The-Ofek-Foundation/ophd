@@ -5,8 +5,26 @@ import 'package:ophd/models/paper.dart';
 
 final List<Paper> papers = [
   Paper(
+    title: 'Fast Geographic Routing in Fixed-Growth Graphs',
+    authors: ['ofek', 'mikeg', 'abraham', 'vinesh'].map((a) => authors[a]!).toList(),
+    link: 'tbd',
+    description: 'placeholder',
+    date: DateTime(2025, 6, 1),
+    conference: CIAC2025,
+    show: false,
+  ),
+  Paper(
+    title: 'Investigating the Capabilities of Generative AI in Solving Data Structures, Algorithms, and Computability Problems',
+    authors: ['ofek', 'mikes', 'nero', 'shahar', 'katrina', 'elijah', 'claire', 'albert'].map((a) => authors[a]!).toList(),
+    link: 'https://ics.uci.edu/~mikes/papers/fp0628.pdf',
+    description: 'placeholder',
+    date: DateTime(2025, 2, 27),
+    conference: SIGCSE2025,
+    show: false
+  ),
+  Paper(
     title: 'Highway Preferential Attachment Models for Geographic Routing',
-    authors: ['ofek', 'evrim', 'mikeg'].map((a) => authors[a]!).toList(),
+    authors: ['ofek', 'mikeg', 'evrim'].map((a) => authors[a]!).toList(),
     link: 'https://arxiv.org/pdf/2403.08105.pdf',
     description: highwayPreferentialAttachmentDescription,
     date: DateTime(2023, 12, 9),

@@ -12,7 +12,7 @@ import 'package:ophd/widgets/launchable_icon_button.dart';
 import 'package:ophd/widgets/standard_card.dart';
 
 class PublicationPage extends StatelessWidget {
-  const PublicationPage({Key? key}) : super(key: key);
+  const PublicationPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,8 @@ class PublicationPage extends StatelessWidget {
         child: Column(
           children: [
             for (final paper in papers)
-              CardWrapper(child: _buildPaperBlock(context, paper)),
+              if (paper.show)
+                CardWrapper(child: _buildPaperBlock(context, paper)),
           ],
         ),
       ),

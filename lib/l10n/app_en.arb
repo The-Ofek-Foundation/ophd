@@ -1,9 +1,27 @@
 {
 	"@@locale": "en",
 	"ofekGila": "Ofek Gila",
+	"@ofekGila": {},
 	"title": "Ofek PhD Portfolio",
+	"@title": {},
 	"mySubtitle": "Ph.D. Student, Computer Science @ UCI",
+	"@mySubtitle": {},
 	"label": "{key, select, other {{key}}}",
-	"name": "{key, select, ofek {Ofek Gila} mikeg {Michael Goodrich} bob {Robert Tarjan} evrim {Evrim Ozel} mikes {Michael Shindler} miked {Michael Dillencourt} other {{key}}}",
-	"page": "{key, select, other {{key}}}"
+	"@label": {
+		"placeholders": {
+			"key": {}
+		}
+	},
+	"name": "{key, select, ofek {Ofek Gila} mikeg {Michael Goodrich} bob {Robert Tarjan} evrim {Evrim Ozel} mikes {Michael Shindler} miked {Michael Dillencourt} nero {Nero Li} shahar {Shahar Broner} yubin {Yubin Kim} katrina {Katrina Mizuo} elijah {Elijah Sauder} claire {Claire To} albert {Albert Wang} abraham {Abraham Illickan} vinesh {Vinesh Sridhar} other {{key}}}",
+	"@name": {
+		"placeholders": {
+			"key": {}
+		}
+	},
+	"page": "{key, select, other {{key}}}",
+	"@page": {
+		"placeholders": {
+			"key": {}
+		}
+	}
 }

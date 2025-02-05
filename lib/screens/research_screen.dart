@@ -481,7 +481,7 @@ class _LabGraphState extends State<LabGraph> {
                 runAlignment: WrapAlignment.center,
                 children: [
                   for (StudentResearcher student in unconnectedStudents)
-                    Chip(label: Text(student.name)),
+                    Chip(label: SelectableText(student.name)),
                 ],
               ),
               const SizedBox(height: 16),

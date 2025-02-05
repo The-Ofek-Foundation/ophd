@@ -18,12 +18,16 @@ class Researcher {
   @JsonKey(name: 'collaborators')
   List<String> collaboratorNames;
 
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  bool hasDoctorate;
+
   Researcher({
     required this.name,
     required this.dblpPid,
     this.url,
     required this.collaboratorNames,
     this.collaborators = const [],
+    this.hasDoctorate = false,
   });
 
   factory Researcher.fromJson(Map<String, dynamic> json) => _$ResearcherFromJson(json);
@@ -59,6 +63,7 @@ class StudentResearcher extends Researcher {
     url: url,
     dblpPid: dblpPid,
     collaboratorNames: collaboratorNames,
+    hasDoctorate: hasDoctorate,
   );
 
   factory StudentResearcher.fromJson(Map<String, dynamic> json) => _$StudentResearcherFromJson(json);
@@ -86,6 +91,7 @@ class ProfessorResearcher extends Researcher {
     url: url,
     dblpPid: dblpPid,
     collaboratorNames: collaboratorNames,
+    hasDoctorate: true,
   );
 
   factory ProfessorResearcher.fromJson(Map<String, dynamic> json) => _$ProfessorResearcherFromJson(json);

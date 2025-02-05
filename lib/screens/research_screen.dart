@@ -484,6 +484,17 @@ class _LabGraphState extends State<LabGraph> {
                     Chip(label: Text(student.name)),
                 ],
               ),
+              const SizedBox(height: 16),
+              ConstrainedBox(
+                constraints: const BoxConstraints(
+                  maxWidth: 800,
+                ),
+                child: SelectableText(
+                  'If you are a lab member and have a missing connection, please try syncing the database from the reload button. If that doesn\'t work, it is possible that either your publication is too recent and does not (yet) appear in DBLP, I have an incorrect DBLP ID associated with you, or your publication is in an adjacent field and does not appear in DBLP. In either case, you can contact me to manually update the data.',
+                  style: Theme.of(context).textTheme.labelLarge,
+                  textAlign: TextAlign.center,
+                ),
+              ),
             ],
           ),
       ],
@@ -530,9 +541,22 @@ class _LabGraphState extends State<LabGraph> {
         ],
       ),
       child: Center(
-        child: Text(
-          i.name,
-          style: TextStyle(color: textColor),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              i.name,
+              style: TextStyle(color: textColor),
+            ),
+            if (i.hasDoctorate && i is StudentResearcher) ...[
+              const SizedBox(width: 4),
+              Icon(
+                Icons.school,
+                size: 16,
+                color: textColor,
+              ),
+            ]
+          ],
         ),
       ),
     );

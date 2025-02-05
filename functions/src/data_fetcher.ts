@@ -63,24 +63,8 @@ const getDoctorateStudents = async () => {
 	return students;
 }
 
-const getCurrentStudents = async () => {
-	const content = await fetch(THEORY_URL)
-		.then(response => response.text())
-		.catch(error => logger.error("Failed to fetch data:", error));
-	
-	if (!content) {
-		throw new Error("Failed to fetch data");
-	}
-
-	const ulMatch = content.match(/<ul>(.*?)<\/ul>/sgu);
-	if (!ulMatch || ulMatch.length < 4) {
-		throw new Error("Failed to parse data");
-	}
-
-	const ulContent = ulMatch[1] + ulMatch[3];
-
-	const students = [];
-	const liMatches = ulContent.match(/<li>(.*?)<\/li>/sgu);
+const addStudents = async (students: Omit<LabMemberEntry, "advisors" | "dblpPid" | "lastUpdate" | "collaborators">[], ulMatches: string, arePostDocs: boolean) => {
+	const liMatches = ulMatches.match(/<li>(.*?)<\/li>/sgu);
 
 	if (!liMatches) {
 		throw new Error("Failed to parse data");
@@ -96,11 +80,31 @@ const getCurrentStudents = async () => {
 		const student: Omit<LabMemberEntry, "advisors" | "dblpPid" | "lastUpdate" | "collaborators"> = {
 			name: nameAndUrl.name,
 			url: nameAndUrl.url,
-			hasDoctorate: false,
+			hasDoctorate: arePostDocs,
 		};
 
 		students.push(student);
 	}
+}
+
+const getCurrentStudents = async () => {
+	const content = await fetch(THEORY_URL)
+		.then(response => response.text())
+		.catch(error => logger.error("Failed to fetch data:", error));
+	
+	if (!content) {
+		throw new Error("Failed to fetch data");
+	}
+
+	const ulMatch = content.match(/<ul>(.*?)<\/ul>/sgu);
+	if (!ulMatch || ulMatch.length < 4) {
+		throw new Error("Failed to parse data");
+	}
+
+	const students: Array<Omit<LabMemberEntry, "advisors" | "dblpPid" | "lastUpdate" | "collaborators">> = [];
+
+	addStudents(students, ulMatch[1], false);
+	addStudents(students, ulMatch[3], true);
 
 	return students;
 }
@@ -169,13 +173,17 @@ const fetchDblpPid = async (name: string) => {
 		.then(response => response.json())
 		.catch(error => console.error("Failed to fetch data:", error, name));
 	
-	logger.debug(response);
-
 	if (response?.result && response.result.hits.hit?.length > 0) {
+		const hitName = response.result.hits.hit[0].info.author as string;
+		if (hitName !== name) {
+			logger.warn("Name mismatch:", name, "vs.", hitName);
+			return "";
+		}
+
 		const pid = response.result.hits.hit[0].info.url as string;
 		return pid.split("pid/")[1];
 	} else {
-		logger.error("Failed to fetch DBLP PID for", name);
+		logger.warn("DBLP PID not found for", name);
 		return "";
 	}
 }
@@ -216,6 +224,8 @@ const fetchCollaborators = async (dblpPid: string) => {
 };
 
 const fetchNewCollaborators = async (dblpPid: string, docRef: DocumentReference<ResearcherEntry>, existingCollaborators: DocumentReference<ResearcherEntry>[]) => {
+	logger.info("Fetching collaborators for", dblpPid);
+	
 	const collaborators = await fetchCollaborators(dblpPid);
 	const newCollaborators = [];
 	for (const collaborator of collaborators) {
@@ -262,6 +272,7 @@ const updateLabStudents = async () => {
 
 		let shouldUpdateMember = false;
 		let shouldUpdateAdvisors = false;
+		let forceUpdateCollaborators = false;
 		
 		if (!docSnap.exists()) {
 			updatedData.name = student.name;
@@ -273,11 +284,19 @@ const updateLabStudents = async () => {
 		} else {
 			const data = docSnap.data();
 
+			if (!data.dblpPid) {
+				updatedData.dblpPid = await fetchDblpPid(student.name);
+
+				if (data.dblpPid !== updatedData.dblpPid)
+					forceUpdateCollaborators = true;
+			}
+
 			if (data.year === updatedData.year &&
 				data.url === updatedData.url &&
 				(data.advisors || []).length === (updatedData.advisors || []).length &&
 				data.hasDoctorate === updatedData.hasDoctorate &&
-				data.thesisTitle === updatedData.thesisTitle) {
+				data.thesisTitle === updatedData.thesisTitle &&
+				data.dblpPid === updatedData.dblpPid) {
 			} else {
 				shouldUpdateMember = true;
 				shouldUpdateAdvisors = data.advisors !== updatedData.advisors;
@@ -285,9 +304,10 @@ const updateLabStudents = async () => {
 		}
 
 		const updatedRecently = docSnap.exists() && (docSnap.data().lastUpdate as Timestamp).toDate() > new Date(Date.now() - 1000 * 60 * 60 * 24 * 30 * 6);
-		const dblpPid = docSnap.exists() ? docSnap.data().dblpPid : updatedData.dblpPid;
+		const dblpPid = docSnap.exists() && docSnap.data().dblpPid ? docSnap.data().dblpPid : updatedData.dblpPid;
 
-		if (dblpPid && (!docSnap.exists() || !updatedRecently)) {
+		if (dblpPid && (!docSnap.exists() || !updatedRecently || forceUpdateCollaborators)) {
+			logger.info("Searching for new collaborators for", student.name);
 			const existingCollaborators = docSnap.exists() ? docSnap.data().collaborators || [] : [];
 			const newCollaborators = await fetchNewCollaborators(dblpPid, docRef, existingCollaborators);
 
@@ -327,11 +347,10 @@ const updateLabStudents = async () => {
 	}
 }
 
-// name should be first initial of name and middle name/s, a period after each, a space, then last name
-// for example: "Thomas A. Standish" should become "T. A. Standish"
+// for example: "Thomas A. Standish" should become "T. Standish"
 const formatProfessorName = (name: string) => {
 	const names = name.split(" ");
-	return names.slice(0, -1).map(n => n[0].replace(".", "") + ".").join(" ") + " " + names[names.length - 1];
+	return `${names[0][0]}. ${names[names.length - 1]}`;
 }
 
 const updateLabProfessors = async () => {

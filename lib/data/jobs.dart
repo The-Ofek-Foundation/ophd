@@ -8,6 +8,29 @@ import 'package:ophd/utils/screen_utils.dart';
 
 final List<Job> jobs = [
   Job(
+    company: Cloudera,
+    team: 'AI Inference',
+    location: 'Santa Clara, CA',
+    dateRange: 'Summer\n2024',
+    keywords: ['go', 'kubernetes', 'application serving', 'docker'],
+    hourlyRate: 75,
+    description: Cloudera2024Description,
+    keyDetails: [
+      const Chip(
+        avatar: Icon(Icons.rocket_launch),
+        label: Text('3 Ways to Serve Models'),
+      ),
+      const Chip(
+        avatar: Icon(Icons.webhook),
+        label: Text('Streamlined Libraries'),
+      ),
+      const Chip(
+        avatar: Icon(Icons.analytics),
+        label: Text('User Behavior Tracking'),
+      ),
+    ],
+  ),
+  Job(
     company: Snowflake,
     team: 'SQL Frameworks',
     location: 'San Mateo, CA',
@@ -18,7 +41,7 @@ final List<Job> jobs = [
     keyDetails: [
       const Chip(
         avatar: Icon(Icons.school),
-        label: Text('Created Internal Course'),
+        label: Text('Internal Course'),
       ),
       const Chip(
         avatar: Icon(Icons.dashboard),
@@ -109,7 +132,7 @@ final List<Job> jobs = [
         label: Text('95% Speedup'),
       ),
       const Chip(
-        avatar: Icon(Icons.people),
+        avatar: Icon(Icons.co_present),
         label: Text('Presented to Executives & Customers'),
       ),
       const Chip(
@@ -161,13 +184,24 @@ final List<Job> jobs = [
   ),
 ];
 
+const Cloudera2024Description = '''
+At this point I am apparently a perpetual 'intern' at Cloudera, rounding up my 4th summer 'internship' here. I put 'intern' in quotes since Cloudera did not have any US interns this year, and instead I was hired as a contractor. I was still under the same team, formerly known as the Data Science Workbench (CDSW) team, but now known as the AI Inference (AI Inf) team. The team had recently made a new product which was still in its very early stages, so I spent a reasonable amount of time defining best practices and major, major refactoring. I was able to simplify (and delete) tons of code, make the API much simpler, add usage reporting, fix lots of breaking bugs, help with our Jupyter plugin, and make parts of our Kubernetes cluster more vanilla. My main project which I worked on was the ability to serve _long-running_ applications.
+
+* I **researched and defined** _best-in-class_ application serving strategies by analyzing top industry practices, culminating in a comprehensive design document guiding implementation.
+* I **architected and implemented** _three distinct_ application serving methods (Git, object store, pre-built containers) to support diverse customer needs and deployment scenarios.
+* I **enhanced application resilience** with features like _graceful recovery_, _dynamic autoscaling_ (including scale-to-zero), _versioning/rollback_, and _A/B testing with traffic splitting_, improving user experience and system reliability.
+* I **unified and significantly simplified** the application and model serving codebase, _reducing complexity_ and _improving maintainability_.
+* I **integrated comprehensive usage tracking**, providing valuable insights into application performance and user behavior.
+* I **laid the foundation** for future scalability and security by designing for _precise application versioning_ and addressing key _security considerations_.
+''';
+
 const String Snowflake2022Description = '''
 When I joined, Snowflake did not have any good automated process for dealing with data  corruption issues. Although data corruption certainly didn't occur often, when it did occur, it was usually due to a different team or individual who hadn't dealt with one before. Moreover, time is critical when dealing with corruption since backups are only kept for a limited time, and the corrupted data can propagate to other tables.
 
 * I **automated the process** for dealing with these issues to quickly _determine the extent of damage_ (blast radius) as it propagates through tables, databases, and accounts.
 * Then, I created **dashboards and tools** to _freeze the data_ and _track progress_ as issues are addressed.
 * As far as I know, I am the **_only intern_** to create an entire _internal course_ on their project (Snow Academy).
-* My tools are still in **active use** two years later.
+* My tools are still in **active use** (as of two years later).
 ''';
 
 const String Cloudera2021Description = '''

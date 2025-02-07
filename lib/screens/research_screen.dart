@@ -376,8 +376,19 @@ class _LabGraphState extends State<LabGraph> {
             maxWidth: 800,
           ),
           child: Center(
-            child: SelectableText(
-              'Here is a graph of all the members of my lab, the theory lab, at UCI. Edges correspond to co-authorship on research papers. Feel free to select faculty members to see their collaborations.',
+            child: SelectableText.rich(
+              TextSpan(
+                children: [
+                  const TextSpan(text: 'Here is a graph of all the members of my lab, the '),
+                  TextSpan(
+                    text: 'theory lab',
+                    style: const TextStyle(color: Colors.blue),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () => launchURL('https://ics.uci.edu/~theory/'),
+                  ),
+                  const TextSpan(text: ', at UCI. Edges correspond to co-authorship on research papers. Feel free to select faculty members to see their collaborations.'),
+                ],
+              ),
               style: Theme.of(context).textTheme.bodyLarge,
               textAlign: TextAlign.center,
             ),
@@ -504,27 +515,153 @@ class _LabGraphState extends State<LabGraph> {
   Widget displayProfessor(BuildContext context, ProfessorResearcher professor) {
     final int degree = professor.collaborators.length;
     final double size = (log(degree) + 1) * 30.0;
-
-    // Get the color for the professor
     final Color color = professorColors[professor]!;
 
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: color,
-      ),
-      child: Center(
-        child: Text(
-          professor.name[0],  // Get the first initial
-          style: TextStyle(
-            color: Colors.white, // Adjust text color for contrast
-            fontSize: size / 2,  // Scale font size with the circle size
-            fontWeight: FontWeight.bold,
+    return ClipOval(
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: () => _showProfessorDetails(context, professor),
+          customBorder: const CircleBorder(),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              width: size,
+              height: size,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: color,
+              ),
+              child: Center(
+                child: Text(
+                  professor.name[0],
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: size / 2,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
           ),
         ),
       ),
+    );
+  }
+
+  void _showProfessorDetails(BuildContext context, ProfessorResearcher professor) {
+    final gradStudents = allResearchers!.students.where((s) => 
+      s.advisors?.any((a) => a.name == professor.name) ?? false).toList();
+    gradStudents.sort((a, b) => (a.year ?? 9999).compareTo(b.year ?? 9999));
+    
+    final currentStudents = gradStudents.where((s) => !s.hasDoctorate).length;
+    final graduatedStudents = gradStudents.where((s) => s.hasDoctorate).toList();
+    final yearRange = graduatedStudents.isEmpty ? null : 
+      graduatedStudents.first.year == graduatedStudents.last.year ? 
+      graduatedStudents.first.year.toString() :
+      '${graduatedStudents.first.year} – ${graduatedStudents.last.year}';
+
+    final facultyCollaborators = professor.collaborators.whereType<ProfessorResearcher>().length;
+    final studentCollaborators = professor.collaborators.whereType<StudentResearcher>().length;
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
+          ),
+          child: Container(
+            constraints: const BoxConstraints(maxWidth: 500),
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: professorColors[professor],
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Icon(
+                        Icons.school,
+                        color: Colors.white,
+                        size: 32,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: SelectableText(
+                        professor.name,
+                        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    if (professor.url != null)
+                      IconButton.filledTonal(
+                        style: IconButton.styleFrom(
+                          backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                          foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
+                        ),
+                        icon: const Icon(Icons.language),
+                        tooltip: 'Visit website',
+                        onPressed: () => launchURL(professor.url!),
+                      ),
+                  ],
+                ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 16),
+                  child: Divider(),
+                ),
+                _buildInfoCard(
+                  context,
+                  Icons.groups,
+                  'Graduate Students',
+                  '${currentStudents > 0 ? 'Current: $currentStudents\n' : ''}'
+                  'Graduated: ${graduatedStudents.length}\n'
+                  '${yearRange != null ? 'Graduation years: $yearRange' : ''}',
+                ),
+                _buildInfoCard(
+                  context,
+                  Icons.people_alt,
+                  'Research Collaborations',
+                  '${facultyCollaborators > 0 ? '$facultyCollaborators faculty' : ''}'
+                  '${facultyCollaborators > 0 && studentCollaborators > 0 ? ' and ' : ''}'
+                  '${studentCollaborators > 0 ? '$studentCollaborators student' : ''} '
+                  'co-authors in the lab',
+                ),
+                if (graduatedStudents.isNotEmpty) ...[
+                  _buildInfoCard(
+                    context,
+                    Icons.history_edu,
+                    'Recent PhD Graduates',
+                    graduatedStudents.reversed
+                      .take(3)
+                      .map((s) => '${s.name} (${s.year})')
+                      .join('\n'),
+                  ),
+                ],
+                const SizedBox(height: 24),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: FilledButton.tonalIcon(
+                    style: FilledButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                    ),
+                    onPressed: () => Navigator.of(context).pop(),
+                    icon: const Icon(Icons.check_circle),
+                    label: const Text('Done'),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -532,32 +669,181 @@ class _LabGraphState extends State<LabGraph> {
     final shadowColor = i.name == 'Ofek Gila' ? Theme.of(context).colorScheme.tertiary : Theme.of(context).colorScheme.tertiaryContainer;
     final textColor = i.name == 'Ofek Gila' ? Theme.of(context).colorScheme.onTertiary : Theme.of(context).colorScheme.onTertiaryContainer;
 
-    return Container(
-      padding: const EdgeInsets.all(4),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(4),
-        boxShadow: [
-          BoxShadow(color: shadowColor, spreadRadius: 1),
-        ],
-      ),
-      child: Center(
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              i.name,
-              style: TextStyle(color: textColor),
-            ),
-            if (i.hasDoctorate && i is StudentResearcher) ...[
-              const SizedBox(width: 4),
-              Icon(
-                Icons.school,
-                size: 16,
-                color: textColor,
-              ),
-            ]
+    return InkWell(
+      onTap: i is StudentResearcher ? () => _showStudentDetails(context, i) : null,
+      child: Container(
+        padding: const EdgeInsets.all(4),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(4),
+          boxShadow: [
+            BoxShadow(color: shadowColor, spreadRadius: 1),
           ],
         ),
+        child: Center(
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                i.name,
+                style: TextStyle(color: textColor),
+              ),
+              if (i.hasDoctorate && i is StudentResearcher) ...[
+                const SizedBox(width: 4),
+                Icon(
+                  Icons.school,
+                  size: 16,
+                  color: textColor,
+                ),
+              ]
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showStudentDetails(BuildContext context, StudentResearcher student) {
+    String getGraduationStatus() {
+      if (student.hasDoctorate) {
+        return student.year != null ? '${student.year} (PhD)' : 'Unknown (PhD)';
+      }
+      return 'PhD not yet awarded';
+    }
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
+          ),
+          child: Container(
+            constraints: const BoxConstraints(maxWidth: 500),
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.secondaryContainer,
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Icon(
+                        Icons.person,
+                        color: Theme.of(context).colorScheme.onSecondaryContainer,
+                        size: 32,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: SelectableText(
+                        student.name,
+                        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    if (student.url != null)
+                      IconButton.filledTonal(
+                        style: IconButton.styleFrom(
+                          backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                          foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
+                        ),
+                        icon: const Icon(Icons.language),
+                        tooltip: 'Visit website',
+                        onPressed: () => launchURL(student.url!),
+                      ),
+                  ],
+                ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 16),
+                  child: Divider(),
+                ),
+                if (student.advisors != null && student.advisors!.isNotEmpty)
+                  _buildInfoCard(
+                    context,
+                    Icons.supervisor_account,
+                    'Advisors',
+                    student.advisors!.map((a) => a.name).join(", "),
+                  ),
+                _buildInfoCard(
+                  context,
+                  Icons.school,
+                  'Graduation Status',
+                  getGraduationStatus(),
+                ),
+                if (student.thesisTitle != null)
+                  _buildInfoCard(
+                    context,
+                    Icons.menu_book,
+                    'Thesis Title',
+                    student.thesisTitle!,
+                  ),
+                const SizedBox(height: 24),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: FilledButton.tonalIcon(
+                    style: FilledButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                    ),
+                    onPressed: () => Navigator.of(context).pop(),
+                    icon: const Icon(Icons.check_circle),
+                    label: const Text('Done'),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildInfoCard(BuildContext context, IconData icon, String label, String value) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.3),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: Theme.of(context).colorScheme.outlineVariant,
+          width: 1,
+        ),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(
+            icon,
+            size: 24,
+            color: Theme.of(context).colorScheme.secondary,
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SelectableText(
+                  label,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                SelectableText(
+                  value,
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

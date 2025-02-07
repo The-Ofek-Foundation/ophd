@@ -492,7 +492,10 @@ class _LabGraphState extends State<LabGraph> {
                 runAlignment: WrapAlignment.center,
                 children: [
                   for (StudentResearcher student in unconnectedStudents)
-                    Chip(label: SelectableText(student.name)),
+                    ActionChip(
+                      label: Text(student.name),
+                      onPressed: () => _showStudentDetails(context, student),
+                    ),
                 ],
               ),
               const SizedBox(height: 16),
@@ -642,8 +645,8 @@ class _LabGraphState extends State<LabGraph> {
                   'Research Collaborations',
                   '${facultyCollaborators > 0 ? '$facultyCollaborators faculty' : ''}'
                   '${facultyCollaborators > 0 && studentCollaborators > 0 ? ' and ' : ''}'
-                  '${studentCollaborators > 0 ? '$studentCollaborators student' : ''} '
-                  'co-authors in the lab',
+                  '${studentCollaborators > 0 ? '$studentCollaborators student' : ''}'
+                  ' co-author${(studentCollaborators == 0 && facultyCollaborators == 1) || studentCollaborators == 1 ? '' : 's'} in the lab',
                 ),
                 if (graduatedStudents.isNotEmpty) ...[
                   _buildInfoCard(
@@ -721,6 +724,9 @@ class _LabGraphState extends State<LabGraph> {
       return 'PhD not yet awarded';
     }
 
+    final facultyCollaborators = student.collaborators.whereType<ProfessorResearcher>().length;
+    final studentCollaborators = student.collaborators.whereType<StudentResearcher>().length;
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -787,6 +793,16 @@ class _LabGraphState extends State<LabGraph> {
                   'Graduation Status',
                   getGraduationStatus(),
                 ),
+                if (student.collaborators.isNotEmpty)
+                  _buildInfoCard(
+                    context,
+                    Icons.people_alt,
+                    'Research Collaborations',
+                    '${facultyCollaborators > 0 ? '$facultyCollaborators faculty' : ''}'
+                    '${facultyCollaborators > 0 && studentCollaborators > 0 ? ' and ' : ''}'
+                    '${studentCollaborators > 0 ? '$studentCollaborators student' : ''}'
+                    ' co-author${(studentCollaborators == 0 && facultyCollaborators == 1) || studentCollaborators == 1 ? '' : 's'} in the lab',
+                  ),
                 if (student.thesisTitle != null)
                   _buildInfoCard(
                     context,

@@ -7,7 +7,7 @@ final List<Paper> papers = [
   Paper(
     title: 'Fast Geographic Routing in Fixed-Growth Graphs',
     authors: ['ofek', 'mikeg', 'abraham', 'vinesh'].map((a) => authors[a]!).toList(),
-    link: 'tbd',
+    link: 'https://arxiv.org/pdf/2502.03663',
     description: 'placeholder',
     date: DateTime(2025, 6, 1), // not correct
     conference: CIAC2025,

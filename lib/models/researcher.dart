@@ -13,12 +13,11 @@ class Researcher {
   String? url;
 
   @JsonKey(includeFromJson: false, includeToJson: false)
-  List<Researcher> collaborators;
+  List<Researcher> collaborators = const [];
 
   @JsonKey(name: 'collaborators')
   List<String> collaboratorNames;
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
   bool hasDoctorate;
 
   Researcher({
@@ -26,7 +25,6 @@ class Researcher {
     required this.dblpPid,
     this.url,
     required this.collaboratorNames,
-    this.collaborators = const [],
     this.hasDoctorate = false,
   });
 
@@ -72,15 +70,21 @@ class ProfessorResearcher extends Researcher {
   @JsonKey(name: 'students')
   List<String>? studentNames;
 
+  @JsonKey(required: true)
+  String title;
+
+  @JsonKey(includeFromJson: false)
+  @override
+  bool get hasDoctorate => true;
+
   ProfessorResearcher({
     required super.name,
     super.url,
     required super.dblpPid,
     required super.collaboratorNames,
-    List<String>? studentNames,
-  }) : super(
-    hasDoctorate: true,
-  );
+    this.studentNames,
+    required this.title,
+  });
 
   factory ProfessorResearcher.fromJson(Map<String, dynamic> json) => _$ProfessorResearcherFromJson(json);
 

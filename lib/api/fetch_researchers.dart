@@ -10,7 +10,11 @@ Future<AllResearchers> fetchResearchers() async {
   try {
     final response = await http.get(Uri.parse(fetchResearchersUrl));
     
-    return AllResearchers.fromJson(jsonDecode(response.body));
+    if (response.statusCode == 200) {
+      return AllResearchers.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Failed to load researchers');
+    }
   } catch (e) {
     return AllResearchers(students: [], professors: []);
   }

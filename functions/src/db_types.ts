@@ -22,6 +22,7 @@ export type GraduatedLabMemberEntry = LabMemberEntry & {
 
 export type AdvisorEntry = ResearcherEntry & {
 	students: DocumentReference<LabMemberEntry>[];
+	title: string;
 }
 
 export type DblpPid = {

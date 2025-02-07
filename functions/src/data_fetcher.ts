@@ -142,21 +142,55 @@ const getProfessors = async () => {
 
 	for (const liMatch of liMatches) {
 		const nameMatch = liMatch.match(/<a href="(.*?)">(.*?)<\/a>/su);
+		let title = "";
+		
+		// Extract title by removing HTML tags and the professor's name
+		const liText = cleanHtml(liMatch);
+		if (nameMatch) {
+			const professorName = cleanHtml(nameMatch[2]);
+			title = liText.replace(professorName, "").trim();
+			// Remove any leading commas and whitespace
+			title = title.replace(/^,\s*/, "");
+			// Only keep the first title (before any comma or additional roles)
+			title = title.split(/,|\(/)[0].trim();
+		}
+
+		// Default to "Professor" if no title is found
+		title = title || "Professor";
+
 		if (!nameMatch) {
 			const nameMatch = liMatch.match(/<b>(.*?)<\/b>/su);
 			if (!nameMatch) {
 				throw new Error("Failed to parse name match");
 			}
 
+			const professorName = cleanHtml(nameMatch[1]);
+			const liText = cleanHtml(liMatch);
+			title = liText.replace(professorName, "").trim();
+			// Remove any leading commas and whitespace
+			title = title.replace(/^,\s*/, "");
+			// Only keep the first title (before any comma or additional roles)
+			title = title.split(/,|\(/)[0].trim();
+
 			const professor: Omit<AdvisorEntry, "students" | "dblpPid" | "lastUpdate" | "collaborators"> = {
-				name: cleanHtml(nameMatch[1]),
+				name: professorName,
+				title: title || "Professor",
 			};
 
 			professors.push(professor);
 		} else {
+			const professorName = cleanHtml(nameMatch[2]);
+			const liText = cleanHtml(liMatch);
+			title = liText.replace(professorName, "").trim();
+			// Remove any leading commas and whitespace
+			title = title.replace(/^,\s*/, "");
+			// Only keep the first title (before any comma or additional roles)
+			title = title.split(/,|\(/)[0].trim();
+
 			const professor: Omit<AdvisorEntry, "students" | "dblpPid" | "lastUpdate" | "collaborators"> = {
-				name: cleanHtml(nameMatch[2]),
+				name: professorName,
 				url: nameMatch[1],
+				title: title || "Professor",
 			};
 
 			professors.push(professor);
@@ -335,7 +369,14 @@ const updateLabStudents = async () => {
 				const advisorDoc = await getDoc(advisorRef);
 				if (!advisorDoc.exists()) {
 					const advisorDblpPid = await fetchDblpPid(advisor);
-					await setDoc(advisorRef, {name: advisor, lastUpdate: serverTimestamp(), students: [docRef], dblpPid: advisorDblpPid, collaborators: []} as AdvisorEntry);
+					await setDoc(advisorRef, {
+						name: advisor,
+						lastUpdate: serverTimestamp(),
+						students: [docRef],
+						dblpPid: advisorDblpPid,
+						collaborators: [],
+						title: "Professor"  // Adding default title
+					} as AdvisorEntry);
 
 					const dblpPidRef = doc(db, "dblp-pids", advisorDblpPid.replace("/", "-")) as DocumentReference<DblpPid>;
 					await setDoc(dblpPidRef, {pid: advisorDblpPid, researcher: advisorRef}, {merge: true});
@@ -366,6 +407,7 @@ const updateLabProfessors = async () => {
 		};
 
 		if (professor.url) updatedData.url = professor.url;
+		if (professor.title) updatedData.title = professor.title;
 
 		let shouldUpdateAdvisor = false;
 
@@ -376,7 +418,7 @@ const updateLabProfessors = async () => {
 
 			shouldUpdateAdvisor = true;
 		} else {
-			shouldUpdateAdvisor = docSnap.data().url !== updatedData.url || docSnap.data().name !== updatedData.name;
+			shouldUpdateAdvisor = docSnap.data().url !== updatedData.url || docSnap.data().name !== updatedData.name || docSnap.data().title !== updatedData.title;
 		}
 
 		const updatedRecently = docSnap.exists() && (docSnap.data().lastUpdate as Timestamp).toDate() > new Date(Date.now() - 1000 * 60 * 60 * 24 * 30 * 6);

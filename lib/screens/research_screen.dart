@@ -594,11 +594,22 @@ class _LabGraphState extends State<LabGraph> {
                     ),
                     const SizedBox(width: 16),
                     Expanded(
-                      child: SelectableText(
-                        professor.name,
-                        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SelectableText(
+                            professor.name,
+                            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SelectableText(
+                            professor.title,
+                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              color: Theme.of(context).colorScheme.secondary,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     if (professor.url != null)
@@ -622,8 +633,8 @@ class _LabGraphState extends State<LabGraph> {
                   Icons.groups,
                   'Graduate Students',
                   '${currentStudents > 0 ? 'Current: $currentStudents\n' : ''}'
-                  'Graduated: ${graduatedStudents.length}\n'
-                  '${yearRange != null ? 'Graduation years: $yearRange' : ''}',
+                  'Graduated: ${graduatedStudents.length}'
+                  '${yearRange != null ? '\nGraduation ${graduatedStudents.first.year == graduatedStudents.last.year ? "year" : "years"}: $yearRange' : ''}',
                 ),
                 _buildInfoCard(
                   context,
@@ -808,7 +819,7 @@ class _LabGraphState extends State<LabGraph> {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.3),
+        color: Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.3),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: Theme.of(context).colorScheme.outlineVariant,

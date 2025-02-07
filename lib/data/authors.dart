@@ -64,7 +64,7 @@ final Map<String, Author> authors = {
   'claire': Author(
     name: 'Claire To',
     link: 'mailto:clairt2@uci.edu',
-    i10nKey: 'clair',
+    i10nKey: 'claire',
     show: false,
   ),
   'albert': Author(

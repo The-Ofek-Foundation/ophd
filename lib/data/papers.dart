@@ -8,19 +8,19 @@ final List<Paper> papers = [
     title: 'Fast Geographic Routing in Fixed-Growth Graphs',
     authors: ['ofek', 'mikeg', 'abraham', 'vinesh'].map((a) => authors[a]!).toList(),
     link: 'https://arxiv.org/pdf/2502.03663',
-    description: 'My paper was recently accepted to CIAC, but I have yet to go. I\'ll update as I learn more.',
+    description: 'After my previous paper with Evrim and Mike about fast geographic routing, we searched for a way to prove more general results that extend beyond perfect lattice graphs, and could explain the good performance on road networks (which are certainly not perfect, infinite lattices). We ultimately decided on a graph property we call _fixed-growth_, and show that any graph with this property (such as lattices) can add a highway to it and achieve great greedy routing and diameter results. We were able to prove tight bounds for all our results. We then applied our findings to road networks and were able to route much better, especially in states whose road networks least resembled 2D lattices (such as Alaska). Evrim finished his PhD by this point, but was replaced by two new lab members, Vinesh and Abraham.',
     date: DateTime(2025, 6, 10), // not correct
     conference: CIAC2025,
-    show: true,
+    researchCategory: ResearchCategory.theory,
   ),
   Paper(
     title: 'Investigating the Capabilities of Generative AI in Solving Data Structures, Algorithms, and Computability Problems',
-    authors: ['ofek', 'mikes', 'nero', 'shahar', 'katrina', 'elijah', 'claire', 'albert'].map((a) => authors[a]!).toList(),
+    authors: ['nero', 'shahar', 'yubin', 'katrina', 'elijah', 'claire', 'albert', 'ofek', 'mikes'].map((a) => authors[a]!).toList(),
     link: 'https://ics.uci.edu/~mikes/papers/fp0628.pdf',
-    description: 'placeholder',
+    description: 'This paper aims to determine to which extent "current" generative AI models (GPT-4o) are able to solve CS theory problems. The short answer—in some areas well, not so well in others, but when they\'re not well they still BS well enough to fool people. I think this is more of a testament that humans are incompetent rather than that gen AI is particularly smart. Of course the state of the art of gen AI improved dramatically since.',
     date: DateTime(2025, 2, 27),
     conference: SIGCSE2025,
-    show: false
+    researchCategory: ResearchCategory.education,
   ),
   Paper(
     title: 'Highway Preferential Attachment Models for Geographic Routing',
@@ -31,6 +31,7 @@ final List<Paper> papers = [
     conference: COCOA2023,
     awards: ['Best Paper'],
     imagePath: 'assets/images/cocoa_nicole.jpg',
+    researchCategory: ResearchCategory.theory,
   ),
   Paper(
     title: 'Zip-zip Trees: Making Zip Trees More Balanced, Biased, Compact, or Persistent',
@@ -41,6 +42,7 @@ final List<Paper> papers = [
     conference: WADS2023,
     awards: ['Best Paper'],
     imagePath: 'assets/images/wads_best_paper.jpg',
+    researchCategory: ResearchCategory.theory,
   ),
   Paper(
     title: 'Beyond Big O: Teaching Experimental Algorithmics',
@@ -49,6 +51,7 @@ final List<Paper> papers = [
     description: "This is the first paper I helped write. I was the TA for an experimental algorithmics course at UCI while Mike Shindler was working on this paper. I helped create questions to evaluate students' understanding, where we discussed how supplementing traditional algorithms courses with experimental algorithmics could lead to positive practical outcomes. The ongoing joke is that I was only added so that the authors would be able to say that they don't discriminate against non-Mikes. The conference was the first I attended, and was conveniently held at UCI that year.",
     date: DateTime(2022, 4, 1),
     conference: CCSC2022,
+    researchCategory: ResearchCategory.education,
   )
 ];
 

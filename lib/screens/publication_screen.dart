@@ -21,11 +21,37 @@ class PublicationPage extends StatelessWidget {
       child: SingleChildScrollView(
         child: Column(
           children: [
+            _buildTheoryOverview(context),
             for (final paper in papers)
-              if (paper.show)
+              if (paper.researchCategory == ResearchCategory.theory)
+                CardWrapper(child: _buildPaperBlock(context, paper)),
+            _buildEducationOverview(context),
+            for (final paper in papers)
+              if (paper.researchCategory == ResearchCategory.education)
                 CardWrapper(child: _buildPaperBlock(context, paper)),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildTheoryOverview(BuildContext context) {
+    return CardWrapper(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SelectableText(
+            'Theoretical Computer Science Papers',
+            style: Theme.of(context).textTheme.headlineLarge,
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 16),
+          SelectableText(
+            'The vast majority of my research time is spent in theoretical computer science research, with a focus on randomized algorithms and data structures. Here is a selection of my work.',
+            style: Theme.of(context).textTheme.bodyLarge,
+            textAlign: TextAlign.center,
+          ),
+        ],
       ),
     );
   }
@@ -131,6 +157,27 @@ class PublicationPage extends StatelessWidget {
           ]
         );
       },
+    );
+  }
+
+  Widget _buildEducationOverview(BuildContext context) {
+    return CardWrapper(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SelectableText(
+            'Computer Science Education Papers',
+            style: Theme.of(context).textTheme.headlineLarge,
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 16),
+          SelectableText(
+            'During my time as a UCI PhD student, I have had the opportunity to tag along on some CS ed research projects.',
+            style: Theme.of(context).textTheme.bodyLarge,
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
     );
   }
 }

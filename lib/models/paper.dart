@@ -2,6 +2,11 @@ import 'package:ophd/models/conference.dart';
 
 import 'author.dart';
 
+enum ResearchCategory {
+  theory,
+  education,
+}
+
 class Paper {
   final String title;
   final List<Author> authors;
@@ -11,7 +16,7 @@ class Paper {
   final DateTime date;
   final List<String>? awards;
   final Conference conference;
-  final bool show;
+  final ResearchCategory researchCategory;
 
   Paper({
     required this.title,
@@ -22,6 +27,6 @@ class Paper {
     required this.date,
     this.awards,
     required this.conference,
-    this.show = true,
+    required this.researchCategory,
   });
 }

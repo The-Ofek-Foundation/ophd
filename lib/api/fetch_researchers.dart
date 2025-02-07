@@ -12,8 +12,6 @@ Future<AllResearchers> fetchResearchers() async {
     
     return AllResearchers.fromJson(jsonDecode(response.body));
   } catch (e) {
-    print('Failed to fetch researchers');
-    print('Error: $e');
     return AllResearchers(students: [], professors: []);
   }
 }

@@ -183,6 +183,7 @@ class _LayoutState extends State<Layout> {
               actions: <Widget>[
                 _getThemeSwitch(),
                 _getContrastSelector(),
+                const SizedBox(width: 5),
               ],
             ),
             body: Center(

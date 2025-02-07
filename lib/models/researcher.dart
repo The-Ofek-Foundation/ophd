@@ -43,9 +43,6 @@ class StudentResearcher extends Researcher {
   @JsonKey(name: 'advisors')
   List<String>? advisorNames;
 
-  @override
-  bool hasDoctorate;
-
   int? year;
 
   String? thesisTitle;
@@ -56,12 +53,10 @@ class StudentResearcher extends Researcher {
     required super.dblpPid,
     required super.collaboratorNames,
     required List<String> this.advisorNames,
-    required this.hasDoctorate,
+    required super.hasDoctorate,
     this.year,
     this.thesisTitle,
-  }) : super(
-    hasDoctorate: hasDoctorate,
-  );
+  });
 
   factory StudentResearcher.fromJson(Map<String, dynamic> json) => _$StudentResearcherFromJson(json);
 

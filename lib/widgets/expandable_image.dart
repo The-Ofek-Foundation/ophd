@@ -54,8 +54,7 @@ class ExpandableImage extends StatelessWidget {
                     left: 0,
                     right: 0,
                     child: Container(
-                      color:
-                          Theme.of(context).colorScheme.surface.withOpacity(0.8),
+                      color: Theme.of(context).colorScheme.surface.withAlpha(204),
                       padding: const EdgeInsets.all(8.0),
                       child: SelectableText(
                         caption,

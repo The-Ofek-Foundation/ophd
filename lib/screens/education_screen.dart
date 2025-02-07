@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:flutter/material.dart';
 import 'package:ophd/widgets/clickable_image.dart';
 import 'package:ophd/widgets/launchable_icon_button.dart';
@@ -58,7 +60,6 @@ class EducationPage extends StatelessWidget {
   }
 
   Widget _buildEducationBlock(BuildContext context, {double width = 500}) {
-    // ignore: non_constant_identifier_names
     UCILogo({double? width}) => ClickableImage(
       image: const AssetImage('assets/images/UCI_logo_256.png'),
       link: "https://uci.edu/",

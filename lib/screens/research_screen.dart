@@ -553,127 +553,14 @@ class _LabGraphState extends State<LabGraph> {
   }
 
   void _showProfessorDetails(BuildContext context, ProfessorResearcher professor) {
-    final gradStudents = allResearchers!.students.where((s) => 
-      s.advisors?.any((a) => a.name == professor.name) ?? false).toList();
-    gradStudents.sort((a, b) => (a.year ?? 9999).compareTo(b.year ?? 9999));
-    
-    final currentStudents = gradStudents.where((s) => !s.hasDoctorate).length;
-    final graduatedStudents = gradStudents.where((s) => s.hasDoctorate).toList();
-    final yearRange = graduatedStudents.isEmpty ? null : 
-      graduatedStudents.first.year == graduatedStudents.last.year ? 
-      graduatedStudents.first.year.toString() :
-      '${graduatedStudents.first.year} – ${graduatedStudents.last.year}';
-
-    final facultyCollaborators = professor.collaborators.whereType<ProfessorResearcher>().length;
-    final studentCollaborators = professor.collaborators.whereType<StudentResearcher>().length;
-
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(24),
-          ),
-          child: Container(
-            constraints: const BoxConstraints(maxWidth: 500),
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: professorColors[professor],
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Icon(
-                        Icons.school,
-                        color: Colors.white,
-                        size: 32,
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SelectableText(
-                            professor.name,
-                            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SelectableText(
-                            professor.title,
-                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              color: Theme.of(context).colorScheme.secondary,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    if (professor.url != null)
-                      IconButton.filledTonal(
-                        style: IconButton.styleFrom(
-                          backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-                          foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
-                        ),
-                        icon: const Icon(Icons.language),
-                        tooltip: 'Visit website',
-                        onPressed: () => launchURL(professor.url!),
-                      ),
-                  ],
-                ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 16),
-                  child: Divider(),
-                ),
-                _buildInfoCard(
-                  context,
-                  Icons.groups,
-                  'Graduate Students',
-                  '${currentStudents > 0 ? 'Current: $currentStudents\n' : ''}'
-                  'Graduated: ${graduatedStudents.length}'
-                  '${yearRange != null ? '\nGraduation ${graduatedStudents.first.year == graduatedStudents.last.year ? "year" : "years"}: $yearRange' : ''}',
-                ),
-                _buildInfoCard(
-                  context,
-                  Icons.people_alt,
-                  'Research Collaborations',
-                  '${facultyCollaborators > 0 ? '$facultyCollaborators faculty' : ''}'
-                  '${facultyCollaborators > 0 && studentCollaborators > 0 ? ' and ' : ''}'
-                  '${studentCollaborators > 0 ? '$studentCollaborators student' : ''}'
-                  ' co-author${(studentCollaborators == 0 && facultyCollaborators == 1) || studentCollaborators == 1 ? '' : 's'} in the lab',
-                ),
-                if (graduatedStudents.isNotEmpty) ...[
-                  _buildInfoCard(
-                    context,
-                    Icons.history_edu,
-                    'Recent PhD Graduates',
-                    graduatedStudents.reversed
-                      .take(3)
-                      .map((s) => '${s.name} (${s.year})')
-                      .join('\n'),
-                  ),
-                ],
-                const SizedBox(height: 24),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: FilledButton.tonalIcon(
-                    style: FilledButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                    ),
-                    onPressed: () => Navigator.of(context).pop(),
-                    icon: const Icon(Icons.check_circle),
-                    label: const Text('Done'),
-                  ),
-                ),
-              ],
-            ),
-          ),
+        return ResearcherDetailsModal(
+          researcher: professor,
+          backgroundColor: professorColors[professor],
+          avatarIcon: Icons.school,
+          allResearchers: allResearchers,
         );
       },
     );
@@ -717,120 +604,135 @@ class _LabGraphState extends State<LabGraph> {
   }
 
   void _showStudentDetails(BuildContext context, StudentResearcher student) {
-    String getGraduationStatus() {
-      if (student.hasDoctorate) {
-        return student.year != null ? '${student.year} (PhD)' : 'Unknown (PhD)';
-      }
-      return 'PhD not yet awarded';
-    }
-
-    final facultyCollaborators = student.collaborators.whereType<ProfessorResearcher>().length;
-    final studentCollaborators = student.collaborators.whereType<StudentResearcher>().length;
-
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(24),
-          ),
-          child: Container(
-            constraints: const BoxConstraints(maxWidth: 500),
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.secondaryContainer,
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Icon(
-                        Icons.person,
-                        color: Theme.of(context).colorScheme.onSecondaryContainer,
-                        size: 32,
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: SelectableText(
-                        student.name,
-                        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    if (student.url != null)
-                      IconButton.filledTonal(
-                        style: IconButton.styleFrom(
-                          backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-                          foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
-                        ),
-                        icon: const Icon(Icons.language),
-                        tooltip: 'Visit website',
-                        onPressed: () => launchURL(student.url!),
-                      ),
-                  ],
-                ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 16),
-                  child: Divider(),
-                ),
-                if (student.advisors != null && student.advisors!.isNotEmpty)
-                  _buildInfoCard(
-                    context,
-                    Icons.supervisor_account,
-                    'Advisors',
-                    student.advisors!.map((a) => a.name).join(", "),
-                  ),
-                _buildInfoCard(
-                  context,
-                  Icons.school,
-                  'Graduation Status',
-                  getGraduationStatus(),
-                ),
-                if (student.collaborators.isNotEmpty)
-                  _buildInfoCard(
-                    context,
-                    Icons.people_alt,
-                    'Research Collaborations',
-                    '${facultyCollaborators > 0 ? '$facultyCollaborators faculty' : ''}'
-                    '${facultyCollaborators > 0 && studentCollaborators > 0 ? ' and ' : ''}'
-                    '${studentCollaborators > 0 ? '$studentCollaborators student' : ''}'
-                    ' co-author${(studentCollaborators == 0 && facultyCollaborators == 1) || studentCollaborators == 1 ? '' : 's'} in the lab',
-                  ),
-                if (student.thesisTitle != null)
-                  _buildInfoCard(
-                    context,
-                    Icons.menu_book,
-                    'Thesis Title',
-                    student.thesisTitle!,
-                  ),
-                const SizedBox(height: 24),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: FilledButton.tonalIcon(
-                    style: FilledButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                    ),
-                    onPressed: () => Navigator.of(context).pop(),
-                    icon: const Icon(Icons.check_circle),
-                    label: const Text('Done'),
-                  ),
-                ),
-              ],
-            ),
-          ),
+        return ResearcherDetailsModal(
+          researcher: student,
+          avatarIcon: Icons.person,
+          allResearchers: allResearchers,
         );
       },
     );
   }
+}
 
-  Widget _buildInfoCard(BuildContext context, IconData icon, String label, String value) {
+class ResearcherDetailsModal extends StatelessWidget {
+  final Researcher researcher;
+  final Color? backgroundColor;
+  final IconData avatarIcon;
+  final AllResearchers? allResearchers;
+
+  const ResearcherDetailsModal({
+    super.key,
+    required this.researcher,
+    this.backgroundColor,
+    required this.avatarIcon,
+    required this.allResearchers,
+  });
+
+  List<Widget> _buildDetails(BuildContext context) {
+    final List<Widget> details = [];
+    final facultyCollaborators = researcher.collaborators.whereType<ProfessorResearcher>().length;
+    final studentCollaborators = researcher.collaborators.whereType<StudentResearcher>().length;
+
+    // Add researcher-specific details
+    if (researcher is StudentResearcher) {
+      final student = researcher as StudentResearcher;
+      if (student.advisors != null && student.advisors!.isNotEmpty) {
+        details.add(_buildInfoCard(
+          context,
+          Icons.supervisor_account,
+          'Advisors',
+          student.advisors!.map((a) => a.name).join(", "),
+        ));
+      }
+
+      details.add(_buildInfoCard(
+        context,
+        Icons.school,
+        'Graduation Status',
+        student.hasDoctorate 
+          ? (student.year != null ? '${student.year} (PhD)' : 'Unknown (PhD)')
+          : 'PhD not yet awarded',
+      ));
+
+      if (student.thesisTitle != null) {
+        details.add(_buildInfoCard(
+          context,
+          Icons.menu_book,
+          'Thesis Title',
+          student.thesisTitle!,
+        ));
+      }
+    } else if (researcher is ProfessorResearcher) {
+      final professor = researcher as ProfessorResearcher;
+      final gradStudents = allResearchers!.students.where((s) => 
+        s.advisors?.any((a) => a.name == professor.name) ?? false).toList()
+        ..sort((a, b) => (a.year ?? 9999).compareTo(b.year ?? 9999));
+      
+      final currentStudents = gradStudents.where((s) => !s.hasDoctorate).length;
+      final graduatedStudents = gradStudents.where((s) => s.hasDoctorate).toList();
+      final yearRange = graduatedStudents.isEmpty ? null : 
+        graduatedStudents.first.year == graduatedStudents.last.year ? 
+        graduatedStudents.first.year.toString() :
+        '${graduatedStudents.first.year} – ${graduatedStudents.last.year}';
+
+      details.add(_buildInfoCard(
+        context,
+        Icons.groups,
+        'Graduate Students',
+        '${currentStudents > 0 ? 'Current: $currentStudents\n' : ''}'
+        '${graduatedStudents.length} ${graduatedStudents.length == 1 ? 'student' : 'students'}'
+        '${yearRange != null ? ' ($yearRange)' : ''}',
+      ));
+
+      if (graduatedStudents.isNotEmpty) {
+        details.add(_buildInfoCard(
+          context,
+          Icons.history_edu,
+          'Recent Graduates',
+          '',
+          customContent: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: graduatedStudents.reversed.take(3).map((s) => 
+              Padding(
+                padding: const EdgeInsets.only(bottom: 4),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: SelectableText(s.name),
+                    ),
+                    SelectableText(
+                      s.year.toString(),
+                    ),
+                  ],
+                ),
+              )
+            ).toList(),
+          ),
+        ));
+      }
+    }
+
+    // Add shared collaboration details
+    if (researcher.collaborators.isNotEmpty) {
+      details.add(_buildInfoCard(
+        context,
+        Icons.people_alt,
+        'Research Collaborations',
+        '${facultyCollaborators > 0 ? '$facultyCollaborators faculty' : ''}'
+        '${facultyCollaborators > 0 && studentCollaborators > 0 ? ' and ' : ''}'
+        '${studentCollaborators > 0 ? '$studentCollaborators student' : ''}'
+        ' co-author${(studentCollaborators == 0 && facultyCollaborators == 1) || studentCollaborators == 1 ? '' : 's'} in the lab',
+      ));
+    }
+
+    return details;
+  }
+
+  Widget _buildInfoCard(BuildContext context, IconData icon, String label, String value, {Widget? customContent}) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
@@ -863,7 +765,7 @@ class _LabGraphState extends State<LabGraph> {
                   ),
                 ),
                 const SizedBox(height: 4),
-                SelectableText(
+                customContent ?? SelectableText(
                   value,
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
@@ -871,6 +773,89 @@ class _LabGraphState extends State<LabGraph> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(24),
+      ),
+      child: Container(
+        constraints: const BoxConstraints(maxWidth: 500),
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: backgroundColor ?? Theme.of(context).colorScheme.secondaryContainer,
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Icon(
+                    avatarIcon,
+                    color: backgroundColor != null ? Colors.white : Theme.of(context).colorScheme.onSecondaryContainer,
+                    size: 32,
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SelectableText(
+                        researcher.name,
+                        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      if (researcher is ProfessorResearcher)
+                        SelectableText(
+                          (researcher as ProfessorResearcher).title,
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+                if (researcher.url != null)
+                  IconButton.filledTonal(
+                    style: IconButton.styleFrom(
+                      backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                      foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
+                    ),
+                    icon: const Icon(Icons.language),
+                    tooltip: 'Visit website',
+                    onPressed: () => launchURL(researcher.url!),
+                  ),
+              ],
+            ),
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 16),
+              child: Divider(),
+            ),
+            ..._buildDetails(context),
+            const SizedBox(height: 24),
+            Align(
+              alignment: Alignment.centerRight,
+              child: FilledButton.tonalIcon(
+                style: FilledButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                ),
+                onPressed: () => Navigator.of(context).pop(),
+                icon: const Icon(Icons.check_circle),
+                label: const Text('Done'),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

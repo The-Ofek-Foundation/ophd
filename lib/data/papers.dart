@@ -8,10 +8,10 @@ final List<Paper> papers = [
     title: 'Fast Geographic Routing in Fixed-Growth Graphs',
     authors: ['ofek', 'mikeg', 'abraham', 'vinesh'].map((a) => authors[a]!).toList(),
     link: 'https://arxiv.org/pdf/2502.03663',
-    description: 'placeholder',
-    date: DateTime(2025, 6, 1), // not correct
+    description: 'My paper was recently accepted to CIAC, but I have yet to go. I\'ll update as I learn more.',
+    date: DateTime(2025, 6, 10), // not correct
     conference: CIAC2025,
-    show: false,
+    show: true,
   ),
   Paper(
     title: 'Investigating the Capabilities of Generative AI in Solving Data Structures, Algorithms, and Computability Problems',

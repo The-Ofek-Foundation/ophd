@@ -40,133 +40,274 @@ class ResearchPage extends StatelessWidget {
   }
 
   Widget _buildPrimaryResearchBlock(context) {
-    const TextSpan researchInterest = TextSpan(
-      text: 'Algorithms in the Real World',
-        style: TextStyle(
-          fontFamily: 'RobotoMono',
-        )
-    );
-
-    return Column(
-      children: [
-        SelectableText.rich(
-          const TextSpan(
-            text: 'My primary research interests are in the field of ',
-            children: [
-              researchInterest,
-              TextSpan(
-                text: ', which involves a combination of computer science theory and experiments.',
-              ),
-              TextSpan(
-                text: ' My recent work has specifically been in randomized data structures, including randomized graph models and randomized binary search trees.'
-              ),
-              TextSpan(
-                text: ' View my work in any of my links below, or in the publications tab on this website.',
-              )
-            ]
-          ),
-          style: Theme.of(context).textTheme.bodyLarge,
-          textAlign: TextAlign.center,
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surfaceContainerHighest.withAlpha(77),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: Theme.of(context).colorScheme.outlineVariant,
+          width: 1,
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            for (SocialLink social in socials.where((social) => social.types.contains(SocialType.research)))
-              LaunchableSocialButton(social: social),
-          ],
-        )
-      ],
+      ),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.secondaryContainer,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Icon(
+                  FontAwesomeIcons.flask,
+                  color: Theme.of(context).colorScheme.onSecondaryContainer,
+                  size: 32,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SelectableText(
+                      'Primary Research',
+                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    SelectableText(
+                      'Algorithms in the Real World',
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.secondary,
+                        fontFamily: 'RobotoMono',
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 8),
+            child: Divider(),
+          ),
+          SelectableText(
+            'My work combines computer science theory with experimental validation, focusing on randomized data structures including graph models and binary search trees.',
+            style: Theme.of(context).textTheme.bodyLarge,
+            textAlign: TextAlign.start,
+          ),
+          const SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              for (SocialLink social in socials.where((social) => social.types.contains(SocialType.research))) ...[
+                LaunchableSocialButton(social: social),
+                const SizedBox(width: 8),
+              ],
+            ],
+          ),
+        ],
+      ),
     );
   }
 
   Widget _buildContributorsBlock(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        SelectableText(
-          'I have been fortunate to work with some amazing people:',
-          textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.bodyLarge,
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surfaceContainerHighest.withAlpha(77),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: Theme.of(context).colorScheme.outlineVariant,
+          width: 1,
         ),
-        const SizedBox(height: 20),
-        const WordCloud(),
-        const SizedBox(height: 20),
-        SelectableText(
-          'A special thanks to my advisor, Michael Goodrich, for his continuing mentorship and support.',
-          textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.bodyLarge,
-        )
-      ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.secondaryContainer,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Icon(
+                  FontAwesomeIcons.peopleGroup,
+                  color: Theme.of(context).colorScheme.onSecondaryContainer,
+                  size: 32,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SelectableText(
+                      'Research Collaborators',
+                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    SelectableText(
+                      'Special thanks to my amazing advisor, Michael Goodrich',
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.secondary,
+                        fontFamily: 'RobotoMono',
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 16),
+            child: Divider(),
+          ),
+          const WordCloud(),
+        ],
+      ),
     );
   }
 
   Widget _buildErdosNumberBlock(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        SelectableText.rich(
-          TextSpan(
-            text: 'My ',
-            style: Theme.of(context).textTheme.bodyLarge,
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surfaceContainerHighest.withAlpha(77),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: Theme.of(context).colorScheme.outlineVariant,
+          width: 1,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: [
-              TextSpan(
-                text: 'Erdős number',
-                style: const TextStyle(
-                  color: Colors.blue,  // You can change color as per your requirement
-                  fontFamily: 'RobotoMono',
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.secondaryContainer,
+                  borderRadius: BorderRadius.circular(16),
                 ),
-                recognizer: TapGestureRecognizer()
-                  ..onTap = () async {
-                    const url = 'https://en.wikipedia.org/wiki/Erd%C5%91s_number';
-                    launchURL(url);
-                  },
+                child: Icon(
+                  FontAwesomeIcons.diagramProject,
+                  color: Theme.of(context).colorScheme.onSecondaryContainer,
+                  size: 32,
+                ),
               ),
-              TextSpan(
-                text: ' is 3, via the following path:',
-                style: Theme.of(context).textTheme.bodyLarge,
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SelectableText(
+                      'Erdős Number',
+                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    MouseRegion(
+                      cursor: SystemMouseCursors.click,
+                      child: GestureDetector(
+                        onTap: () => launchURL('https://en.wikipedia.org/wiki/Erd%C5%91s_number'),
+                        child: Text(
+                          'Learn more about Erdős numbers',
+                          style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                            color: Theme.of(context).colorScheme.primary,
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
-        ),
-        _buildPathElement(context, 'Paul Erdős', 'https://en.wikipedia.org/wiki/Paul_Erdős', 'Stephan Hedetniemi', 'On the equality of the Grundy and ochromatic numbers of graphs', 'https://www.sciencedirect.com/science/article/pii/S0012365X03001845'),
-        _buildPathElement(context, 'Stephan Hedetniemi', 'https://people.computing.clemson.edu/~hedet/Stephen_Hedetniemi/Stephen_T._Hedetniemi,_Professor.html', 'Bob Tarjan', 'B-matchings in trees', 'https://epubs.siam.org/doi/abs/10.1137/0205009?journalCode=smjcat'),
-        _buildPathElement(context, 'Bob Tarjan', 'https://en.wikipedia.org/wiki/Robert_Tarjan', 'Ofek Gila', 'Zip-zip Trees: Making Zip Trees More Balanced, Biased, Compact, or Persistent', 'https://arxiv.org/abs/2307.07660'),
-      ],
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 16),
+            child: Divider(),
+          ),
+          Column(
+            children: [
+              _buildErdosPathElement(context, 'Paul Erdős', 'https://en.wikipedia.org/wiki/Paul_Erdős', 'Stephan Hedetniemi', 'On the equality of the Grundy and ochromatic numbers of graphs', 'https://www.sciencedirect.com/science/article/pii/S0012365X03001845'),
+              _buildErdosPathElement(context, 'Stephan Hedetniemi', 'https://people.computing.clemson.edu/~hedet/Stephen_Hedetniemi/Stephen_T._Hedetniemi,_Professor.html', 'Bob Tarjan', 'B-matchings in trees', 'https://epubs.siam.org/doi/abs/10.1137/0205009?journalCode=smjcat'),
+              _buildErdosPathElement(context, 'Bob Tarjan', 'https://en.wikipedia.org/wiki/Robert_Tarjan', 'Ofek Gila', 'Zip-zip Trees: Making Zip Trees More Balanced, Biased, Compact, or Persistent', 'https://arxiv.org/abs/2307.07660'),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
-  Widget _buildPathElement(BuildContext context, String name1, String personUrl1, String name2, String paper, String paperUrl) {
-    return Padding(
-      padding: const EdgeInsets.all(4.0),
-      child: SelectableText.rich(
-        TextSpan(
-          children: [
-            TextSpan(
-              text: name1,
-              style: const TextStyle(color: Colors.blue),
-              recognizer: TapGestureRecognizer()
-                ..onTap = () => launchURL(personUrl1),
-            ),
-            TextSpan(
-              text: ' & ',
-              style: TextStyle(color: Theme.of(context).textTheme.bodyLarge!.color),
-            ),
-            TextSpan(
-              text: name2,
-              style: Theme.of(context).textTheme.bodyLarge,
-            ),
-            TextSpan(
-              text: ' – ',
-              style: TextStyle(color: Theme.of(context).textTheme.bodyLarge!.color),
-            ),
-            TextSpan(
-              text: paper,
-              style: const TextStyle(color: Colors.blue),
-              recognizer: TapGestureRecognizer()
-                ..onTap = () => launchURL(paperUrl),
-            ),
-          ],
-        ),
+  Widget _buildErdosPathElement(BuildContext context, String name1, String personUrl1, String name2, String paper, String paperUrl) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surfaceContainerLowest,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Row(
+                  children: [
+                    Text(
+                      name1,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.primary,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const Text(' & '),
+                    Text(name2),
+                  ],
+                ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.open_in_new, size: 16),
+                onPressed: () => launchURL(personUrl1),
+                tooltip: 'View $name1\'s page',
+                visualDensity: VisualDensity.compact,
+              ),
+            ],
+          ),
+          const SizedBox(height: 4),
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  paper,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.article_outlined, size: 16),
+                onPressed: () => launchURL(paperUrl),
+                tooltip: 'View paper',
+                visualDensity: VisualDensity.compact,
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -198,7 +339,7 @@ class WordCloudState extends State<WordCloud> {
                 onExit: (event) => setState(() => selectedAuthor = null),
                 child: ActionChip(
                   label: AnimatedDefaultTextStyle(
-                    style: TextStyle(fontSize: (author == selectedAuthor ? 12.0 : 10.0) + papersWithAuthor[author.name]!.length * 10, color: author == selectedAuthor ? Theme.of(context).colorScheme.tertiary : Theme.of(context).colorScheme.onSecondaryContainer),
+                    style: TextStyle(fontSize: (author == selectedAuthor ? 12.0 : 10.0) + papersWithAuthor[author.name]!.length * 10, color: author == selectedAuthor ? Theme.of(context).colorScheme.tertiary : Theme.of(context).colorScheme.secondary),
                     duration: const Duration(milliseconds: 200),
                     child: Text(author.name),
                   ),
@@ -222,7 +363,7 @@ class WordCloudState extends State<WordCloud> {
                 },
                 hoverColor: Colors.transparent,
                 child: AnimatedDefaultTextStyle(
-                  style: TextStyle(fontSize: (author == selectedAuthor ? 12.0 : 10.0) + papersWithAuthor[author.name]!.length * 10, color: author == selectedAuthor ? Theme.of(context).colorScheme.tertiary : Theme.of(context).colorScheme.onSecondaryContainer),
+                  style: TextStyle(fontSize: (author == selectedAuthor ? 12.0 : 10.0) + papersWithAuthor[author.name]!.length * 10, color: author == selectedAuthor ? Theme.of(context).colorScheme.tertiary : Theme.of(context).colorScheme.secondary),
                   duration: const Duration(milliseconds: 200),
                   child: Text(AppLocalizations.of(context)!.name(author.i10nKey)),
                 ),

@@ -17,6 +17,7 @@ import 'package:ophd/models/author.dart';
 import 'package:ophd/models/researcher.dart';
 import 'package:ophd/models/social_link.dart';
 import 'package:ophd/utils/screen_utils.dart';
+import 'package:ophd/widgets/card_header_icon.dart';
 import 'package:ophd/widgets/launchable_icon_button.dart';
 import 'package:ophd/widgets/refresh.dart';
 import 'package:ophd/widgets/standard_card.dart';
@@ -40,215 +41,155 @@ class ResearchPage extends StatelessWidget {
   }
 
   Widget _buildPrimaryResearchBlock(context) {
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainerHighest.withAlpha(77),
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(
-          color: Theme.of(context).colorScheme.outlineVariant,
-          width: 1,
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            const CardHeaderIcon(
+              icon: FontAwesomeIcons.flask,
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SelectableText(
+                    'Primary Research',
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  SelectableText(
+                    'Algorithms in the Real World',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.secondary,
+                      fontFamily: 'RobotoMono',
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
-      ),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.secondaryContainer,
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Icon(
-                  FontAwesomeIcons.flask,
-                  color: Theme.of(context).colorScheme.onSecondaryContainer,
-                  size: 32,
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SelectableText(
-                      'Primary Research',
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    SelectableText(
-                      'Algorithms in the Real World',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.secondary,
-                        fontFamily: 'RobotoMono',
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+        const SizedBox(height: 16),
+        const Padding(
+          padding: EdgeInsets.symmetric(vertical: 8),
+          child: Divider(),
+        ),
+        SelectableText(
+          'My work combines computer science theory with experimental validation, focusing on randomized data structures including graph models and binary search trees.',
+          style: Theme.of(context).textTheme.bodyLarge,
+          textAlign: TextAlign.start,
+        ),
+        const SizedBox(height: 16),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            for (SocialLink social in socials.where((social) => social.types.contains(SocialType.research))) ...[
+              LaunchableSocialButton(social: social),
+              const SizedBox(width: 8),
             ],
-          ),
-          const SizedBox(height: 16),
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 8),
-            child: Divider(),
-          ),
-          SelectableText(
-            'My work combines computer science theory with experimental validation, focusing on randomized data structures including graph models and binary search trees.',
-            style: Theme.of(context).textTheme.bodyLarge,
-            textAlign: TextAlign.start,
-          ),
-          const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              for (SocialLink social in socials.where((social) => social.types.contains(SocialType.research))) ...[
-                LaunchableSocialButton(social: social),
-                const SizedBox(width: 8),
-              ],
-            ],
-          ),
-        ],
-      ),
+          ],
+        ),
+      ],
     );
   }
 
   Widget _buildContributorsBlock(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainerHighest.withAlpha(77),
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(
-          color: Theme.of(context).colorScheme.outlineVariant,
-          width: 1,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            const CardHeaderIcon(
+              icon: Icons.groups,
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SelectableText(
+                    'Research Collaborators',
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  SelectableText(
+                    'Special thanks to my amazing advisor, Michael Goodrich',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.secondary,
+                      fontFamily: 'RobotoMono',
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.secondaryContainer,
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Icon(
-                  FontAwesomeIcons.peopleGroup,
-                  color: Theme.of(context).colorScheme.onSecondaryContainer,
-                  size: 32,
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SelectableText(
-                      'Research Collaborators',
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    SelectableText(
-                      'Special thanks to my amazing advisor, Michael Goodrich',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.secondary,
-                        fontFamily: 'RobotoMono',
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 16),
-            child: Divider(),
-          ),
-          const WordCloud(),
-        ],
-      ),
+        const Padding(
+          padding: EdgeInsets.symmetric(vertical: 16),
+          child: Divider(),
+        ),
+        const WordCloud(),
+      ],
     );
   }
 
   Widget _buildErdosNumberBlock(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainerHighest.withAlpha(77),
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(
-          color: Theme.of(context).colorScheme.outlineVariant,
-          width: 1,
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.secondaryContainer,
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Icon(
-                  FontAwesomeIcons.diagramProject,
-                  color: Theme.of(context).colorScheme.onSecondaryContainer,
-                  size: 32,
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SelectableText(
-                      'Erdős Number',
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            const CardHeaderIcon(
+              icon: Icons.people_alt_outlined,
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SelectableText(
+                    'Erdős Number',
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
                     ),
-                    const SizedBox(height: 4),
-                    MouseRegion(
-                      cursor: SystemMouseCursors.click,
-                      child: GestureDetector(
-                        onTap: () => launchURL('https://en.wikipedia.org/wiki/Erd%C5%91s_number'),
-                        child: Text(
-                          'Learn more about Erdős numbers',
-                          style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                            color: Theme.of(context).colorScheme.primary,
-                            decoration: TextDecoration.underline,
-                          ),
+                  ),
+                  const SizedBox(height: 4),
+                  MouseRegion(
+                    cursor: SystemMouseCursors.click,
+                    child: GestureDetector(
+                      onTap: () => launchURL('https://en.wikipedia.org/wiki/Erd%C5%91s_number'),
+                      child: Text(
+                        'Learn more about Erdős numbers',
+                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                          color: Theme.of(context).colorScheme.primary,
+                          decoration: TextDecoration.underline,
                         ),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          ),
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 16),
-            child: Divider(),
-          ),
-          Column(
-            children: [
-              _buildErdosPathElement(context, 'Paul Erdős', 'https://en.wikipedia.org/wiki/Paul_Erdős', 'Stephan Hedetniemi', 'On the equality of the Grundy and ochromatic numbers of graphs', 'https://www.sciencedirect.com/science/article/pii/S0012365X03001845'),
-              _buildErdosPathElement(context, 'Stephan Hedetniemi', 'https://people.computing.clemson.edu/~hedet/Stephen_Hedetniemi/Stephen_T._Hedetniemi,_Professor.html', 'Bob Tarjan', 'B-matchings in trees', 'https://epubs.siam.org/doi/abs/10.1137/0205009?journalCode=smjcat'),
-              _buildErdosPathElement(context, 'Bob Tarjan', 'https://en.wikipedia.org/wiki/Robert_Tarjan', 'Ofek Gila', 'Zip-zip Trees: Making Zip Trees More Balanced, Biased, Compact, or Persistent', 'https://arxiv.org/abs/2307.07660'),
-            ],
-          ),
-        ],
-      ),
+            ),
+          ],
+        ),
+        const Padding(
+          padding: EdgeInsets.symmetric(vertical: 16),
+          child: Divider(),
+        ),
+        Column(
+          children: [
+            _buildErdosPathElement(context, 'Paul Erdős', 'https://en.wikipedia.org/wiki/Paul_Erdős', 'Stephan Hedetniemi', 'On the equality of the Grundy and ochromatic numbers of graphs', 'https://www.sciencedirect.com/science/article/pii/S0012365X03001845'),
+            _buildErdosPathElement(context, 'Stephan Hedetniemi', 'https://people.computing.clemson.edu/~hedet/Stephen_Hedetniemi/Stephen_T._Hedetniemi,_Professor.html', 'Bob Tarjan', 'B-matchings in trees', 'https://epubs.siam.org/doi/abs/10.1137/0205009?journalCode=smjcat'),
+            _buildErdosPathElement(context, 'Bob Tarjan', 'https://en.wikipedia.org/wiki/Robert_Tarjan', 'Ofek Gila', 'Zip-zip Trees: Making Zip Trees More Balanced, Biased, Compact, or Persistent', 'https://link.springer.com/chapter/10.1007/978-3-031-38906-1_31'),
+          ],
+        ),
+      ],
     );
   }
 
@@ -257,8 +198,12 @@ class ResearchPage extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 8),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainerLowest,
+        color: Theme.of(context).colorScheme.surfaceContainerHighest.withAlpha(77),
         borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: Theme.of(context).colorScheme.outlineVariant,
+          width: 1,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -494,38 +439,62 @@ class _LabGraphState extends State<LabGraph> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SelectableText(
-              'Graph of Lab Members',
-              style: Theme.of(context).textTheme.headlineLarge,
-              textAlign: TextAlign.center,
-            ),
-            RefreshButton(
-              tooltip: AppLocalizations.of(context)!.label("Sync"),
-              onPressed: () async  {
-                await updateDatabase();
-                refetchResearchers();
-              }
-            ),
-          ],
-        ),
-        const SizedBox(height: 16),
-        ConstrainedBox(
-          constraints: const BoxConstraints(
-            maxWidth: 800,
+    return Container(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              const CardHeaderIcon(
+                icon: Icons.account_tree,
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SelectableText(
+                      'Lab Collaboration Graph',
+                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    SelectableText(
+                      'Interactive visualization of research collaborations',
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.secondary,
+                        fontFamily: 'RobotoMono',
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              RefreshButton(
+                tooltip: AppLocalizations.of(context)!.label("Sync"),
+                onPressed: () async {
+                  await updateDatabase();
+                  refetchResearchers();
+                },
+              ),
+            ],
           ),
-          child: Center(
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 16),
+            child: Divider(),
+          ),
+          ConstrainedBox(
+            constraints: const BoxConstraints(
+              maxWidth: 800,
+            ),
             child: SelectableText.rich(
               TextSpan(
                 children: [
                   const TextSpan(text: 'Here is a graph of all the members of my lab, the '),
                   TextSpan(
                     text: 'theory lab',
-                    style: const TextStyle(color: Colors.blue),
+                    style: TextStyle(color: Theme.of(context).colorScheme.primary),
                     recognizer: TapGestureRecognizer()
                       ..onTap = () => launchURL('https://ics.uci.edu/~theory/'),
                   ),
@@ -533,140 +502,191 @@ class _LabGraphState extends State<LabGraph> {
                 ],
               ),
               style: Theme.of(context).textTheme.bodyLarge,
-              textAlign: TextAlign.center,
+              textAlign: TextAlign.start,
             ),
           ),
-        ),
-        const SizedBox(height: 16),
-        if (isLoading)
-          const CircularProgressIndicator()
-        else if (errorMessage != null)
-          SelectableText('Error: $errorMessage')
-        else
-          Column(
-            children: [
-              Wrap(
-                spacing: 10,
-                runSpacing: 10,
-                alignment: WrapAlignment.center,
-                runAlignment: WrapAlignment.center,
-                children: [
-                  for (ProfessorResearcher researcher in allResearchers!.professors)
-                    FilterChip(
-                      label: Text(researcher.name),
-                      selected: selectedProfessors.contains(researcher),
-                      checkmarkColor: Colors.white,
-                      avatar: CircleAvatar(
-                        backgroundColor: professorColors[researcher],
-                        // child: Text(researcher.name[0]),
-                      ),
-                      onSelected: (bool selected) {
-                        setState(() {
-                          if (selected) {
-                            selectedProfessors.add(researcher);
-                            final Color color = remainingColors.first;
-                            remainingColors.remove(color);
-                            professorColors[researcher] = color;
-
-                            if (remainingColors.isEmpty) {
-                              remainingColors = okabe.toSet();
-                            }
-                          } else {
-                            selectedProfessors.remove(researcher);
-                            remainingColors.add(professorColors[researcher]!);
-                            professorColors.remove(researcher);
-                          }
-                          _updateGraph();
-                        });
-                      },
+          const SizedBox(height: 16),
+          if (isLoading)
+            const Center(child: CircularProgressIndicator())
+          else if (errorMessage != null)
+            Center(child: SelectableText('Error: $errorMessage'))
+          else
+            Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surfaceContainerHighest.withAlpha(77),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: Theme.of(context).colorScheme.outlineVariant,
+                      width: 1,
                     ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              LayoutBuilder(
-                builder: (context, constraints) {
-                  var width = max(constraints.maxWidth, 1000.0);
-                  var height = 1000.0;
-                  return SizedBox(
-                    height: height,
-                    child: InteractiveViewer(
-                      constrained: false,
-                      minScale: 1,
-                      maxScale: 1,
-                      child: GraphView(
-                        key: ValueKey(graph),
-                        graph: graph!,
-                        algorithm: FruchtermanReingoldAlgorithm(),
-                        animated: true,
-                        width: width,
+                  ),
+                  child: Wrap(
+                    spacing: 10,
+                    runSpacing: 10,
+                    alignment: WrapAlignment.start,
+                    runAlignment: WrapAlignment.start,
+                    children: [
+                      for (ProfessorResearcher researcher in allResearchers!.professors)
+                        FilterChip(
+                          label: Text(researcher.name),
+                          selected: selectedProfessors.contains(researcher),
+                          checkmarkColor: Colors.white,
+                          avatar: CircleAvatar(
+                            backgroundColor: professorColors[researcher],
+                          ),
+                          onSelected: (bool selected) {
+                            setState(() {
+                              if (selected) {
+                                selectedProfessors.add(researcher);
+                                final Color color = remainingColors.first;
+                                remainingColors.remove(color);
+                                professorColors[researcher] = color;
+
+                                if (remainingColors.isEmpty) {
+                                  remainingColors = okabe.toSet();
+                                }
+                              } else {
+                                selectedProfessors.remove(researcher);
+                                remainingColors.add(professorColors[researcher]!);
+                                professorColors.remove(researcher);
+                              }
+                              _updateGraph();
+                            });
+                          },
+                        ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surfaceContainerHighest.withAlpha(77),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: Theme.of(context).colorScheme.outlineVariant,
+                      width: 1,
+                    ),
+                  ),
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      var width = max(constraints.maxWidth, 1000.0);
+                      var height = 1000.0;
+                      return SizedBox(
                         height: height,
-                        builder: (Node node) {
-                          // I can decide what widget should be shown here based on the id
-                          Researcher researcher = node.key!.value as Researcher;
-
-                          // check if node is a professor
-                          if (researcher is ProfessorResearcher) {
-                            return displayProfessor(context, researcher);
-                          }
-
-                          return displayResearcher(context, node.key!.value as Researcher);
-                        },
-                      ),
+                        child: InteractiveViewer(
+                          constrained: false,
+                          minScale: 1,
+                          maxScale: 1,
+                          child: GraphView(
+                            key: ValueKey(graph),
+                            graph: graph!,
+                            algorithm: FruchtermanReingoldAlgorithm(),
+                            animated: true,
+                            width: width,
+                            height: height,
+                            builder: (Node node) {
+                              Researcher researcher = node.key!.value as Researcher;
+                              if (researcher is ProfessorResearcher) {
+                                return displayProfessor(context, researcher);
+                              }
+                              return displayResearcher(context, node.key!.value as Researcher);
+                            },
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(height: 24),
+                Container(
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surfaceContainerHighest.withAlpha(77),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: Theme.of(context).colorScheme.outlineVariant,
+                      width: 1,
                     ),
-                  );
-                },
-              ),
-              const SizedBox(height: 16),
-              ConstrainedBox(
-                constraints: const BoxConstraints(
-                  maxWidth: 800,
-                ),
-                child: SelectableText(
-                  'The ${unconnectedStudents.length} lab members who have not (yet) collaborated with any other lab members or shown faculty are unfortunately not shown above, and are instead listed below.',
-                  style: Theme.of(context).textTheme.bodyLarge,
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              const SizedBox(height: 16),
-              Wrap(
-                spacing: 10,
-                runSpacing: 10,
-                alignment: WrapAlignment.center,
-                runAlignment: WrapAlignment.center,
-                children: [
-                  for (StudentResearcher student in unconnectedStudents)
-                    ActionChip(
-                      label: Row(
-                        mainAxisSize: MainAxisSize.min,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SelectableText(
+                        'Unconnected Lab Members',
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      SelectableText(
+                        'The ${unconnectedStudents.length} lab members who have not (yet) collaborated with any other lab members or shown faculty are listed below.',
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
+                      const SizedBox(height: 16),
+                      Wrap(
+                        spacing: 10,
+                        runSpacing: 10,
+                        alignment: WrapAlignment.start,
+                        runAlignment: WrapAlignment.start,
                         children: [
-                          Text(student.name),
-                          if (student.hasDoctorate) ...[
-                            const SizedBox(width: 4),
-                            const Icon(
-                              Icons.school,
-                              size: 16,
+                          for (StudentResearcher student in unconnectedStudents)
+                            ActionChip(
+                              label: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(student.name),
+                                  if (student.hasDoctorate) ...[
+                                    const SizedBox(width: 4),
+                                    const Icon(
+                                      Icons.school,
+                                      size: 16,
+                                    ),
+                                  ]
+                                ],
+                              ),
+                              onPressed: () => _showStudentDetails(context, student),
                             ),
-                          ]
                         ],
                       ),
-                      onPressed: () => _showStudentDetails(context, student),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 24),
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surfaceContainerHighest.withAlpha(77),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: Theme.of(context).colorScheme.outlineVariant,
+                      width: 1,
                     ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              ConstrainedBox(
-                constraints: const BoxConstraints(
-                  maxWidth: 800,
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.info_outline,
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: SelectableText(
+                          'If you are a lab member and have a missing connection, please try syncing the database from the reload button. If that doesn\'t work, it is possible that either your publication is too recent and does not (yet) appear in DBLP, I have an incorrect DBLP ID associated with you, or your publication is in an adjacent field and does not appear in DBLP. In either case, you can contact me to manually update the data.',
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                child: SelectableText(
-                  'If you are a lab member and have a missing connection, please try syncing the database from the reload button. If that doesn\'t work, it is possible that either your publication is too recent and does not (yet) appear in DBLP, I have an incorrect DBLP ID associated with you, or your publication is in an adjacent field and does not appear in DBLP. In either case, you can contact me to manually update the data.',
-                  style: Theme.of(context).textTheme.labelLarge,
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ],
-          ),
-      ],
+              ],
+            ),
+        ],
+      ),
     );
   }
 
@@ -949,17 +969,10 @@ class ResearcherDetailsModal extends StatelessWidget {
           children: [
             Row(
               children: [
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: backgroundColor ?? Theme.of(context).colorScheme.secondaryContainer,
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Icon(
-                    hasPhd ? FontAwesomeIcons.userGraduate : avatarIcon,
-                    color: backgroundColor != null ? Colors.white : Theme.of(context).colorScheme.onSecondaryContainer,
-                    size: 32,
-                  ),
+                CardHeaderIcon(
+                  icon: hasPhd ? FontAwesomeIcons.userGraduate : avatarIcon,
+                  backgroundColor: backgroundColor,
+                  size: hasPhd ? 32 : 40,
                 ),
                 const SizedBox(width: 16),
                 Expanded(

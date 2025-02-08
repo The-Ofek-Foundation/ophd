@@ -742,39 +742,34 @@ class _LabGraphState extends State<LabGraph> {
   }
 
   Widget displayResearcher(context, Researcher i) {
-    final shadowColor = i.name == 'Ofek Gila' ? Theme.of(context).colorScheme.tertiary : Theme.of(context).colorScheme.tertiaryContainer;
-    final textColor = i.name == 'Ofek Gila' ? Theme.of(context).colorScheme.onTertiary : Theme.of(context).colorScheme.onTertiaryContainer;
+    if (i is! StudentResearcher) return Container(); // Skip non-students
 
-    return InkWell(
-      onTap: i is StudentResearcher ? () => _showStudentDetails(context, i) : null,
-      child: Container(
-        padding: const EdgeInsets.all(4),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(4),
-          boxShadow: [
-            BoxShadow(color: shadowColor, spreadRadius: 1),
-          ],
-        ),
-        child: Center(
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                i.name,
-                style: TextStyle(color: textColor),
-              ),
-              if (i.hasDoctorate && i is StudentResearcher) ...[
-                const SizedBox(width: 4),
-                Icon(
-                  Icons.school,
-                  size: 16,
-                  color: textColor,
-                ),
-              ]
-            ],
-          ),
-        ),
+    return ActionChip(
+      backgroundColor: i.name == 'Ofek Gila' ? 
+        Theme.of(context).colorScheme.tertiary : 
+        Theme.of(context).colorScheme.tertiaryContainer,
+      labelStyle: TextStyle(
+        color: i.name == 'Ofek Gila' ? 
+          Theme.of(context).colorScheme.onTertiary : 
+          Theme.of(context).colorScheme.onTertiaryContainer,
       ),
+      label: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(i.name),
+          if (i.hasDoctorate) ...[
+            const SizedBox(width: 4),
+            Icon(
+              Icons.school,
+              size: 16,
+              color: i.name == 'Ofek Gila' ? 
+                Theme.of(context).colorScheme.onTertiary :
+                Theme.of(context).colorScheme.onTertiaryContainer,
+            ),
+          ]
+        ],
+      ),
+      onPressed: () => _showStudentDetails(context, i),
     );
   }
 

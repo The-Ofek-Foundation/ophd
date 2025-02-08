@@ -8,7 +8,7 @@ const xml2js = require("xml2js");
 import cors from "cors";
 const corsHandler = cors({origin: true});
 import { db } from "./initialize_app";
-import { DocumentReference, QuerySnapshot, Timestamp, collection, doc, getDoc, getDocs, serverTimestamp, setDoc } from "firebase/firestore";
+import { DocumentReference, DocumentSnapshot, QuerySnapshot, Timestamp, collection, doc, getDoc, getDocs, serverTimestamp, setDoc, FieldValue } from "firebase/firestore";
 import { AdvisorEntry, DblpPid, GraduatedLabMemberEntry, LabMemberEntry, ResearcherEntry } from "./db_types";
 
 const DOCTORATE_STUDENTS_URL = "https://ics.uci.edu/~theory/doctorates.html";
@@ -18,16 +18,127 @@ const DBLP_AUTHOR_LOOKUP_URL = "https://dblp.org/search/author/api?h=1&format=js
 const DBLP_AUTHOR_URL = "https://dblp.org/pid/";
 
 
-const cleanHtml = (html: string) =>
-	(he.decode(html) as string).replace(/<[^>]*>?/gm, "").replace(/\s+/g, " ").trim();
+// HTML Parsing utilities
+interface NameUrlPair {
+	name: string;
+	url?: string;
+}
 
-const getNameAndUrl = (html: string) => {
-	const nameMatch = (he.decode(html) as string).match(/<a href="(.*?)">(.*?)<\/a>/u);
+const cleanHtml = (html: string): string =>
+	(he.decode(html) as string)
+		.replace(/<[^>]*>?/gm, "")
+		.replace(/\s+/g, " ")
+		.trim();
+
+const getNameAndUrl = (html: string): NameUrlPair => {
+	const nameMatch = (he.decode(html) as string).match(/<a href="(.*?)">(.*?)<\/a>/u) ||
+				   (he.decode(html) as string).match(/<b>(.*?)<\/b>/u);
+	
+	if (!nameMatch) {
+		return { name: cleanHtml(html) };
+	}
+
 	return {
-		name: nameMatch ? cleanHtml(nameMatch[2]) : cleanHtml(html),
-		url: nameMatch ? nameMatch[1] : undefined,
+		name: cleanHtml(nameMatch[2] || nameMatch[1]),
+		url: nameMatch[1] && nameMatch[1] !== nameMatch[2] ? nameMatch[1] : undefined,
+	};
+};
+
+// DBLP utilities
+interface DblpResponse {
+	result?: {
+		hits: {
+			hit?: Array<{
+				info: {
+					author: string;
+					url: string;
+				};
+			}>;
+		};
 	};
 }
+
+interface DblpXmlResponse {
+	dblpperson?: {
+		coauthors?: [{
+			co: Array<{
+				na: Array<{
+					$: {
+						pid: string;
+					};
+				}>;
+			}>;
+		}];
+	};
+}
+
+const fetchWithErrorHandling = async (url: string, name?: string) => {
+	try {
+		const response = await fetch(url);
+		const data = await response.text();
+		if (!data) {
+			throw new Error(`Failed to fetch data${name ? " for ${name}" : ""}`);
+		}
+		return data;
+	} catch (error) {
+		logger.error(`Failed to fetch data${name ? " for ${name}" : ""}:`, error);
+		throw error;
+	}
+};
+
+const fetchDblpPid = async (name: string): Promise<string> => {
+	logger.info("Fetching DBLP PID for", name);
+	
+	try {
+		const response = await fetch(DBLP_AUTHOR_LOOKUP_URL + name);
+		const data = await response.json() as DblpResponse;
+		
+		const hit = data?.result?.hits?.hit?.[0];
+		if (hit) {
+			const hitName = hit.info.author;
+			if (hitName !== name) {
+				logger.warn("Name mismatch:", name, "vs.", hitName);
+				return "";
+			}
+			return hit.info.url.split("pid/")[1];
+		}
+		
+		logger.warn("DBLP PID not found for", name);
+		return "";
+	} catch (error) {
+		logger.error("Failed to fetch DBLP PID:", error);
+		return "";
+	}
+};
+
+// Update the fetchCollaborators function to use the new utilities
+const fetchCollaborators = async (dblpPid: string): Promise<string[]> => {
+	const authorXmlUrl = DBLP_AUTHOR_URL + dblpPid + ".xml";
+
+	try {
+		const responseText = await fetchWithErrorHandling(authorXmlUrl, dblpPid);
+		const parser = new xml2js.Parser();
+		
+		const parsed = await new Promise<DblpXmlResponse>((resolve, reject) => {
+			parser.parseString(responseText, (err: Error | null, result: DblpXmlResponse) => {
+				if (err) {
+					logger.error("Failed to parse XML:", err, dblpPid);
+					reject(err);
+				} else {
+					resolve(result);
+				}
+			});
+		});
+
+		const coauthors = parsed.dblpperson?.coauthors;
+		return coauthors && coauthors.length > 0 
+			? coauthors[0].co.map(entry => entry.na[0]["$"].pid)
+			: [];
+	} catch (error) {
+		logger.error("An error occurred:", error, dblpPid);
+		throw error;
+	}
+};
 
 const rcontains = (list: DocumentReference[], ref: DocumentReference) => list.some(item => item.path === ref.path);
 
@@ -200,63 +311,6 @@ const getProfessors = async () => {
 	return professors;
 }
 
-const fetchDblpPid = async (name: string) => {
-	logger.info("Fetching DBLP PID for", name);
-	
-	const response = await fetch(DBLP_AUTHOR_LOOKUP_URL + name)
-		.then(response => response.json())
-		.catch(error => console.error("Failed to fetch data:", error, name));
-	
-	if (response?.result && response.result.hits.hit?.length > 0) {
-		const hitName = response.result.hits.hit[0].info.author as string;
-		if (hitName !== name) {
-			logger.warn("Name mismatch:", name, "vs.", hitName);
-			return "";
-		}
-
-		const pid = response.result.hits.hit[0].info.url as string;
-		return pid.split("pid/")[1];
-	} else {
-		logger.warn("DBLP PID not found for", name);
-		return "";
-	}
-}
-
-const fetchCollaborators = async (dblpPid: string) => {
-	const authorXmlUrl = DBLP_AUTHOR_URL + dblpPid + ".xml";
-
-	try {
-		const response = await fetch(authorXmlUrl);
-		const responseText = await response.text();
-        
-		if (!responseText) {
-			throw new Error("Failed to fetch data: " + dblpPid);
-		}
-
-		const parser = new xml2js.Parser();
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		const parsed: any = await new Promise((resolve, reject) => {
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			parser.parseString(responseText, (err: Error, result: any) => {
-				if (err) {
-					console.error("Failed to parse XML:", err, dblpPid);
-					reject(err);
-				} else {
-					resolve(result);
-				}
-			});
-		});
-
-		const coauthors = parsed.dblpperson.coauthors;
-
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		return coauthors && coauthors.length > 0 ? coauthors[0].co.map((entry: any) => entry.na[0]["$"].pid) : [];
-	} catch (error) {
-		console.error("An error occurred:", error, dblpPid);
-		throw error;
-	}
-};
-
 const fetchNewCollaborators = async (dblpPid: string, docRef: DocumentReference<ResearcherEntry>, existingCollaborators: DocumentReference<ResearcherEntry>[]) => {
 	logger.info("Fetching collaborators for", dblpPid);
 	
@@ -280,93 +334,158 @@ const fetchNewCollaborators = async (dblpPid: string, docRef: DocumentReference<
 	return newCollaborators;
 }
 
+// Shared utility functions for researcher updates
+interface BaseResearcherEntry {
+	name: string;
+	url?: string;
+	dblpPid?: string;
+	lastUpdate?: Timestamp | FieldValue;
+	collaborators: DocumentReference<ResearcherEntry>[];
+}
+
+interface ExtendedResearcher extends BaseResearcherEntry {
+	title?: string;
+	hasDoctorate?: boolean;
+	thesisTitle?: string;
+	year?: number;
+}
+
+const updateResearcherDblpInfo = async (
+	docRef: DocumentReference<ResearcherEntry>,
+	docSnap: DocumentSnapshot<ResearcherEntry>,
+	updatedData: Partial<BaseResearcherEntry>,
+	forceUpdateCollaborators = false
+) => {
+	const updatedRecently = docSnap.exists() && (docSnap.data()?.lastUpdate as Timestamp)?.toDate() > new Date(Date.now() - 1000 * 60 * 60 * 24 * 30 * 6);
+	const dblpPid = docSnap.exists() && docSnap.data()?.dblpPid ? docSnap.data()?.dblpPid : updatedData.dblpPid;
+
+	if (dblpPid && (!docSnap.exists() || !updatedRecently || forceUpdateCollaborators)) {
+		logger.info("Searching for new collaborators for", docRef.id);
+		const existingCollaborators = docSnap.exists() ? docSnap.data()?.collaborators || [] : [];
+		const newCollaborators = await fetchNewCollaborators(dblpPid, docRef, existingCollaborators);
+
+		if (newCollaborators.length > 0) {
+			logger.log("Adding collaborators", newCollaborators.map(collaborator => collaborator.id));
+			updatedData.collaborators = [...existingCollaborators, ...newCollaborators];
+		}
+		return true;
+	}
+	return false;
+}
+
+const updateDblpPidMapping = async (dblpPid: string, researcherRef: DocumentReference<ResearcherEntry>) => {
+	if (dblpPid) {
+		const dblpPidRef = doc(db, "dblp-pids", dblpPid.replace("/", "-")) as DocumentReference<DblpPid>;
+		await setDoc(dblpPidRef, {pid: dblpPid, researcher: researcherRef}, {merge: true});
+	}
+}
+
+interface ResearcherUpdateOptions<T extends ExtendedResearcher> {
+	collection: string;
+	getDocId: (name: string) => string;
+	transformData: (data: Partial<T>) => Partial<T>;
+}
+
+const updateResearcher = async <T extends ExtendedResearcher>(
+	researcher: Partial<T>,
+	options: ResearcherUpdateOptions<T>
+) => {
+	const { collection, getDocId, transformData } = options;
+	
+	if (!researcher.name) {
+		throw new Error("Researcher name is required");
+	}
+	
+	logger.info("Checking researcher", researcher.name);
+	
+	const docRef = doc(db, collection, getDocId(researcher.name)) as DocumentReference<T>;
+	const docSnap = await getDoc(docRef);
+	const updatedData = transformData(researcher);
+
+	let shouldUpdate = false;
+	let forceUpdateCollaborators = false;
+
+	if (!docSnap.exists()) {
+		updatedData.name = researcher.name;
+		updatedData.dblpPid = await fetchDblpPid(researcher.name);
+		updatedData.collaborators = [];
+		shouldUpdate = true;
+	} else {
+		const data = docSnap.data();
+		if (!data.dblpPid) {
+			const newDblpPid = await fetchDblpPid(researcher.name);
+			updatedData.dblpPid = newDblpPid;
+			if (data.dblpPid !== newDblpPid) {
+				forceUpdateCollaborators = true;
+			}
+		}
+		
+		shouldUpdate = Object.entries(updatedData).some(
+			([key, value]) => key in data && data[key as keyof T] !== value
+		);
+	}
+
+	shouldUpdate = shouldUpdate || await updateResearcherDblpInfo(
+		docRef as DocumentReference<ResearcherEntry>,
+		docSnap as DocumentSnapshot<ResearcherEntry>,
+		updatedData,
+		forceUpdateCollaborators
+	);
+
+	if (shouldUpdate) {
+		updatedData.lastUpdate = serverTimestamp();
+		await setDoc(docRef, updatedData, { merge: true });
+	}
+
+	if (updatedData.dblpPid) {
+		await updateDblpPidMapping(
+			updatedData.dblpPid,
+			docRef as DocumentReference<ResearcherEntry>
+		);
+	}
+	
+	return { docRef, updatedData, shouldUpdate };
+}
+
+const updateLabProfessors = async () => {
+	const professors = await getProfessors();
+
+	for (const professor of professors) {
+		await updateResearcher(professor, {
+			collection: "advisors",
+			getDocId: formatProfessorName,
+			transformData: (prof: Partial<ExtendedResearcher>) => ({
+				name: prof.name,
+				...(prof.url ? { url: prof.url } : {}),
+				...(prof.title ? { title: prof.title } : {}),
+				students: [],
+			}),
+		});
+	}
+}
+
 const updateLabStudents = async () => {
 	const students = await getLabStudents();
 	
 	for (const student of students) {
-		logger.info("Checking student", student.name);
-		const docRef = doc(db, "lab-members", student.name) as DocumentReference<LabMemberEntry>;
-		const docSnap = await getDoc(docRef);
+		const { docRef, shouldUpdate } = await updateResearcher(student, {
+			collection: "lab-members",
+			getDocId: (name) => name,
+			transformData: (stud: Partial<ExtendedResearcher>) => ({
+				...(typeof stud.hasDoctorate === "boolean" ? { hasDoctorate: stud.hasDoctorate } : {}),
+				...(stud.thesisTitle ? { thesisTitle: stud.thesisTitle } : {}),
+				...(stud.year ? { year: stud.year } : {}),
+				...(stud.url ? { url: stud.url } : {}),
+			}),
+		});
 
-		const updatedData: Partial<LabMemberEntry> = {
-			hasDoctorate: student.hasDoctorate,
-		};
-
-		if (student.thesisTitle) updatedData.thesisTitle = student.thesisTitle;
-		if (student.year) updatedData.year = student.year;
-		if (student.url) updatedData.url = student.url;
-
-		if ("advisors" in student && (student.advisors as string[]).length > 0) {
-			updatedData.advisors = [];
-			for (const advisor of (student.advisors as string[])) {
-				const advisorRef = doc(db, "advisors", advisor) as DocumentReference<AdvisorEntry>;
-				updatedData.advisors.push(advisorRef);
-			}
-		}
-
-		let shouldUpdateMember = false;
-		let shouldUpdateAdvisors = false;
-		let forceUpdateCollaborators = false;
-		
-		if (!docSnap.exists()) {
-			updatedData.name = student.name;
-			updatedData.dblpPid = await fetchDblpPid(student.name);
-			updatedData.collaborators = [];
-
-			shouldUpdateMember = true;
-			shouldUpdateAdvisors = true;
-		} else {
-			const data = docSnap.data();
-
-			if (!data.dblpPid) {
-				updatedData.dblpPid = await fetchDblpPid(student.name);
-
-				if (data.dblpPid !== updatedData.dblpPid)
-					forceUpdateCollaborators = true;
-			}
-
-			if (data.year === updatedData.year &&
-				data.url === updatedData.url &&
-				(data.advisors || []).length === (updatedData.advisors || []).length &&
-				data.hasDoctorate === updatedData.hasDoctorate &&
-				data.thesisTitle === updatedData.thesisTitle &&
-				data.dblpPid === updatedData.dblpPid) {
-			} else {
-				shouldUpdateMember = true;
-				shouldUpdateAdvisors = data.advisors !== updatedData.advisors;
-			}
-		}
-
-		const updatedRecently = docSnap.exists() && (docSnap.data().lastUpdate as Timestamp).toDate() > new Date(Date.now() - 1000 * 60 * 60 * 24 * 30 * 6);
-		const dblpPid = docSnap.exists() && docSnap.data().dblpPid ? docSnap.data().dblpPid : updatedData.dblpPid;
-
-		if (dblpPid && (!docSnap.exists() || !updatedRecently || forceUpdateCollaborators)) {
-			logger.info("Searching for new collaborators for", student.name);
-			const existingCollaborators = docSnap.exists() ? docSnap.data().collaborators || [] : [];
-			const newCollaborators = await fetchNewCollaborators(dblpPid, docRef, existingCollaborators);
-
-			if (newCollaborators.length > 0) {
-				logger.log("Adding collaborators", newCollaborators.map(collaborator => collaborator.id));
-				updatedData.collaborators = [...existingCollaborators, ...newCollaborators];
-			}
-
-			shouldUpdateMember = true;
-		}
-
-		if (shouldUpdateMember) {
-			updatedData.lastUpdate = serverTimestamp();
-			await setDoc(docRef, updatedData, {merge: true});
-		}
-
-		if (updatedData.dblpPid) {
-			const dblpPidRef = doc(db, "dblp-pids", updatedData.dblpPid.replace("/", "-")) as DocumentReference<DblpPid>;
-			await setDoc(dblpPidRef, {pid: updatedData.dblpPid, researcher: docRef}, {merge: true});
-		}
-
-		if (shouldUpdateAdvisors && "advisors" in student) {
-			for (const advisor of (student.advisors as string[])) {
+		// Handle advisors separately since it's unique to students
+		if (shouldUpdate && "advisors" in student) {
+			const advisors = student.advisors as string[];
+			for (const advisor of advisors) {
 				const advisorRef = doc(db, "advisors", advisor) as DocumentReference<AdvisorEntry>;
 				const advisorDoc = await getDoc(advisorRef);
+				
 				if (!advisorDoc.exists()) {
 					const advisorDblpPid = await fetchDblpPid(advisor);
 					await setDoc(advisorRef, {
@@ -375,13 +494,14 @@ const updateLabStudents = async () => {
 						students: [docRef],
 						dblpPid: advisorDblpPid,
 						collaborators: [],
-						title: "Professor"  // Adding default title
+						title: "Professor"
 					} as AdvisorEntry);
 
-					const dblpPidRef = doc(db, "dblp-pids", advisorDblpPid.replace("/", "-")) as DocumentReference<DblpPid>;
-					await setDoc(dblpPidRef, {pid: advisorDblpPid, researcher: advisorRef}, {merge: true});
+					await updateDblpPidMapping(advisorDblpPid, advisorRef);
 				} else if (!rcontains(advisorDoc.data().students, docRef)) {
-					await setDoc(advisorRef, {students: [...advisorDoc.data().students, docRef]}, {merge: true});
+					await setDoc(advisorRef, {
+						students: [...advisorDoc.data().students, docRef]
+					}, { merge: true });
 				}
 			}
 		}
@@ -392,60 +512,6 @@ const updateLabStudents = async () => {
 const formatProfessorName = (name: string) => {
 	const names = name.split(" ");
 	return `${names[0][0]}. ${names[names.length - 1]}`;
-}
-
-const updateLabProfessors = async () => {
-	const professors = await getProfessors();
-
-	for (const professor of professors) {
-		logger.info("Checking professor", professor.name);
-		const docRef = doc(db, "advisors", formatProfessorName(professor.name)) as DocumentReference<AdvisorEntry>;
-		const docSnap = await getDoc(docRef);
-
-		const updatedData: Partial<AdvisorEntry> = {
-			name: professor.name,
-		};
-
-		if (professor.url) updatedData.url = professor.url;
-		if (professor.title) updatedData.title = professor.title;
-
-		let shouldUpdateAdvisor = false;
-
-		if (!docSnap.exists()) {
-			updatedData.dblpPid = await fetchDblpPid(professor.name);
-			updatedData.students = [];
-			updatedData.collaborators = [];
-
-			shouldUpdateAdvisor = true;
-		} else {
-			shouldUpdateAdvisor = docSnap.data().url !== updatedData.url || docSnap.data().name !== updatedData.name || docSnap.data().title !== updatedData.title;
-		}
-
-		const updatedRecently = docSnap.exists() && (docSnap.data().lastUpdate as Timestamp).toDate() > new Date(Date.now() - 1000 * 60 * 60 * 24 * 30 * 6);
-		const dblpPid = docSnap.exists() ? docSnap.data().dblpPid : updatedData.dblpPid;
-
-		if (dblpPid && (!docSnap.exists() || (!updatedRecently && Math.random() < 0.5))) {
-			const existingCollaborators = docSnap.exists() ? docSnap.data().collaborators || [] : [];
-			const newCollaborators = await fetchNewCollaborators(dblpPid, docRef, existingCollaborators);
-
-			if (newCollaborators.length > 0) {
-				logger.log("Adding collaborators", newCollaborators.map(collaborator => collaborator.id));
-				updatedData.collaborators = [...existingCollaborators, ...newCollaborators];
-			}
-
-			shouldUpdateAdvisor = true;
-		}
-
-		if (shouldUpdateAdvisor) {
-			updatedData.lastUpdate = serverTimestamp();
-			await setDoc(docRef, updatedData, {merge: true});
-		}
-
-		if (updatedData.dblpPid) {
-			const dblpPidRef = doc(db, "dblp-pids", updatedData.dblpPid.replace("/", "-")) as DocumentReference<DblpPid>;
-			await setDoc(dblpPidRef, {pid: updatedData.dblpPid, researcher: docRef}, {merge: true});
-		}
-	}
 }
 
 export const fetchAllResearchers = onRequest(async (request, response) => {
@@ -471,12 +537,10 @@ export const fetchAllResearchers = onRequest(async (request, response) => {
 			return {...student, advisors, collaborators};
 		});
 
-		return response.json(
-			{
-				professors,
-				students,
-			}
-		);
+		return response.json({
+			professors,
+			students,
+		});
 	});
 });
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ophd/models/social_link.dart';
 
@@ -32,7 +33,7 @@ final List<SocialLink> socials = [
     types: { SocialType.contact },
   ),
   SocialLink(
-    icon: const AssetImage('assets/images/avatar_scholar_256.png'),
+    icon: SvgPicture.asset('assets/images/Google_Scholar_logo.svg'),
     url: 'https://scholar.google.com/citations?hl=en&user=t9s-uKcAAAAJ',
     label: 'Google Scholar',
     isMain: false,
@@ -67,27 +68,26 @@ final List<SocialLink> socials = [
     types: { SocialType.personal },
   ),
   SocialLink(
-    icon: const AssetImage('assets/images/acm_icon_256.png'),
+    icon: SvgPicture.asset('assets/images/acm_icon.svg'),
     url: 'https://dl.acm.org/profile/99660168076',
     label: 'ACM',
     isMain: false,
     types: { SocialType.research },
   ),
   SocialLink(
-    icon: const AssetImage('assets/images/arxiv_logo.jpg'),
+    icon: SvgPicture.asset('assets/images/arxiv-logo.svg'),
     url: 'https://arxiv.org/search/cs?searchtype=author&query=Gila%2C+O',
     label: 'arXiv',
     isMain: false,
     types: { SocialType.research },
   ),
   SocialLink(
-    icon: const AssetImage('assets/images/dblp_icon_256.png'),
+    icon: SvgPicture.asset('assets/images/dblp_icon.svg'),
     url: 'https://dblp.org/pid/352/4182.html',
     label: 'dblp',
     isMain: false,
     types: { SocialType.research },
   ),
-    // resume
   SocialLink(
     icon: FontAwesomeIcons.filePdf,
     url: 'assets/pdfs/resume.pdf',

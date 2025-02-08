@@ -120,6 +120,7 @@ flutter:
     - assets/images/acm_icon_256.png
     - assets/images/acm_icon.svg
     - assets/images/arxiv_logo.jpg
+    - assets/images/arxiv-logo.svg
     - assets/images/UCI_logo_256.png
     - assets/images/UCI_logo.svg
     - assets/images/CATOC.png
@@ -127,6 +128,7 @@ flutter:
     - assets/images/cocoa_nicole.jpg
     - assets/images/dblp_icon_256.png
     - assets/images/dblp_icon.svg
+    - assets/images/Google_Scholar_logo.svg
     - assets/images/snowflake_logo.png
     - assets/images/snowflake_logo.svg
     - assets/images/cloudera_logo.jpeg

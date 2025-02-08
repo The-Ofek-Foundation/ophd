@@ -6,6 +6,7 @@ import 'package:ophd/data/papers.dart';
 import 'package:ophd/models/author.dart';
 import 'package:ophd/models/paper.dart';
 import 'package:ophd/utils/screen_utils.dart';
+import 'package:ophd/widgets/card_header_icon.dart';
 import 'package:ophd/widgets/clickable_markdown.dart';
 import 'package:ophd/widgets/expandable_image.dart';
 import 'package:ophd/widgets/launchable_icon_button.dart';
@@ -21,11 +22,11 @@ class PublicationPage extends StatelessWidget {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            _buildTheoryOverview(context),
+            CardWrapper(child: _buildTheoryOverview(context)),
             for (final paper in papers)
               if (paper.researchCategory == ResearchCategory.theory)
-                CardWrapper(child: _buildPaperBlock(context, paper)),
-            _buildEducationOverview(context),
+              CardWrapper(child: _buildPaperBlock(context, paper)),
+            CardWrapper(child: _buildEducationOverview(context)),
             for (final paper in papers)
               if (paper.researchCategory == ResearchCategory.education)
                 CardWrapper(child: _buildPaperBlock(context, paper)),
@@ -36,23 +37,35 @@ class PublicationPage extends StatelessWidget {
   }
 
   Widget _buildTheoryOverview(BuildContext context) {
-    return CardWrapper(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SelectableText(
-            'Theoretical Computer Science Papers',
-            style: Theme.of(context).textTheme.headlineLarge,
-            textAlign: TextAlign.center,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        const CardHeaderIcon(
+          icon: FontAwesomeIcons.book,
+        ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SelectableText(
+                'Theoretical Computer Science',
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 4),
+              SelectableText(
+                'Randomized Algorithms and Data Structures',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.secondary,
+                  fontFamily: 'RobotoMono',
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 16),
-          SelectableText(
-            'The vast majority of my research time is spent in theoretical computer science research, with a focus on randomized algorithms and data structures. Here is a selection of my work.',
-            style: Theme.of(context).textTheme.bodyLarge,
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -161,27 +174,51 @@ class PublicationPage extends StatelessWidget {
   }
 
   Widget _buildEducationOverview(BuildContext context) {
-    return CardWrapper(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SelectableText(
-            'Computer Science Education Papers',
-            style: Theme.of(context).textTheme.headlineLarge,
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 16),
-          SelectableText(
-            'During my time as a UCI PhD student, I have had the opportunity to tag along on some CS ed research projects.',
-            style: Theme.of(context).textTheme.bodyLarge,
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            const CardHeaderIcon(
+              icon: Icons.school,
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SelectableText(
+                    'Computer Science Education',
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  SelectableText(
+                    'Research in CS Education at UCI',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.secondary,
+                      fontFamily: 'RobotoMono',
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        const Divider(),
+        const SizedBox(height: 16),
+        SelectableText(
+          'I\'ve had the opportunity to tag along on some CS ed research projects.',
+          style: Theme.of(context).textTheme.bodyLarge,
+        ),
+      ],
     );
   }
-}
 
-String _formatDate(DateTime date) {
-  return DateFormat('MMM d, yyyy').format(date);
+  String _formatDate(DateTime date) {
+    return DateFormat('MMM d, yyyy').format(date);
+  }
 }

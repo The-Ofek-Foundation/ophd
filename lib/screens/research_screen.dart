@@ -245,7 +245,7 @@ class ResearchPage extends StatelessWidget {
                 ),
               ),
               IconButton(
-                icon: const Icon(Icons.article_outlined, size: 16),
+                icon: const Icon(FontAwesomeIcons.scroll, size: 16),
                 onPressed: () => launchURL(paperUrl),
                 tooltip: 'View paper',
                 visualDensity: VisualDensity.compact,

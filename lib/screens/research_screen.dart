@@ -495,7 +495,19 @@ class _LabGraphState extends State<LabGraph> {
                 children: [
                   for (StudentResearcher student in unconnectedStudents)
                     ActionChip(
-                      label: Text(student.name),
+                      label: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(student.name),
+                          if (student.hasDoctorate) ...[
+                            const SizedBox(width: 4),
+                            const Icon(
+                              Icons.school,
+                              size: 16,
+                            ),
+                          ]
+                        ],
+                      ),
                       onPressed: () => _showStudentDetails(context, student),
                     ),
                 ],
@@ -739,7 +751,7 @@ class ResearcherDetailsModal extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.3),
+        color: Theme.of(context).colorScheme.surfaceContainerHighest.withAlpha(77),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: Theme.of(context).colorScheme.outlineVariant,

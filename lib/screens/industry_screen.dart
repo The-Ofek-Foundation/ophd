@@ -75,18 +75,16 @@ class JobCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return HighlightedCard(
       highlighted: job.isSelected,
-      child: CardItself(
-        child: Column(
-          children: [
-            CollapsibleLeading(
-              initiallyExpanded: false,
-              leading: JobLeading(job: job),
-              header: JobHeader(job: job),
-              footer: JobFooter(job: job),
-              child: JobBody(job: job),
-            ),
-          ],
-        ),
+      child: Column(
+        children: [
+          CollapsibleLeading(
+            initiallyExpanded: false,
+            leading: JobLeading(job: job),
+            header: JobHeader(job: job),
+            footer: JobFooter(job: job),
+            child: JobBody(job: job),
+          ),
+        ],
       ),
     );
   }

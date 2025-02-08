@@ -94,7 +94,19 @@ class HighlightedCard extends StatelessWidget {
             ),
           ],
         ) : null,
-        child: CardItself(child: child),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
+            borderRadius: BorderRadius.circular(32),
+          ),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surface.withAlpha(120),
+              borderRadius: BorderRadius.circular(24),
+            ),
+            child: CardItself(child: child)
+          ),
+        ),
       ),
     );
   }

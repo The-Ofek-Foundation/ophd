@@ -3,6 +3,7 @@ import 'package:ophd/data/jobs.dart';
 import 'package:ophd/data/social_links.dart';
 import 'package:ophd/models/job.dart';
 import 'package:ophd/models/social_link.dart';
+import 'package:ophd/widgets/card_header_icon.dart';
 import 'package:ophd/widgets/clickable_image.dart';
 import 'package:ophd/widgets/clickable_markdown.dart';
 import 'package:ophd/widgets/collapsible_leading.dart';
@@ -20,7 +21,8 @@ class IndustryPage extends StatelessWidget {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            const JobOverviewCard(),
+            CardWrapper(child: JobOverviewCard()),
+            // const JobOverviewCard(),
             for (Job job in jobs)
               JobCard(job: job),
           ],
@@ -44,24 +46,59 @@ Below I list out all my internships (with select internships highlighted), and I
 [got patented]: https://www.patentguru.com/inventor/gila-ofek
 ''';
 
-    Wrap social = Wrap(
-      spacing: 8,
-      runSpacing: 8,
-      alignment: WrapAlignment.center,
-      runAlignment: WrapAlignment.center,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        for (SocialLink social in socials.where((social) => social.types.contains(SocialType.industry)))
-          LaunchableSocialButton(social: social),
-      ]
-    );
-
-    return CardWrapper(
-      child: Column(
-        children: [
-          ClickableMarkdown(data: overview, textAlign: WrapAlignment.center),
-          social,
-        ],
-      )
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            const CardHeaderIcon(
+              icon: Icons.work,
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SelectableText(
+                    'Industry Experience',
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  SelectableText(
+                    'From Startups to Large Corporations',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.secondary,
+                      fontFamily: 'RobotoMono',
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        const Padding(
+          padding: EdgeInsets.symmetric(vertical: 16),
+          child: Divider(),
+        ),
+        ClickableMarkdown(
+          data: overview,
+          textAlign: WrapAlignment.start,
+        ),
+        const SizedBox(height: 16),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          alignment: WrapAlignment.start,
+          runAlignment: WrapAlignment.start,
+          children: [
+            for (SocialLink social in socials.where((social) => social.types.contains(SocialType.industry)))
+              LaunchableSocialButton(social: social),
+          ],
+        ),
+      ],
     );
   }
 }

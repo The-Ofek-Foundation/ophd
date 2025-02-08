@@ -213,15 +213,15 @@ class ResearchPage extends StatelessWidget {
               Expanded(
                 child: Row(
                   children: [
-                    Text(
+                    SelectableText(
                       name1,
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.primary,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    const Text(' & '),
-                    Text(name2),
+                    const SelectableText(' & '),
+                    SelectableText(name2),
                   ],
                 ),
               ),
@@ -237,7 +237,7 @@ class ResearchPage extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: Text(
+                child: SelectableText(
                   paper,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: Theme.of(context).colorScheme.onSurfaceVariant,

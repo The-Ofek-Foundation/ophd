@@ -45,6 +45,7 @@ dependencies:
   font_awesome_flutter: ^10.4.0
   url_launcher: ^6.1.11
   flutter_scatter: ^0.2.0
+  flutter_svg: ^2.0.9
   intl: any
   flutter_markdown: ^0.7.6+1
   flutter_localizations:
@@ -117,13 +118,17 @@ flutter:
     - assets/images/profile.jpg
     - assets/images/avatar_scholar_256.png
     - assets/images/acm_icon_256.png
+    - assets/images/acm_icon.svg
     - assets/images/arxiv_logo.jpg
     - assets/images/UCI_logo_256.png
+    - assets/images/UCI_logo.svg
     - assets/images/CATOC.png
     - assets/images/wads_best_paper.jpg
     - assets/images/cocoa_nicole.jpg
     - assets/images/dblp_icon_256.png
+    - assets/images/dblp_icon.svg
     - assets/images/snowflake_logo.png
+    - assets/images/snowflake_logo.svg
     - assets/images/cloudera_logo.jpeg
     - assets/images/optical_research_associates_logo.jpeg
     - assets/images/recruiter_ai.jpeg

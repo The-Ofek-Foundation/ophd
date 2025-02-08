@@ -4,8 +4,10 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_scatter/flutter_scatter.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:graphview/GraphView.dart';
 import 'package:ophd/api/fetch_researchers.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:ophd/data/authors.dart';
 import 'package:ophd/data/okabe_ito.dart';
@@ -779,6 +781,8 @@ class ResearcherDetailsModal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool hasPhd = researcher is StudentResearcher ? (researcher as StudentResearcher).hasDoctorate : true;
+
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(24),
@@ -799,7 +803,7 @@ class ResearcherDetailsModal extends StatelessWidget {
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Icon(
-                    avatarIcon,
+                    hasPhd ? FontAwesomeIcons.userGraduate : avatarIcon,
                     color: backgroundColor != null ? Colors.white : Theme.of(context).colorScheme.onSecondaryContainer,
                     size: 32,
                   ),
@@ -835,6 +839,22 @@ class ResearcherDetailsModal extends StatelessWidget {
                     tooltip: 'Visit website',
                     onPressed: () => launchURL(researcher.url!),
                   ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8),
+                  child: IconButton.filledTonal(
+                    style: IconButton.styleFrom(
+                      backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                      foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
+                    ),
+                    icon: SvgPicture.asset(
+                      'assets/images/dblp_icon.svg',
+                      width: 24,
+                      height: 24,
+                    ),
+                    tooltip: 'View on DBLP',
+                    onPressed: () => launchURL('https://dblp.org/pid/${researcher.dblpPid}'),
+                  ),
+                ),
               ],
             ),
             const Padding(

@@ -55,14 +55,14 @@ class ResearchPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SelectableText(
-                    'Primary Research',
+                    AppLocalizations.of(context)!.researchPrimary,
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 4),
                   SelectableText(
-                    'Algorithms in the Real World',
+                    AppLocalizations.of(context)!.researchPrimarySubtitle,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       color: Theme.of(context).colorScheme.secondary,
                       fontFamily: 'RobotoMono',
@@ -112,14 +112,16 @@ class ResearchPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SelectableText(
-                    'Research Collaborators',
+                    AppLocalizations.of(context)!.researchCollaborators,
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 4),
                   SelectableText(
-                    'Special thanks to my amazing advisor, Michael Goodrich',
+                    AppLocalizations.of(context)!.researchCollaboratorsSubtitle(
+                      AppLocalizations.of(context)!.name('mikeg')
+                    ),
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       color: Theme.of(context).colorScheme.secondary,
                       fontFamily: 'RobotoMono',
@@ -154,7 +156,7 @@ class ResearchPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SelectableText(
-                    'Erdős Number',
+                    AppLocalizations.of(context)!.erdosNumber,
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
@@ -165,7 +167,7 @@ class ResearchPage extends StatelessWidget {
                     child: GestureDetector(
                       onTap: () => launchURL('https://en.wikipedia.org/wiki/Erd%C5%91s_number'),
                       child: Text(
-                        'Learn more about Erdős numbers',
+                        AppLocalizations.of(context)!.erdosNumberSubtitle,
                         style: Theme.of(context).textTheme.labelLarge?.copyWith(
                           color: Theme.of(context).colorScheme.primary,
                           decoration: TextDecoration.underline,
@@ -455,14 +457,14 @@ class _LabGraphState extends State<LabGraph> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SelectableText(
-                      'Lab Collaboration Graph',
+                      AppLocalizations.of(context)!.labGraphTitle,
                       style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     const SizedBox(height: 4),
                     SelectableText(
-                      'Interactive visualization of research collaborations',
+                      AppLocalizations.of(context)!.labGraphSubtitle,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         color: Theme.of(context).colorScheme.secondary,
                         fontFamily: 'RobotoMono',

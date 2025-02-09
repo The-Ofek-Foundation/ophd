@@ -3,7 +3,7 @@
 	"ofekGila": "אופק גילה",
 	"title": "פורטפוליו לדוקטורט של אופק",
 	"mySubtitle": "סטודנט דוקטורט, מדעי המחשב @ UCI",
-	"label": "{key, select, Family {משפחה} Website {אתר אישי} Blog {בלוג} LinkedIn {לינקדאין} Email {אימייל} Paper {מאמר} WhatsApp {וואטסאפ} Resume {קורות החיים} Sync {אחזר שיתופי פעולה חדשים} other {{key}}}",
+	"label": "{key, select, Family {משפחה} Website {אתר אישי} Blog {בלוג} LinkedIn {לינקדאין} Email {אימייל} Paper {מאמר} WhatsApp {וואטסאפ} Resume {קורות החיים} Sync {אחזר שיתופי פעולה חדשים} GoogleScholar {גוגל סקולר} other {{key}}}",
 	"@label": {
 		"placeholders": {
 			"key": {}
@@ -20,5 +20,25 @@
 		"placeholders": {
 			"key": {}
 		}
-	}
+	},
+	"researchPrimary": "מחקר עיקרי",
+	"@researchPrimary": {},
+	"researchPrimarySubtitle": "אלגוריתמים בעולם האמיתי",
+	"@researchPrimarySubtitle": {},
+	"researchCollaborators": "שותפי מחקר",
+	"@researchCollaborators": {},
+	"researchCollaboratorsSubtitle": "תודה במיוחד למנחה המדהים שלי, {name}",
+	"@researchCollaboratorsSubtitle": {
+		"placeholders": {
+			"name": {}
+		}
+	},
+	"erdosNumber": "מספר ארדש",
+	"@erdosNumber": {},
+	"erdosNumberSubtitle": "למד עוד על מספרי ארדש",
+	"@erdosNumberSubtitle": {},
+	"labGraphTitle": "גרף שיתופי פעולה במעבדה",
+	"@labGraphTitle": {},
+	"labGraphSubtitle": "ויזואליזציה אינטראקטיבית של שיתופי פעולה במחקר",
+	"@labGraphSubtitle": {}
 }

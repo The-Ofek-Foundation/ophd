@@ -49,6 +49,7 @@ class App extends StatelessWidget {
             ),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
+            locale: Locale('he', 'IL'),
           ),
         ),
       ),

@@ -6,7 +6,7 @@
 	"@title": {},
 	"mySubtitle": "PhD Student, Computer Science @ UCI",
 	"@mySubtitle": {},
-	"label": "{key, select, other {{key}}}",
+	"label": "{key, select, GoogleScholar {Google Scholar} other {{key}}}",
 	"@label": {
 		"placeholders": {
 			"key": {}
@@ -23,5 +23,25 @@
 		"placeholders": {
 			"key": {}
 		}
-	}
+	},
+	"researchPrimary": "Primary Research",
+	"@researchPrimary": {},
+	"researchPrimarySubtitle": "Algorithms in the Real World",
+	"@researchPrimarySubtitle": {},
+	"researchCollaborators": "Research Collaborators",
+	"@researchCollaborators": {},
+	"researchCollaboratorsSubtitle": "Special thanks to my amazing advisor, {name}",
+	"@researchCollaboratorsSubtitle": {
+		"placeholders": {
+			"name": {}
+		}
+	},
+	"erdosNumber": "Erdős Number",
+	"@erdosNumber": {},
+	"erdosNumberSubtitle": "Learn more about Erdős numbers",
+	"@erdosNumberSubtitle": {},
+	"labGraphTitle": "Lab Collaboration Graph",
+	"@labGraphTitle": {},
+	"labGraphSubtitle": "Interactive visualization of research collaborations",
+	"@labGraphSubtitle": {}
 }

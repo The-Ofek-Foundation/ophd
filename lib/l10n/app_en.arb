@@ -12,7 +12,7 @@
 			"key": {}
 		}
 	},
-	"name": "{key, select, ofek {Ofek Gila} mikeg {Michael Goodrich} bob {Robert Tarjan} evrim {Evrim Ozel} mikes {Michael Shindler} miked {Michael Dillencourt} nero {Nero Li} shahar {Shahar Broner} yubin {Yubin Kim} katrina {Katrina Mizuo} elijah {Elijah Sauder} claire {Claire To} albert {Albert Wang} abraham {Abraham Illickan} vinesh {Vinesh Sridhar} other {{key}}}",
+	"name": "{key, select, ofek {Ofek Gila} mikeg {Michael Goodrich} bob {Robert Tarjan} evrim {Evrim Ozel} mikes {Michael Shindler} miked {Michael Dillencourt} nero {Nero Li} shahar {Shahar Broner} yubin {Yubin Kim} katrina {Katrina Mizuo} elijah {Elijah Sauder} claire {Claire To} albert {Albert Wang} abraham {Abraham Illickan} vinesh {Vinesh Sridhar} paul {Paul Erdős} hedet {Stephan Hedetniemi} other {{key}}}",
 	"@name": {
 		"placeholders": {
 			"key": {}
@@ -43,5 +43,12 @@
 	"labGraphTitle": "Lab Collaboration Graph",
 	"@labGraphTitle": {},
 	"labGraphSubtitle": "Interactive visualization of research collaborations",
-	"@labGraphSubtitle": {}
+	"@labGraphSubtitle": {},
+	"link": "{key, select, viewPaper {View paper} viewPage {View {name}'s page} other {{key}}}",
+	"@link": {
+		"placeholders": {
+			"key": {},
+			"name": {}
+		}
+	}
 }

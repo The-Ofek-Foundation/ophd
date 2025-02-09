@@ -186,16 +186,17 @@ class ResearchPage extends StatelessWidget {
         ),
         Column(
           children: [
-            _buildErdosPathElement(context, 'Paul Erdős', 'https://en.wikipedia.org/wiki/Paul_Erdős', 'Stephan Hedetniemi', 'On the equality of the Grundy and ochromatic numbers of graphs', 'https://www.sciencedirect.com/science/article/pii/S0012365X03001845'),
-            _buildErdosPathElement(context, 'Stephan Hedetniemi', 'https://people.computing.clemson.edu/~hedet/Stephen_Hedetniemi/Stephen_T._Hedetniemi,_Professor.html', 'Bob Tarjan', 'B-matchings in trees', 'https://epubs.siam.org/doi/abs/10.1137/0205009?journalCode=smjcat'),
-            _buildErdosPathElement(context, 'Bob Tarjan', 'https://en.wikipedia.org/wiki/Robert_Tarjan', 'Ofek Gila', 'Zip-zip Trees: Making Zip Trees More Balanced, Biased, Compact, or Persistent', 'https://link.springer.com/chapter/10.1007/978-3-031-38906-1_31'),
+            _buildErdosPathElement(context, 'paul', 'https://en.wikipedia.org/wiki/Paul_Erdős', 'hedet', 'On the equality of the Grundy and ochromatic numbers of graphs', 'https://www.sciencedirect.com/science/article/pii/S0012365X03001845'),
+            _buildErdosPathElement(context, 'hedet', 'https://people.computing.clemson.edu/~hedet/Stephen_Hedetniemi/Stephen_T._Hedetniemi,_Professor.html', 'bob', 'B-matchings in trees', 'https://epubs.siam.org/doi/abs/10.1137/0205009?journalCode=smjcat'),
+            _buildErdosPathElement(context, 'bob', 'https://en.wikipedia.org/wiki/Robert_Tarjan', 'ofek', 'Zip-zip Trees: Making Zip Trees More Balanced, Biased, Compact, or Persistent', 'https://link.springer.com/chapter/10.1007/978-3-031-38906-1_31'),
           ],
         ),
       ],
     );
   }
 
-  Widget _buildErdosPathElement(BuildContext context, String name1, String personUrl1, String name2, String paper, String paperUrl) {
+  Widget _buildErdosPathElement(BuildContext context, String name1Key, String personUrl1, String name2Key, String paper, String paperUrl) {
+    final localizations = AppLocalizations.of(context)!;
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -216,21 +217,21 @@ class ResearchPage extends StatelessWidget {
                 child: Row(
                   children: [
                     SelectableText(
-                      name1,
+                      localizations.name(name1Key),
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.primary,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
                     const SelectableText(' & '),
-                    SelectableText(name2),
+                    SelectableText(localizations.name(name2Key)),
                   ],
                 ),
               ),
               IconButton(
                 icon: const Icon(Icons.open_in_new, size: 16),
                 onPressed: () => launchURL(personUrl1),
-                tooltip: 'View $name1\'s page',
+                tooltip: localizations.link('viewPage', localizations.name(name1Key)),
                 visualDensity: VisualDensity.compact,
               ),
             ],
@@ -249,7 +250,7 @@ class ResearchPage extends StatelessWidget {
               IconButton(
                 icon: const Icon(FontAwesomeIcons.scroll, size: 16),
                 onPressed: () => launchURL(paperUrl),
-                tooltip: 'View paper',
+                tooltip: localizations.link('viewPaper', ''),
                 visualDensity: VisualDensity.compact,
               ),
             ],

@@ -9,7 +9,7 @@
 			"key": {}
 		}
 	},
-	"name": "{key, select, ofek {אופק גילה} mikeg {מייקל גודריץ'} bob {רוברט טרג'אן} evrim {אברים אוזל} mikes {מייקל שינדלר} miked {מייקל דילנקורט} nero {נירו לי} shahar {שחר ברונר} yubin {יובין קים} katrina {קתרינה מיזאו} elijah {אליהו סאדר} claire {קלייר טו} albert {אלברט וואנג} abraham {אברהם איליקן} vinesh {וינש סרידהאר} other {{key}}}",
+	"name": "{key, select, ofek {אופק גילה} mikeg {מייקל גודריץ'} bob {רוברט טרג'אן} evrim {אברים אוזל} mikes {מייקל שינדלר} miked {מייקל דילנקורט} nero {נירו לי} shahar {שחר ברונר} yubin {יובין קים} katrina {קתרינה מיזאו} elijah {אליהו סאדר} claire {קלייר טו} albert {אלברט וואנג} abraham {אברהם איליקן} vinesh {וינש סרידהאר} paul {פול ארדש} hedet {סטפן הדטנימי} other {{key}}}",
 	"@name": {
 		"placeholders": {
 			"key": {}
@@ -40,5 +40,12 @@
 	"labGraphTitle": "גרף שיתופי פעולה במעבדה",
 	"@labGraphTitle": {},
 	"labGraphSubtitle": "ויזואליזציה אינטראקטיבית של שיתופי פעולה במחקר",
-	"@labGraphSubtitle": {}
+	"@labGraphSubtitle": {},
+	"link": "{key, select, viewPaper {צפה במאמר} viewPage {צפה בעמוד של {name}} other {{key}}}",
+	"@link": {
+		"placeholders": {
+			"key": {},
+			"name": {}
+		}
+	}
 }

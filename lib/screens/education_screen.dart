@@ -1,6 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:ophd/widgets/clickable_image.dart';
 import 'package:ophd/widgets/launchable_icon_button.dart';
 import 'package:ophd/widgets/leading_trailing_mid.dart';
@@ -26,6 +27,7 @@ class EducationPage extends StatelessWidget {
   }
 
   Widget _buildOverviewBlock(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -40,14 +42,14 @@ class EducationPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SelectableText(
-                    'Educational Journey',
+                    AppLocalizations.of(context)!.educationJourney,
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 4),
                   SelectableText(
-                    'From High School to Graduate Studies',
+                    AppLocalizations.of(context)!.educationJourneySubtitle,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       color: Theme.of(context).colorScheme.secondary,
                       fontFamily: 'RobotoMono',
@@ -64,29 +66,25 @@ class EducationPage extends StatelessWidget {
         ),
         SelectableText.rich(
           TextSpan(
-            text: 'I was raised in Cupertino, CA, and graduated from ',
             style: Theme.of(context).textTheme.bodyLarge,
             children: [
+              TextSpan(text: localizations.educationStoryStart),
               TextSpan(
-                text: 'Monta Vista High School',
+                text: localizations.montaVistaHS,
                 style: TextStyle(
                   fontFamily: 'RobotoMono',
                   color: Theme.of(context).colorScheme.primary,
-                )
+                ),
               ),
-              const TextSpan(
-                text: '. My passion for programming ignited during my freshman year with my first programming course. I continued to engage with AP Computer Science A as both a student and teaching assistant. In 2017, I started at ',
-              ),
+              TextSpan(text: localizations.educationStoryMid),
               TextSpan(
-                text: 'the University of California, Irvine',
+                text: localizations.uci,
                 style: TextStyle(
                   fontFamily: 'RobotoMono',
                   color: Theme.of(context).colorScheme.primary,
-                )
+                ),
               ),
-              const TextSpan(
-                text: ', pursuing a double major in Computer Science and Physics, graduating in 2021. Currently, I am pursuing a PhD at UCI.',
-              ),
+              TextSpan(text: localizations.educationStoryEnd),
             ],
           ),
           textAlign: TextAlign.start,
@@ -96,10 +94,12 @@ class EducationPage extends StatelessWidget {
   }
 
   Widget _buildEducationBlock(BuildContext context, {double width = 500}) {
+    final localizations = AppLocalizations.of(context)!;
+    
     UCILogo({double? width}) => ClickableImage(
       image: const AssetImage('assets/images/UCI_logo_256.png'),
       link: "https://uci.edu/",
-      tooltip: "UCI Homepage",
+      tooltip: localizations.uciHomepage,
       width: width,
     );
 
@@ -119,14 +119,14 @@ class EducationPage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SelectableText(
-                        'Academic Background',
+                        localizations.educationBackground,
                         style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       const SizedBox(height: 4),
                       SelectableText(
-                        'Computer Science and Physics at UCI',
+                        localizations.educationBackgroundSubtitle,
                         style: Theme.of(context).textTheme.titleMedium?.copyWith(
                           color: Theme.of(context).colorScheme.secondary,
                           fontFamily: 'RobotoMono',
@@ -147,39 +147,45 @@ class EducationPage extends StatelessWidget {
               const SizedBox(height: 16),
             LeadingTrailingMid(
               leading: constraints.maxWidth > width ? UCILogo(width: 100) : null,
-              trailing: const LaunchableIconButton(
-                icon: AssetImage('assets/images/CATOC.png'),
+              trailing: LaunchableIconButton(
+                icon: const AssetImage('assets/images/CATOC.png'),
                 url: 'https://ics.uci.edu/~theory/',
-                tooltip: 'UCI Theory Group',
+                tooltip: localizations.uciTheoryGroup,
               ),
               title: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SelectableText('Current Studies', 
+                  SelectableText(
+                    localizations.educationCurrentStudies,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
-                  const SelectableText('PhD in CS Theory (Algorithms in the Real World), UCI, ongoing'),
-                  const SelectableText('Masters attained on the way'),
+                  SelectableText(
+                    localizations.educationCurrentStudiesDetails,
+                  ),
+                  SelectableText(
+                    localizations.educationMasterNote,
+                  ),
                 ],
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 16),
-                  SelectableText('Undergraduate Studies',
+                  SelectableText(
+                    localizations.educationUndergrad,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
-                  const DegreeWidget(
-                    degree: 'BS in Physics, 2021',
+                  DegreeWidget(
+                    degree: localizations.degree(localizations.physics),
                     honors: 'Summa Cum Laude',
                     GPA: 3.92,
                   ),
-                  const DegreeWidget(
-                    degree: 'BS in Computer Science, 2021',
+                  DegreeWidget(
+                    degree: localizations.degree(localizations.computerScience),
                     honors: 'Magna Cum Laude',
                     GPA: 3.98,
                   ),
@@ -202,12 +208,15 @@ class DegreeWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+    final String localizedHonors = honors == 'Summa Cum Laude' ? localizations.summa : localizations.magna;
+    
     return SelectableText.rich(
       TextSpan(
         children: [
           TextSpan(text: '$degree '),
           TextSpan(
-            text: '($honors)',
+            text: '($localizedHonors)',
             style: TextStyle(
               fontWeight: FontWeight.bold,
               color: Theme.of(context).colorScheme.tertiary,

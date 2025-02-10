@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:ophd/data/jobs.dart';
 import 'package:ophd/data/social_links.dart';
 import 'package:ophd/models/job.dart';
@@ -61,14 +62,14 @@ Below I list out all my internships (with select internships highlighted), and I
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SelectableText(
-                    'Industry Experience',
+                    AppLocalizations.of(context)!.industryExperience,
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 4),
                   SelectableText(
-                    'From Startups to Large Corporations',
+                    AppLocalizations.of(context)!.industryExperienceSubtitle,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       color: Theme.of(context).colorScheme.secondary,
                       fontFamily: 'RobotoMono',

@@ -49,14 +49,14 @@ class PublicationPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SelectableText(
-                'Theoretical Computer Science',
+                AppLocalizations.of(context)!.publicationsTheory,
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
               ),
               const SizedBox(height: 4),
               SelectableText(
-                'Randomized Algorithms and Data Structures',
+                AppLocalizations.of(context)!.publicationsTheorySubtitle,
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   color: Theme.of(context).colorScheme.secondary,
                   fontFamily: 'RobotoMono',
@@ -189,14 +189,14 @@ class PublicationPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SelectableText(
-                    'Computer Science Education',
+                    AppLocalizations.of(context)!.publicationsEducation,
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 4),
                   SelectableText(
-                    'Research in CS Education at UCI',
+                    AppLocalizations.of(context)!.publicationsEducationSubtitle,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       color: Theme.of(context).colorScheme.secondary,
                       fontFamily: 'RobotoMono',
@@ -211,7 +211,7 @@ class PublicationPage extends StatelessWidget {
         const Divider(),
         const SizedBox(height: 16),
         SelectableText(
-          'I\'ve had the opportunity to tag along on some CS ed research projects.',
+          AppLocalizations.of(context)!.publicationsEducationIntro,
           style: Theme.of(context).textTheme.bodyLarge,
         ),
       ],

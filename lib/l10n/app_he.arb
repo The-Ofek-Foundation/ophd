@@ -33,6 +33,8 @@
 			"name": {}
 		}
 	},
+	"researchDescription": "עבודתי משלבת תיאוריה במדעי המחשב עם אימות ניסיוני, תוך התמקדות במבני נתונים אקראיים, כולל מודלים של גרפים ועצי חיפוש בינאריים.",
+	"@researchDescription": {},
 	"erdosNumber": "מספר ארדש",
 	"@erdosNumber": {},
 	"erdosNumberSubtitle": "למד עוד על מספרי ארדש",
@@ -41,11 +43,27 @@
 	"@labGraphTitle": {},
 	"labGraphSubtitle": "ויזואליזציה אינטראקטיבית של שיתופי פעולה במחקר",
 	"@labGraphSubtitle": {},
+	"labGraphDescriptionStart": "לפניכם גרף של כל חברי המעבדה שלי, ",
+	"@labGraphDescriptionStart": {},
+	"labGraphDescriptionLink": "מעבדת התיאוריה",
+	"@labGraphDescriptionLink": {},
+	"labGraphDescriptionEnd": ", ב-UCI. הקשתות מייצגות כתיבה משותפת של מאמרי מחקר. אתם מוזמנים לבחור בחברי הסגל כדי לראות את שיתופי הפעולה שלהם, ועל כל אדם כדי לראות פרטים נוספים.",
+	"@labGraphDescriptionEnd": {},
+	"unconnectedLabMembersTitle": "חברי מעבדה ללא קשרים",
+	"@unconnectedLabMembersTitle": {},
+	"unconnectedLabMembersSubtitle": "ה-{count} חברי המעבדה שטרם שיתפו פעולה עם חברי מעבדה אחרים או עם חברי הסגל המוצגים באיור, רשומים מטה.",
+	"@unconnectedLabMembersSubtitle": {
+		"placeholders": {
+			"count": {}
+		}
+	},
 	"link": "{key, select, viewPaper {צפה במאמר} viewPage {צפה בעמוד של {name}} other {{key}}}",
 	"@link": {
 		"placeholders": {
 			"key": {},
 			"name": {}
 		}
-	}
+	},
+	"labGraphInfo": "אם אתה חבר מעבדה ואם חסר לך חיבור, אנא נסה לסנכרן את מסד הנתונים באמצעות כפתור הטעינה מחדש. אם זה לא עובד, ייתכן שהפרסום שלך חדש מדי ועדיין לא מופיע ב-DBLP, שיש לי מזהה DBLP שגוי המשויך אליך, או שהפרסום שלך בתחום משיק ואינו מופיע ב-DBLP. בכל אחד מהמקרים, תוכל ליצור איתי קשר כדי לעדכן את הנתונים באופן ידני.",
+	"@labGraphInfo": {}
 }

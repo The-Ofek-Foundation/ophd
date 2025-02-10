@@ -36,6 +36,8 @@
 			"name": {}
 		}
 	},
+	"researchDescription": "My work combines computer science theory with experimental validation, focusing on randomized data structures including graph models and binary search trees.",
+	"@researchDescription": {},
 	"erdosNumber": "Erdős Number",
 	"@erdosNumber": {},
 	"erdosNumberSubtitle": "Learn more about Erdős numbers",
@@ -44,11 +46,27 @@
 	"@labGraphTitle": {},
 	"labGraphSubtitle": "Interactive visualization of research collaborations",
 	"@labGraphSubtitle": {},
+	"labGraphDescriptionStart": "Here is a graph of all the members of my lab, the ",
+	"@labGraphDescriptionStart": {},
+	"labGraphDescriptionLink": "theory lab",
+	"@labGraphDescriptionLink": {},
+	"labGraphDescriptionEnd": ", at UCI. Edges correspond to co-authorship on research papers. Feel free to select faculty members to see their collaborations, and on any person to see more details.",
+	"@labGraphDescriptionEnd": {},
+	"unconnectedLabMembersTitle": "Unconnected Lab Members",
+	"@unconnectedLabMembersTitle": {},
+	"unconnectedLabMembersSubtitle": "The {count} lab members who have not (yet) collaborated with any other lab members or shown faculty are listed below.",
+	"@unconnectedLabMembersSubtitle": {
+		"placeholders": {
+			"count": {}
+		}
+	},
 	"link": "{key, select, viewPaper {View paper} viewPage {View {name}'s page} other {{key}}}",
 	"@link": {
 		"placeholders": {
 			"key": {},
 			"name": {}
 		}
-	}
+	},
+	"labGraphInfo": "If you are a lab member and have a missing connection, please try syncing the database from the reload button. If that doesn't work, it is possible that either your publication is too recent and does not (yet) appear in DBLP, I have an incorrect DBLP ID associated with you, or your publication is in an adjacent field and does not appear in DBLP. In either case, you can contact me to manually update the data.",
+	"@labGraphInfo": {}
 }

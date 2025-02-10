@@ -1,7 +1,7 @@
 import 'dart:math';
 
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_scatter/flutter_scatter.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -79,7 +79,7 @@ class ResearchPage extends StatelessWidget {
           child: Divider(),
         ),
         SelectableText(
-          'My work combines computer science theory with experimental validation, focusing on randomized data structures including graph models and binary search trees.',
+          AppLocalizations.of(context)!.researchDescription,
           style: Theme.of(context).textTheme.bodyLarge,
           textAlign: TextAlign.start,
         ),
@@ -494,14 +494,14 @@ class _LabGraphState extends State<LabGraph> {
             child: SelectableText.rich(
               TextSpan(
                 children: [
-                  const TextSpan(text: 'Here is a graph of all the members of my lab, the '),
+                  TextSpan(text: AppLocalizations.of(context)!.labGraphDescriptionStart),
                   TextSpan(
-                    text: 'theory lab',
+                    text: AppLocalizations.of(context)!.labGraphDescriptionLink,
                     style: TextStyle(color: Theme.of(context).colorScheme.primary),
                     recognizer: TapGestureRecognizer()
                       ..onTap = () => launchURL('https://ics.uci.edu/~theory/'),
                   ),
-                  const TextSpan(text: ', at UCI. Edges correspond to co-authorship on research papers. Feel free to select faculty members to see their collaborations.'),
+                  TextSpan(text: AppLocalizations.of(context)!.labGraphDescriptionEnd),
                 ],
               ),
               style: Theme.of(context).textTheme.bodyLarge,
@@ -618,14 +618,14 @@ class _LabGraphState extends State<LabGraph> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SelectableText(
-                        'Unconnected Lab Members',
+                        AppLocalizations.of(context)!.unconnectedLabMembersTitle,
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       const SizedBox(height: 12),
                       SelectableText(
-                        'The ${unconnectedStudents.length} lab members who have not (yet) collaborated with any other lab members or shown faculty are listed below.',
+                        AppLocalizations.of(context)!.unconnectedLabMembersSubtitle(unconnectedStudents.length.toString()),
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
                       const SizedBox(height: 16),
@@ -677,7 +677,7 @@ class _LabGraphState extends State<LabGraph> {
                       const SizedBox(width: 16),
                       Expanded(
                         child: SelectableText(
-                          'If you are a lab member and have a missing connection, please try syncing the database from the reload button. If that doesn\'t work, it is possible that either your publication is too recent and does not (yet) appear in DBLP, I have an incorrect DBLP ID associated with you, or your publication is in an adjacent field and does not appear in DBLP. In either case, you can contact me to manually update the data.',
+                          AppLocalizations.of(context)!.labGraphInfo,
                           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             color: Theme.of(context).colorScheme.onSurfaceVariant,
                           ),

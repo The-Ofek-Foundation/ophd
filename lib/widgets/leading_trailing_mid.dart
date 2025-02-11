@@ -16,12 +16,19 @@ class LeadingTrailingMid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isRTL = Directionality.of(context) == TextDirection.rtl;
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         if (leading != null)
           Padding(
-            padding: const EdgeInsets.only(right: 16, bottom: 8, top: 8),
+            padding: EdgeInsets.only(
+              left: isRTL ? 16 : 0,
+              right: isRTL ? 0 : 16,
+              bottom: 8,
+              top: 8
+            ),
             child: leading!,
           ),
         Expanded(child: Column(
@@ -32,7 +39,7 @@ class LeadingTrailingMid extends StatelessWidget {
                 Expanded(child: title),
                 if (trailing != null)
                   Padding(
-                    padding: const EdgeInsets.only(left: 10),
+                    padding: EdgeInsets.only(left: isRTL ? 0 : 10, right: isRTL ? 10 : 0),
                     child: trailing!,
                   ),
               ],

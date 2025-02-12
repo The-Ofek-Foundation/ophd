@@ -56,8 +56,8 @@ class LayoutState extends State<Layout> {
             label: Tooltip(
               message: 'English',
               child: SizedBox(
-                width: 24,  // Increased from 22
-                height: 16,  // Increased from 15
+                width: 24,
+                height: 16,
                 child: SvgPicture.asset(
                   'assets/images/Flag_of_the_United_States.svg',
                   fit: BoxFit.contain,
@@ -70,8 +70,8 @@ class LayoutState extends State<Layout> {
             label: Tooltip(
               message: 'עברית',
               child: SizedBox(
-                width: 24,  // Increased from 22
-                height: 16,  // Increased from 15
+                width: 24,
+                height: 16,
                 child: SvgPicture.asset(
                   'assets/images/Flag_of_Israel.svg',
                   fit: BoxFit.contain,
@@ -248,7 +248,7 @@ class LayoutState extends State<Layout> {
         } else {
           return Scaffold(
             appBar: AppBar(
-              title: Text(AppLocalizations.of(context)!.title),
+              title: SelectableText(AppLocalizations.of(context)!.title),
               backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
               actions: <Widget>[
                 _getLocaleSwitch(),

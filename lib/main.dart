@@ -45,7 +45,7 @@ class App extends StatelessWidget {
             builder: (themeContext) => Consumer<LocaleProvider>(
               builder: (context, localeProvider, _) => MaterialApp(
                 theme: ThemeProvider.themeOf(themeContext).data,
-                title: "Ofek PhD Portfolio",
+                title: "Ofek Portfolio",
                 initialRoute: '/about',
                 routes: {
                   for (PageDetails pd in pages)

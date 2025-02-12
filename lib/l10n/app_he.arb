@@ -1,7 +1,7 @@
 {
 	"@@locale": "he",
 	"ofekGila": "אופק גילה",
-	"title": "פורטפוליו לדוקטורט של אופק",
+	"title": "הפורטפוליו של אופק",
 	"mySubtitle": "סטודנט דוקטורט, מדעי המחשב @ UCI",
 	"label": "{key, select, Family {משפחה} Website {אתר אישי} Blog {בלוג} LinkedIn {לינקדאין} Email {אימייל} Paper {מאמר} WhatsApp {וואטסאפ} Resume {קורות החיים} Sync {אחזר שיתופי פעולה חדשים} GoogleScholar {גוגל סקולר} other {{key}}}",
 	"@label": {

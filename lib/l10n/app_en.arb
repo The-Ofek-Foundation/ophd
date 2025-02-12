@@ -134,5 +134,11 @@
 		"placeholders": {
 			"key": {}
 		}
+	},
+	"award": "{key, select, Best_Paper {Best Paper} other {{key}}}",
+	"@award": {
+		"placeholders": {
+			"key": {}
+		}
 	}
 }

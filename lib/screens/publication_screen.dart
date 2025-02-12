@@ -166,7 +166,7 @@ class PublicationPage extends StatelessWidget {
                 child: Wrap(
                   spacing: 8.0,
                   children: paper.awards!.map((award) => Chip(
-                    label: Text(award),
+                    label: Text(AppLocalizations.of(context)!.award(award.replaceAll(' ', '_'))),
                     avatar: Icon(Icons.star, color: Theme.of(context).colorScheme.tertiary),
                   )).toList(),
                 ),

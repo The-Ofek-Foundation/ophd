@@ -103,7 +103,7 @@ class LayoutState extends State<Layout> {
           ),
           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           visualDensity: VisualDensity.compact,
-          padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 2)),
+          padding: WidgetStateProperty.all(const EdgeInsets.symmetric(horizontal: 2)),
         ),
         showSelectedIcon: false,
       ),

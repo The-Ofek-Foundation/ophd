@@ -1,10 +1,12 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:ophd/data/pages.dart';
 import 'package:ophd/models/page.dart';
+import 'package:ophd/providers/locale_provider.dart';
 import 'package:ophd/utils/replace_history_state.dart';
 import 'package:theme_provider/theme_provider.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class Layout extends StatefulWidget {
   final PageDetails pageDetails;
@@ -12,10 +14,10 @@ class Layout extends StatefulWidget {
   const Layout({super.key, required this.pageDetails});
 
   @override
-  State<Layout> createState() => _LayoutState(); 
+  State<Layout> createState() => LayoutState(); 
 }
 
-class _LayoutState extends State<Layout> {
+class LayoutState extends State<Layout> {
   late PageDetails _pd;
   bool _isDarkMode = false;
   int _selectedContrast = 0;
@@ -40,6 +42,72 @@ class _LayoutState extends State<Layout> {
     });
 
     replaceHistoryState(_pd.label, '/#${_pd.pathname}');
+  }
+
+  Widget _getLocaleSwitch() {
+    final localeProvider = Provider.of<LocaleProvider>(context);
+    return SizedBox(
+      height: 30,
+      width: 80,  // Make even more compact
+      child: SegmentedButton<String>(
+        segments: [
+          ButtonSegment<String>(
+            value: 'en',
+            label: Tooltip(
+              message: 'English',
+              child: SizedBox(
+                width: 24,  // Increased from 22
+                height: 16,  // Increased from 15
+                child: SvgPicture.asset(
+                  'assets/images/Flag_of_the_United_States.svg',
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
+          ),
+          ButtonSegment<String>(
+            value: 'he',
+            label: Tooltip(
+              message: 'עברית',
+              child: SizedBox(
+                width: 24,  // Increased from 22
+                height: 16,  // Increased from 15
+                child: SvgPicture.asset(
+                  'assets/images/Flag_of_Israel.svg',
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
+          ),
+        ],
+        selected: {localeProvider.locale.languageCode},
+        onSelectionChanged: (Set<String> selected) {
+          localeProvider.setLocale(selected.first);
+        },
+        style: ButtonStyle(
+          backgroundColor: WidgetStateProperty.resolveWith<Color?>(
+            (Set<WidgetState> states) {
+              if (states.contains(WidgetState.selected)) {
+                return Theme.of(context).colorScheme.primaryContainer;
+              }
+              return null;
+            },
+          ),
+          foregroundColor: WidgetStateProperty.resolveWith<Color?>(
+            (Set<WidgetState> states) {
+              if (states.contains(WidgetState.selected)) {
+                return Theme.of(context).colorScheme.onPrimaryContainer;
+              }
+              return null;
+            },
+          ),
+          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          visualDensity: VisualDensity.compact,
+          padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 2)),
+        ),
+        showSelectedIcon: false,
+      ),
+    );
   }
 
   void _updateContrastFromTheme() {
@@ -162,6 +230,8 @@ class _LayoutState extends State<Layout> {
                         ],
                       ),
                     ),
+                    _getLocaleSwitch(),
+                    const SizedBox(height: 5),
                     _getThemeSwitch(),
                     const SizedBox(height: 5),
                     _getContrastSelector(),
@@ -181,6 +251,7 @@ class _LayoutState extends State<Layout> {
               title: Text(AppLocalizations.of(context)!.title),
               backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
               actions: <Widget>[
+                _getLocaleSwitch(),
                 _getThemeSwitch(),
                 _getContrastSelector(),
                 const SizedBox(width: 5),

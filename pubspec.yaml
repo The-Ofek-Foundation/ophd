@@ -128,6 +128,8 @@ flutter:
     - assets/images/cocoa_nicole.jpg
     - assets/images/dblp_icon_256.png
     - assets/images/dblp_icon.svg
+    - assets/images/Flag_of_Israel.svg
+    - assets/images/Flag_of_the_United_States.svg
     - assets/images/Google_Scholar_logo.svg
     - assets/images/snowflake_logo.png
     - assets/images/snowflake_logo.svg

@@ -132,5 +132,11 @@
 	"industryExperience": "ניסיון תעשייתי",
 	"@industryExperience": {},
 	"industryExperienceSubtitle": "מסטארט-אפים ועד תאגידים גדולים",
-	"@industryExperienceSubtitle": {}
+	"@industryExperienceSubtitle": {},
+	"conference": "{key, select, COCOA {כנס לאופטימיזציה קומבינטורית ויישומים} WADS {הסימפוזיון לאלגוריתמים ומבני נתונים} CCSC {כתב העת למדעי המחשב במכללות} SIGCSE {קבוצת העניין המיוחדת בחינוך מדעי המחשב} CIAC {הכנס הבינלאומי לאלגוריתמים ומורכבות} other {{key}}}",
+	"@conference": {
+		"placeholders": {
+			"key": {}
+		}
+	}
 }

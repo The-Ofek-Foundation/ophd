@@ -128,5 +128,11 @@
 	"industryExperience": "Industry Experience",
 	"@industryExperience": {},
 	"industryExperienceSubtitle": "From Startups to Large Corporations",
-	"@industryExperienceSubtitle": {}
+	"@industryExperienceSubtitle": {},
+	"conference": "{key, select, COCOA {Conference on Combinatorial Optimization and Applications} WADS {Algorithms and Data Structures Symposium} CCSC {Journal of Computing Sciences in Colleges} SIGCSE {Special Interest Group on Computer Science Education} CIAC {International Conference on Algorithms and Complexity} other {{key}}}",
+	"@conference": {
+		"placeholders": {
+			"key": {}
+		}
+	}
 }

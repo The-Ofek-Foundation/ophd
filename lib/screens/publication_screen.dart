@@ -106,7 +106,11 @@ class PublicationPage extends StatelessWidget {
                     children: [
                       InkWell(
                         child: Text(
-                          constraints.maxWidth > width ? '${paper.conference.fullName} (${paper.conference.shortName})' : (constraints.maxWidth / 2 > width / 3 ? paper.conference.fullName : paper.conference.shortName) ,
+                          constraints.maxWidth > width ? 
+                            '${AppLocalizations.of(context)!.conference(paper.conference.shortName)} (${paper.conference.shortName})' : 
+                            (constraints.maxWidth / 2 > width / 3 ? 
+                              AppLocalizations.of(context)!.conference(paper.conference.shortName) : 
+                              paper.conference.shortName),
                           style: TextStyle(
                             color: Theme.of(context).colorScheme.secondary,
                           ),
@@ -115,7 +119,7 @@ class PublicationPage extends StatelessWidget {
                       ),
                       InkWell(
                         child: Text(
-                          _formatDate(paper.date),
+                          _formatDate(context, paper.date),
                           style: TextStyle(
                             color: Theme.of(context).textTheme.bodyMedium!.color!,
                           ),
@@ -218,7 +222,16 @@ class PublicationPage extends StatelessWidget {
     );
   }
 
-  String _formatDate(DateTime date) {
-    return DateFormat('MMM d, yyyy').format(date);
+  String _formatDate(BuildContext context, DateTime date) {
+    final locale = Localizations.localeOf(context).languageCode;
+    if (locale == 'he') {
+      // Use Unicode control characters to handle bidirectional text correctly
+      // LRM (Left-to-Right Mark) for numbers, RLM (Right-to-Left Mark) for Hebrew text
+      final day = date.day.toString();
+      final month = DateFormat.MMMM(locale).format(date);
+      final year = date.year.toString();
+      return '\u200E$day \u200Fב${month}, \u200E$year';
+    }
+    return DateFormat('MMM d, yyyy', locale).format(date);
   }
 }

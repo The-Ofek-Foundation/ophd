@@ -1003,22 +1003,23 @@ class ResearcherDetailsModal extends StatelessWidget {
                     tooltip: 'Visit website',
                     onPressed: () => launchURL(researcher.url!),
                   ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 8),
-                  child: IconButton.filledTonal(
-                    style: IconButton.styleFrom(
-                      backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-                      foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
+                if (researcher.dblpPid.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8),
+                    child: IconButton.filledTonal(
+                      style: IconButton.styleFrom(
+                        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                        foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
+                      ),
+                      icon: SvgPicture.asset(
+                        'assets/images/dblp_icon.svg',
+                        width: 24,
+                        height: 24,
+                      ),
+                      tooltip: 'View on DBLP',
+                      onPressed: () => launchURL('https://dblp.org/pid/${researcher.dblpPid}'),
                     ),
-                    icon: SvgPicture.asset(
-                      'assets/images/dblp_icon.svg',
-                      width: 24,
-                      height: 24,
-                    ),
-                    tooltip: 'View on DBLP',
-                    onPressed: () => launchURL('https://dblp.org/pid/${researcher.dblpPid}'),
                   ),
-                ),
               ],
             ),
             const Padding(

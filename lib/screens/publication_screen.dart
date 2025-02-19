@@ -230,7 +230,7 @@ class PublicationPage extends StatelessWidget {
       final day = date.day.toString();
       final month = DateFormat.MMMM(locale).format(date);
       final year = date.year.toString();
-      return '\u200E$day \u200Fב${month}, \u200E$year';
+      return '\u200E$day \u200Fב$month, \u200E$year';
     }
     return DateFormat('MMM d, yyyy', locale).format(date);
   }

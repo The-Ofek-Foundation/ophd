@@ -34,7 +34,7 @@ final List<SocialLink> socials = [
   ),
   SocialLink(
     icon: SvgPicture.asset('assets/images/Google_Scholar_logo.svg'),
-    url: 'https://scholar.google.com/citations?hl=en&user=t9s-uKcAAAAJ',
+    url: 'https://scholar.google.com/citations?user=GiGDoI8AAAAJ&hl=en',
     label: 'GoogleScholar',
     isMain: false,
     types: { SocialType.research },

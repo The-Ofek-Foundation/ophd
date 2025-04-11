@@ -625,7 +625,7 @@ class _LabGraphState extends State<LabGraph> {
                       ),
                       const SizedBox(height: 12),
                       SelectableText(
-                        AppLocalizations.of(context)!.unconnectedLabMembersSubtitle(unconnectedStudents.length.toString()),
+                        AppLocalizations.of(context)!.unconnectedLabMembersSubtitle(unconnectedStudents.length),
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
                       const SizedBox(height: 16),
@@ -748,12 +748,12 @@ class _LabGraphState extends State<LabGraph> {
     if (i is! StudentResearcher) return Container(); // Skip non-students
 
     return ActionChip(
-      backgroundColor: i.name == 'Ofek Gila' ? 
-        Theme.of(context).colorScheme.tertiary : 
+      backgroundColor: i.name == 'Ofek Gila' ?
+        Theme.of(context).colorScheme.tertiary :
         Theme.of(context).colorScheme.tertiaryContainer,
       labelStyle: TextStyle(
-        color: i.name == 'Ofek Gila' ? 
-          Theme.of(context).colorScheme.onTertiary : 
+        color: i.name == 'Ofek Gila' ?
+          Theme.of(context).colorScheme.onTertiary :
           Theme.of(context).colorScheme.onTertiaryContainer,
       ),
       label: Row(
@@ -765,7 +765,7 @@ class _LabGraphState extends State<LabGraph> {
             Icon(
               Icons.school,
               size: 16,
-              color: i.name == 'Ofek Gila' ? 
+              color: i.name == 'Ofek Gila' ?
                 Theme.of(context).colorScheme.onTertiary :
                 Theme.of(context).colorScheme.onTertiaryContainer,
             ),
@@ -825,7 +825,7 @@ class ResearcherDetailsModal extends StatelessWidget {
         context,
         Icons.school,
         'Graduation Status',
-        student.hasDoctorate 
+        student.hasDoctorate
           ? (student.year != null ? '${student.year} (PhD)' : 'Unknown (PhD)')
           : 'PhD not yet awarded',
       ));
@@ -840,14 +840,14 @@ class ResearcherDetailsModal extends StatelessWidget {
       }
     } else if (researcher is ProfessorResearcher) {
       final professor = researcher as ProfessorResearcher;
-      final gradStudents = allResearchers!.students.where((s) => 
+      final gradStudents = allResearchers!.students.where((s) =>
         s.advisors?.any((a) => a.name == professor.name) ?? false).toList()
         ..sort((a, b) => (a.year ?? 9999).compareTo(b.year ?? 9999));
-      
+
       final currentStudents = gradStudents.where((s) => !s.hasDoctorate).length;
       final graduatedStudents = gradStudents.where((s) => s.hasDoctorate).toList();
-      final yearRange = graduatedStudents.isEmpty ? null : 
-        graduatedStudents.first.year == graduatedStudents.last.year ? 
+      final yearRange = graduatedStudents.isEmpty ? null :
+        graduatedStudents.first.year == graduatedStudents.last.year ?
         graduatedStudents.first.year.toString() :
         '${graduatedStudents.first.year} – ${graduatedStudents.last.year}';
 
@@ -868,7 +868,7 @@ class ResearcherDetailsModal extends StatelessWidget {
           '',
           customContent: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: graduatedStudents.reversed.take(3).map((s) => 
+            children: graduatedStudents.reversed.take(3).map((s) =>
               Padding(
                 padding: const EdgeInsets.only(bottom: 4),
                 child: Row(

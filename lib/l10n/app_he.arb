@@ -6,19 +6,25 @@
 	"label": "{key, select, Family {משפחה} Website {אתר אישי} Blog {בלוג} LinkedIn {לינקדאין} Email {אימייל} Paper {מאמר} WhatsApp {וואטסאפ} Resume {קורות החיים} Sync {אחזר שיתופי פעולה חדשים} GoogleScholar {גוגל סקולר} other {{key}}}",
 	"@label": {
 		"placeholders": {
-			"key": {}
+			"key": {
+				"type": "String"
+			}
 		}
 	},
 	"name": "{key, select, ofek {אופק גילה} mikeg {מייקל גודריץ'} bob {רוברט טרג'אן} evrim {אברים אוזל} mikes {מייקל שינדלר} miked {מייקל דילנקורט} nero {נירו לי} shahar {שחר ברונר} yubin {יובין קים} katrina {קתרינה מיזאו} elijah {אליהו סאדר} claire {קלייר טו} albert {אלברט וואנג} abraham {אברהם איליקן} vinesh {וינש סרידהאר} paul {פול ארדש} hedet {סטפן הדטנימי} other {{key}}}",
 	"@name": {
 		"placeholders": {
-			"key": {}
+			"key": {
+				"type": "String"
+			}
 		}
 	},
 	"page": "{key, select, About {אודות} Research {מחקר} Publications {פרסומים} Education {השכלה} Contact {צור קשר} Industry {תעשייה} other {{key}}}",
 	"@page": {
 		"placeholders": {
-			"key": {}
+			"key": {
+				"type": "String"
+			}
 		}
 	},
 	"researchPrimary": "מחקר עיקרי",
@@ -30,7 +36,9 @@
 	"researchCollaboratorsSubtitle": "תודה במיוחד למנחה המדהים שלי, {name}",
 	"@researchCollaboratorsSubtitle": {
 		"placeholders": {
-			"name": {}
+			"name": {
+				"type": "String"
+			}
 		}
 	},
 	"researchDescription": "עבודתי משלבת תיאוריה במדעי המחשב עם אימות ניסיוני, תוך התמקדות במבני נתונים אקראיים, כולל מודלים של גרפים ועצי חיפוש בינאריים.",
@@ -54,14 +62,20 @@
 	"unconnectedLabMembersSubtitle": "ה-{count} חברי המעבדה שטרם שיתפו פעולה עם חברי מעבדה אחרים או עם חברי הסגל המוצגים באיור, רשומים מטה.",
 	"@unconnectedLabMembersSubtitle": {
 		"placeholders": {
-			"count": {}
+			"count": {
+				"type": "int"
+			}
 		}
 	},
 	"link": "{key, select, viewPaper {צפה במאמר} viewPage {צפה בעמוד של {name}} other {{key}}}",
 	"@link": {
 		"placeholders": {
-			"key": {},
-			"name": {}
+			"key": {
+				"type": "String"
+			},
+			"name": {
+				"type": "String"
+			}
 		}
 	},
 	"labGraphInfo": "אם אתה חבר מעבדה ואם חסר לך חיבור, אנא נסה לסנכרן את מסד הנתונים באמצעות כפתור הטעינה מחדש. אם זה לא עובד, ייתכן שהפרסום שלך חדש מדי ועדיין לא מופיע ב-DBLP, שיש לי מזהה DBLP שגוי המשויך אליך, או שהפרסום שלך בתחום משיק ואינו מופיע ב-DBLP. בכל אחד מהמקרים, תוכל ליצור איתי קשר כדי לעדכן את הנתונים באופן ידני.",
@@ -95,8 +109,12 @@
 	"educationStory": "גדלתי בקופרטינו, קליפורניה, וסיימתי את {highSchool}. התשוקה שלי לתכנות התעוררה במהלך שנת הלימודים הראשונה שלי עם קורס התכנות הראשון שלי. המשכתי להשתתף ב-AP Computer Science A הן כתלמיד והן כעוזר הוראה. בשנת 2017, התחלתי ב-{university}, בתואר כפול במדעי המחשב ופיזיקה, וסיימתי בשנת 2021. כיום, אני לומד לדוקטורט ב-UCI.",
 	"@educationStory": {
 		"placeholders": {
-			"highSchool": {},
-			"university": {}
+			"highSchool": {
+				"type": "String"
+			},
+			"university": {
+				"type": "String"
+			}
 		}
 	},
 	"educationStoryStart": "גדלתי בקופרטינו, קליפורניה, וסיימתי את ",
@@ -114,7 +132,9 @@
 	"degree": "תואר ראשון ב{subject}, 2021",
 	"@degree": {
 		"placeholders": {
-			"subject": {}
+			"subject": {
+				"type": "String"
+			}
 		}
 	},
 	"physics": "פיזיקה",
@@ -136,13 +156,17 @@
 	"conference": "{key, select, COCOA {כנס לאופטימיזציה קומבינטורית ויישומים} WADS {הסימפוזיון לאלגוריתמים ומבני נתונים} CCSC {כתב העת למדעי המחשב במכללות} SIGCSE {קבוצת העניין המיוחדת בחינוך מדעי המחשב} CIAC {הכנס הבינלאומי לאלגוריתמים ומורכבות} other {{key}}}",
 	"@conference": {
 		"placeholders": {
-			"key": {}
+			"key": {
+				"type": "String"
+			}
 		}
 	},
 	"award": "{key, select, Best_Paper {מאמר מצטיין} other {{key}}}",
 	"@award": {
 		"placeholders": {
-			"key": {}
+			"key": {
+				"type": "String"
+			}
 		}
 	}
 }

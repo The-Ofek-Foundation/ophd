@@ -9,19 +9,25 @@
 	"label": "{key, select, GoogleScholar {Google Scholar} other {{key}}}",
 	"@label": {
 		"placeholders": {
-			"key": {}
+			"key": {
+				"type": "String"
+			}
 		}
 	},
 	"name": "{key, select, ofek {Ofek Gila} mikeg {Michael Goodrich} bob {Robert Tarjan} evrim {Evrim Ozel} mikes {Michael Shindler} miked {Michael Dillencourt} nero {Nero Li} shahar {Shahar Broner} yubin {Yubin Kim} katrina {Katrina Mizuo} elijah {Elijah Sauder} claire {Claire To} albert {Albert Wang} abraham {Abraham Illickan} vinesh {Vinesh Sridhar} paul {Paul Erdős} hedet {Stephan Hedetniemi} other {{key}}}",
 	"@name": {
 		"placeholders": {
-			"key": {}
+			"key": {
+				"type": "String"
+			}
 		}
 	},
 	"page": "{key, select, other {{key}}}",
 	"@page": {
 		"placeholders": {
-			"key": {}
+			"key": {
+				"type": "String"
+			}
 		}
 	},
 	"researchPrimary": "Primary Research",
@@ -33,7 +39,9 @@
 	"researchCollaboratorsSubtitle": "Special thanks to my amazing advisor, {name}",
 	"@researchCollaboratorsSubtitle": {
 		"placeholders": {
-			"name": {}
+			"name": {
+				"type": "String"
+			}
 		}
 	},
 	"researchDescription": "My work combines computer science theory with experimental validation, focusing on randomized data structures including graph models and binary search trees.",
@@ -57,14 +65,20 @@
 	"unconnectedLabMembersSubtitle": "The {count} lab members who have not (yet) collaborated with any other lab members or shown faculty are listed below.",
 	"@unconnectedLabMembersSubtitle": {
 		"placeholders": {
-			"count": {}
+			"count": {
+				"type": "int"
+			}
 		}
 	},
 	"link": "{key, select, viewPaper {View paper} viewPage {View {name}'s page} other {{key}}}",
 	"@link": {
 		"placeholders": {
-			"key": {},
-			"name": {}
+			"key": {
+				"type": "String"
+			},
+			"name": {
+				"type": "String"
+			}
 		}
 	},
 	"labGraphInfo": "If you are a lab member and have a missing connection, please try syncing the database from the reload button. If that doesn't work, it is possible that either your publication is too recent and does not (yet) appear in DBLP, I have an incorrect DBLP ID associated with you, or your publication is in an adjacent field and does not appear in DBLP. In either case, you can contact me to manually update the data.",
@@ -110,7 +124,9 @@
 	"degree": "BS in {subject}, 2021",
 	"@degree": {
 		"placeholders": {
-			"subject": {}
+			"subject": {
+				"type": "String"
+			}
 		}
 	},
 	"physics": "Physics",
@@ -132,13 +148,17 @@
 	"conference": "{key, select, COCOA {Conference on Combinatorial Optimization and Applications} WADS {Algorithms and Data Structures Symposium} CCSC {Journal of Computing Sciences in Colleges} SIGCSE {Special Interest Group on Computer Science Education} CIAC {International Conference on Algorithms and Complexity} other {{key}}}",
 	"@conference": {
 		"placeholders": {
-			"key": {}
+			"key": {
+				"type": "String"
+			}
 		}
 	},
 	"award": "{key, select, Best_Paper {Best Paper} other {{key}}}",
 	"@award": {
 		"placeholders": {
-			"key": {}
+			"key": {
+				"type": "String"
+			}
 		}
 	}
 }

@@ -1,6 +1,13 @@
 import { onRequest } from "firebase-functions/v2/https";
 import * as logger from "firebase-functions/logger";
 
+const SECOND = 1000;
+const MINUTE = 60 * SECOND;
+const HOUR = 60 * MINUTE;
+const DAY = 24 * HOUR;
+// const WEEK = 7 * DAY;
+const MONTH = 30 * DAY;
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const he = require("he");
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -8,8 +15,8 @@ const xml2js = require("xml2js");
 import cors from "cors";
 const corsHandler = cors({origin: true});
 import { db } from "./initialize_app";
-import { DocumentReference, DocumentSnapshot, QuerySnapshot, Timestamp, collection, doc, getDoc, getDocs, serverTimestamp, setDoc, FieldValue } from "firebase/firestore";
-import { AdvisorEntry, DblpPid, GraduatedLabMemberEntry, LabMemberEntry, ResearcherEntry } from "./db_types";
+import { DocumentReference, QuerySnapshot, Timestamp, collection, doc, getDoc, getDocs, serverTimestamp, setDoc, FieldValue, deleteDoc } from "firebase/firestore";
+import { AdvisorEntry, DblpPid, GraduatedLabMemberEntry, LabMemberEntry, ResearcherEntry, DblpResponse, DblpPersonXml, ensureArray, convertR_ElementToPublicationEntry, PublicationEntry } from "./db_types";
 
 const DOCTORATE_STUDENTS_URL = "https://ics.uci.edu/~theory/doctorates.html";
 const THEORY_URL = "https://ics.uci.edu/~theory/";
@@ -33,7 +40,7 @@ const cleanHtml = (html: string): string =>
 const getNameAndUrl = (html: string): NameUrlPair => {
 	const nameMatch = (he.decode(html) as string).match(/<a href="(.*?)">(.*?)<\/a>/u) ||
 				   (he.decode(html) as string).match(/<b>(.*?)<\/b>/u);
-	
+
 	if (!nameMatch) {
 		return { name: cleanHtml(html) };
 	}
@@ -43,34 +50,6 @@ const getNameAndUrl = (html: string): NameUrlPair => {
 		url: nameMatch[1] && nameMatch[1] !== nameMatch[2] ? nameMatch[1] : undefined,
 	};
 };
-
-// DBLP utilities
-interface DblpResponse {
-	result?: {
-		hits: {
-			hit?: Array<{
-				info: {
-					author: string;
-					url: string;
-				};
-			}>;
-		};
-	};
-}
-
-interface DblpXmlResponse {
-	dblpperson?: {
-		coauthors?: [{
-			co: Array<{
-				na: Array<{
-					$: {
-						pid: string;
-					};
-				}>;
-			}>;
-		}];
-	};
-}
 
 const fetchWithErrorHandling = async (url: string, name?: string) => {
 	try {
@@ -88,11 +67,11 @@ const fetchWithErrorHandling = async (url: string, name?: string) => {
 
 const fetchDblpPid = async (name: string): Promise<string> => {
 	logger.info("Fetching DBLP PID for", name);
-	
+
 	try {
 		const response = await fetch(DBLP_AUTHOR_LOOKUP_URL + name);
 		const data = await response.json() as DblpResponse;
-		
+
 		const hit = data?.result?.hits?.hit?.[0];
 		if (hit) {
 			const hitName = hit.info.author;
@@ -102,7 +81,7 @@ const fetchDblpPid = async (name: string): Promise<string> => {
 			}
 			return hit.info.url.split("pid/")[1];
 		}
-		
+
 		logger.warn("DBLP PID not found for", name);
 		return "";
 	} catch (error) {
@@ -111,16 +90,20 @@ const fetchDblpPid = async (name: string): Promise<string> => {
 	}
 };
 
-// Update the fetchCollaborators function to use the new utilities
-const fetchCollaborators = async (dblpPid: string): Promise<string[]> => {
+const fetchDblpPidMapping = async () => {
+	const dblpPids = await getDocs(collection(db, "dblp-pids")) as QuerySnapshot<DblpPid>;
+	return new Map(dblpPids.docs.map(doc => [doc.data().pid, doc.data().researcher]));
+}
+
+const fetchPapers = async (dblpPid: string, dblpPidMapping: Map<string, DocumentReference<ResearcherEntry>>) => {
 	const authorXmlUrl = DBLP_AUTHOR_URL + dblpPid + ".xml";
 
 	try {
 		const responseText = await fetchWithErrorHandling(authorXmlUrl, dblpPid);
-		const parser = new xml2js.Parser();
-		
-		const parsed = await new Promise<DblpXmlResponse>((resolve, reject) => {
-			parser.parseString(responseText, (err: Error | null, result: DblpXmlResponse) => {
+		const parser = new xml2js.Parser({explicitArray: false});
+
+		const parsed = await new Promise<DblpPersonXml>((resolve, reject) => {
+			parser.parseString(responseText, (err: Error | null, result: DblpPersonXml) => {
 				if (err) {
 					logger.error("Failed to parse XML:", err, dblpPid);
 					reject(err);
@@ -130,15 +113,63 @@ const fetchCollaborators = async (dblpPid: string): Promise<string[]> => {
 			});
 		});
 
-		const coauthors = parsed.dblpperson?.coauthors;
-		return coauthors && coauthors.length > 0 
-			? coauthors[0].co.map(entry => entry.na[0]["$"].pid)
-			: [];
+		const publications = ensureArray(parsed.dblpperson.r).map(convertR_ElementToPublicationEntry);
+		for (const publication of publications) {
+			if (!publication) {
+				logger.warn("Failed to convert publication:", dblpPid);
+				continue;
+			}
+
+			publication.authors.forEach(author => {
+				if (author.pid && dblpPidMapping.has(author.pid)) {
+					publication.researchers = publication.researchers || [];
+					publication.researchers.push(dblpPidMapping.get(author.pid) as DocumentReference<ResearcherEntry>);
+				}
+			});
+		}
+
+		return publications.filter(p => p !== null) as PublicationEntry[];
 	} catch (error) {
 		logger.error("An error occurred:", error, dblpPid);
 		throw error;
 	}
-};
+}
+
+const fetchAllPapers = async (updatedAfter: Timestamp) => {
+	const dblpPidMapping = await fetchDblpPidMapping();
+	const dblpPids = Array.from(dblpPidMapping.keys());
+	const papers = (await Promise.all(dblpPids.map(pid => fetchPapers(pid, dblpPidMapping))));
+
+	const uniquePapers = new Map<string, PublicationEntry>();
+
+	papers.flat().forEach(paper => {
+		if (paper.mdate.toMillis() < updatedAfter.toMillis()) {
+			return;
+		}
+
+		if (!uniquePapers.has(paper.dblpKey)) {
+			uniquePapers.set(paper.dblpKey, paper);
+		}
+	});
+
+	return uniquePapers;
+}
+
+const updateDbPapers = async (papers: Map<string, PublicationEntry>) => {
+	const updatePromises = Array.from(papers.values()).map(paper => {
+		const docRef = doc(db, "publications", paper.dblpKey.replaceAll("/", "-")) as DocumentReference<PublicationEntry>;
+		console.log(paper);
+		return setDoc(docRef, paper, {merge: true});
+	});
+
+	await Promise.all(updatePromises);
+}
+
+const getMostRecentMdate = async () => {
+	const publications = await getDocs(collection(db, "publications")) as QuerySnapshot<PublicationEntry>;
+	const mdates = publications.docs.map(doc => doc.data().mdate);
+	return mdates.reduce((a, b) => a > b ? a : b);
+}
 
 const rcontains = (list: DocumentReference[], ref: DocumentReference) => list.some(item => item.path === ref.path);
 
@@ -202,7 +233,7 @@ const getCurrentStudents = async () => {
 	const content = await fetch(THEORY_URL)
 		.then(response => response.text())
 		.catch(error => logger.error("Failed to fetch data:", error));
-	
+
 	if (!content) {
 		throw new Error("Failed to fetch data");
 	}
@@ -254,7 +285,7 @@ const getProfessors = async () => {
 	for (const liMatch of liMatches) {
 		const nameMatch = liMatch.match(/<a href="(.*?)">(.*?)<\/a>/su);
 		let title = "";
-		
+
 		// Extract title by removing HTML tags and the professor's name
 		const liText = cleanHtml(liMatch);
 		if (nameMatch) {
@@ -311,29 +342,6 @@ const getProfessors = async () => {
 	return professors;
 }
 
-const fetchNewCollaborators = async (dblpPid: string, docRef: DocumentReference<ResearcherEntry>, existingCollaborators: DocumentReference<ResearcherEntry>[]) => {
-	logger.info("Fetching collaborators for", dblpPid);
-	
-	const collaborators = await fetchCollaborators(dblpPid);
-	const newCollaborators = [];
-	for (const collaborator of collaborators) {
-		const dblpPidRef = doc(db, "dblp-pids", collaborator.replace("/", "-")) as DocumentReference<DblpPid>;
-		const collaboratorDoc = await getDoc(dblpPidRef);
-		if (collaboratorDoc.exists() && !rcontains(existingCollaborators, collaboratorDoc.data().researcher)) {
-			const researcherRef = collaboratorDoc.data().researcher;
-			newCollaborators.push(researcherRef);
-
-			const researcherDoc = await getDoc(researcherRef);
-			const existingCollaborators = researcherDoc.data()?.collaborators || [];
-			if (!rcontains(existingCollaborators, docRef)) {
-				await setDoc(researcherRef, {collaborators: [...existingCollaborators, docRef]}, {merge: true});
-			}
-		}
-	}
-
-	return newCollaborators;
-}
-
 // Shared utility functions for researcher updates
 interface BaseResearcherEntry {
 	name: string;
@@ -348,29 +356,6 @@ interface ExtendedResearcher extends BaseResearcherEntry {
 	hasDoctorate?: boolean;
 	thesisTitle?: string;
 	year?: number;
-}
-
-const updateResearcherDblpInfo = async (
-	docRef: DocumentReference<ResearcherEntry>,
-	docSnap: DocumentSnapshot<ResearcherEntry>,
-	updatedData: Partial<BaseResearcherEntry>,
-	forceUpdateCollaborators = false
-) => {
-	const updatedRecently = docSnap.exists() && (docSnap.data()?.lastUpdate as Timestamp)?.toDate() > new Date(Date.now() - 1000 * 60 * 60 * 24 * 30 * 6);
-	const dblpPid = docSnap.exists() && docSnap.data()?.dblpPid ? docSnap.data()?.dblpPid : updatedData.dblpPid;
-
-	if (dblpPid && (!docSnap.exists() || !updatedRecently || forceUpdateCollaborators)) {
-		logger.info("Searching for new collaborators for", docRef.id);
-		const existingCollaborators = docSnap.exists() ? docSnap.data()?.collaborators || [] : [];
-		const newCollaborators = await fetchNewCollaborators(dblpPid, docRef, existingCollaborators);
-
-		if (newCollaborators.length > 0) {
-			logger.log("Adding collaborators", newCollaborators.map(collaborator => collaborator.id));
-			updatedData.collaborators = [...existingCollaborators, ...newCollaborators];
-		}
-		return true;
-	}
-	return false;
 }
 
 const updateDblpPidMapping = async (dblpPid: string, researcherRef: DocumentReference<ResearcherEntry>) => {
@@ -391,19 +376,19 @@ const updateResearcher = async <T extends ExtendedResearcher>(
 	options: ResearcherUpdateOptions<T>
 ) => {
 	const { collection, getDocId, transformData } = options;
-	
+
 	if (!researcher.name) {
 		throw new Error("Researcher name is required");
 	}
-	
+
 	logger.info("Checking researcher", researcher.name);
-	
+
 	const docRef = doc(db, collection, getDocId(researcher.name)) as DocumentReference<T>;
 	const docSnap = await getDoc(docRef);
 	const updatedData = transformData(researcher);
 
 	let shouldUpdate = false;
-	let forceUpdateCollaborators = false;
+	// let forceUpdateCollaborators = false;
 
 	if (!docSnap.exists()) {
 		updatedData.name = researcher.name;
@@ -415,22 +400,12 @@ const updateResearcher = async <T extends ExtendedResearcher>(
 		if (!data.dblpPid) {
 			const newDblpPid = await fetchDblpPid(researcher.name);
 			updatedData.dblpPid = newDblpPid;
-			if (data.dblpPid !== newDblpPid) {
-				forceUpdateCollaborators = true;
-			}
 		}
-		
+
 		shouldUpdate = Object.entries(updatedData).some(
 			([key, value]) => key in data && data[key as keyof T] !== value
 		);
 	}
-
-	shouldUpdate = shouldUpdate || await updateResearcherDblpInfo(
-		docRef as DocumentReference<ResearcherEntry>,
-		docSnap as DocumentSnapshot<ResearcherEntry>,
-		updatedData,
-		forceUpdateCollaborators
-	);
 
 	if (shouldUpdate) {
 		updatedData.lastUpdate = serverTimestamp();
@@ -443,7 +418,7 @@ const updateResearcher = async <T extends ExtendedResearcher>(
 			docRef as DocumentReference<ResearcherEntry>
 		);
 	}
-	
+
 	return { docRef, updatedData, shouldUpdate };
 }
 
@@ -466,7 +441,7 @@ const updateLabProfessors = async () => {
 
 const updateLabStudents = async () => {
 	const students = await getLabStudents();
-	
+
 	for (const student of students) {
 		const { docRef, shouldUpdate } = await updateResearcher(student, {
 			collection: "lab-members",
@@ -485,7 +460,7 @@ const updateLabStudents = async () => {
 			for (const advisor of advisors) {
 				const advisorRef = doc(db, "advisors", advisor) as DocumentReference<AdvisorEntry>;
 				const advisorDoc = await getDoc(advisorRef);
-				
+
 				if (!advisorDoc.exists()) {
 					const advisorDblpPid = await fetchDblpPid(advisor);
 					await setDoc(advisorRef, {
@@ -514,14 +489,26 @@ const formatProfessorName = (name: string) => {
 	return `${names[0][0]}. ${names[names.length - 1]}`;
 }
 
-export const fetchAllResearchers = onRequest(async (request, response) => {
+// Helper function to create a map of researcher references to names
+const createResearcherRefToNameMap = async (): Promise<Map<string, string>> => {
+	const professorSnapshot = await getDocs(collection(db, "advisors")) as QuerySnapshot<AdvisorEntry>;
+	const studentSnapshot = await getDocs(collection(db, "lab-members")) as QuerySnapshot<LabMemberEntry>;
+
+	const researcherMap = new Map<string, string>();
+	professorSnapshot.docs.forEach(doc => researcherMap.set(doc.ref.path, doc.data().name));
+	studentSnapshot.docs.forEach(doc => researcherMap.set(doc.ref.path, doc.data().name));
+
+	return researcherMap;
+};
+
+export const fetchAllResearchers = onRequest({
+	timeoutSeconds: 540,
+}, async (request, response) => {
 	corsHandler(request, response, async () => {
 		const professorSnapshot = await getDocs(collection(db, "advisors")) as QuerySnapshot<AdvisorEntry>;
 		const studentSnapshot = await getDocs(collection(db, "lab-members")) as QuerySnapshot<LabMemberEntry>;
 
-		const researcherMap = new Map<string, string>();
-		professorSnapshot.docs.forEach(doc => researcherMap.set(doc.ref.path, doc.data().name));
-		studentSnapshot.docs.forEach(doc => researcherMap.set(doc.ref.path, doc.data().name));
+		const researcherMap = await createResearcherRefToNameMap();
 
 		const professors = professorSnapshot.docs.map(doc => {
 			const professor = doc.data();
@@ -544,6 +531,35 @@ export const fetchAllResearchers = onRequest(async (request, response) => {
 	});
 });
 
+export const fetchAllPublications = onRequest({
+	timeoutSeconds: 540,
+}, async (request, response) => {
+	corsHandler(request, response, async () => {
+		const publicationsSnapshot = await getDocs(collection(db, "publications")) as QuerySnapshot<PublicationEntry>;
+		const researcherMap = await createResearcherRefToNameMap();
+
+		const publications = publicationsSnapshot.docs.map(doc => {
+			const publication = doc.data();
+
+			// Convert researcher references to names
+			if (publication.researchers && publication.researchers.length > 0) {
+				const researchers = publication.researchers.map(ref =>
+					researcherMap.get(ref.path)
+				).filter(name => name !== undefined) as string[];
+
+				return {
+					...publication,
+					researchers,
+				};
+			}
+
+			return publication;
+		});
+
+		return response.json(publications);
+	});
+});
+
 export const updateDatabase = onRequest({
 	timeoutSeconds: 540,
 }, async (request, response) => {
@@ -551,6 +567,18 @@ export const updateDatabase = onRequest({
 		try {
 			await updateLabProfessors();
 			await updateLabStudents();
+
+			console.log("Updated researchers");
+
+			const mostRecentMDate = await getMostRecentMdate();
+			const onlyUpdateAfter = Timestamp.fromMillis(mostRecentMDate.toMillis() - MONTH);
+
+			const papers = await fetchAllPapers(onlyUpdateAfter);
+
+			console.log("Fetched", papers.size, "relevant papers");
+
+			await updateDbPapers(papers);
+
 			response.send("Database updated");
 		} catch (error) {
 			logger.error("Error updating database", error);
@@ -558,3 +586,53 @@ export const updateDatabase = onRequest({
 		}
 	});
 });
+
+export const updatePublicationsForResearcher = onRequest({
+	timeoutSeconds: 540,
+}, async (request, response) => {
+	corsHandler(request, response, async () => {
+		// given a researcher path, update their publications
+		try {
+			const researcherPath = request.body.researcherPath as string;
+
+			// Convert the path string to a document reference
+			const researcherRef = doc(db, researcherPath) as DocumentReference<ResearcherEntry>;
+			const researcherDoc = await getDoc(researcherRef);
+
+			if (!researcherDoc.exists()) {
+				throw new Error("Researcher does not exist");
+			}
+
+			if (request.body.refresh) {
+				console.log("Refreshing publications for", researcherDoc.data().name);
+				// delete any existing publication with this researcher
+				const publicationsSnapshot = await getDocs(collection(db, "publications")) as QuerySnapshot<PublicationEntry>;
+				const publications = publicationsSnapshot.docs.map(doc => doc.data());
+
+				for (const publication of publications) {
+					if (!publication.researchers) {
+						continue;
+					}
+
+					if (publication.researchers.some(ref => ref.path === researcherRef.path)) {
+						console.log("Deleting publication", publication.dblpKey);
+						await deleteDoc(doc(db, "publications", publication.dblpKey.replaceAll("/", "-")));
+					}
+				}
+			}
+
+			const papers = await fetchPapers(researcherDoc.data().dblpPid, await fetchDblpPidMapping());
+
+			const uniquePapers = new Map<string, PublicationEntry>(papers.map(paper => [paper.dblpKey, paper]));
+
+			await updateDbPapers(uniquePapers);
+
+			response.send("Publications updated");
+		}
+		catch (error) {
+			logger.error("Error updating publications", error);
+			response.status(500).send("Error updating publications");
+		}
+	});
+});
+

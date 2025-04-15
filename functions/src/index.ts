@@ -11,4 +11,7 @@
 import * as dataFetcherFunctions from "./data_fetcher";
 
 export const fetchAllResearchers = dataFetcherFunctions.fetchAllResearchers;
+export const fetchAllPublications = dataFetcherFunctions.fetchAllPublications;
 export const updateDatabase = dataFetcherFunctions.updateDatabase;
+
+export const updatePublicationsForResearcher = dataFetcherFunctions.updatePublicationsForResearcher;

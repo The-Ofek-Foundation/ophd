@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_scatter/flutter_scatter.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:graphview/GraphView.dart';
+import 'package:ophd/api/fetch_publications.dart';
 import 'package:ophd/api/fetch_researchers.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -14,6 +16,7 @@ import 'package:ophd/data/okabe_ito.dart';
 import 'package:ophd/data/papers.dart';
 import 'package:ophd/data/social_links.dart';
 import 'package:ophd/models/author.dart';
+import 'package:ophd/models/publication.dart';
 import 'package:ophd/models/researcher.dart';
 import 'package:ophd/models/social_link.dart';
 import 'package:ophd/utils/screen_utils.dart';
@@ -338,6 +341,9 @@ class _LabGraphState extends State<LabGraph> {
   Map<ProfessorResearcher, Color> professorColors = {};
   Set<Color> remainingColors = okabe.toSet();
   AllResearchers? allResearchers;
+  List<Publication>? publications;
+  Map<Researcher, Set<Publication>> researcherToPublications = {};
+  Map<Researcher, Map<Researcher, int>> researcherToWeightedCollaborators = {};
   Set<StudentResearcher> unconnectedStudents = {};
   bool isLoading = true;
   String? errorMessage;
@@ -355,10 +361,21 @@ class _LabGraphState extends State<LabGraph> {
       errorMessage = null;
     });
 
-    fetchResearchers().then((data) {
+    // First fetch researchers, then fetch publications with the researchers data
+    fetchResearchers().then((resData) {
       setState(() {
-        allResearchers = data;
-        graph = _getGraph(widget.context, allResearchers!);
+        allResearchers = resData;
+      });
+      return fetchPublications(allResearchers: allResearchers);
+    }).then((pubData) {
+      setState(() {
+        publications = pubData;
+        researcherToPublications = _getResearcherToPublications();
+        // Update the weighted collaborators map
+        final researchers = <Researcher>{...allResearchers!.students};
+        researchers.addAll(selectedProfessors);
+        researcherToWeightedCollaborators = _getResearcherToWeightedCollaborators(researchers);
+        graph = _getGraph(widget.context);
         unconnectedStudents = _getUnconnectedStudents(graph!, allResearchers!);
         isLoading = false;
       });
@@ -370,24 +387,76 @@ class _LabGraphState extends State<LabGraph> {
     });
   }
 
-  Graph _getGraph(BuildContext context, AllResearchers researchers) {
+  Map<Researcher, Set<Publication>> _getResearcherToPublications() {
+    final Map<Researcher, Set<Publication>> researcherToPublications = {};
+
+    for (final Publication publication in publications!) {
+      if (publication.researchers == null) {
+        continue;
+      }
+
+      for (final Researcher researcher in publication.researchers!) {
+        researcherToPublications.putIfAbsent(researcher, () => <Publication>{});
+        researcherToPublications[researcher]!.add(publication);
+      }
+    }
+
+    return researcherToPublications;
+  }
+
+  Map<Researcher, int> _getWeightedCollaborators(Researcher researcher) {
+    final Map<Researcher, int> weightedCollaborators = {};
+
+    for (final Publication publication in researcherToPublications[researcher]!) {
+      for (final Researcher collaborator in publication.researchers!) {
+        if (collaborator != researcher) {
+          weightedCollaborators.update(collaborator, (value) => value + 1, ifAbsent: () => 1);
+        }
+      }
+    }
+    return weightedCollaborators;
+  }
+
+  Map<Researcher, Map<Researcher, int>> _getResearcherToWeightedCollaborators(Set<Researcher> researchers) {
+    final Map<Researcher, Map<Researcher, int>> researcherToWeightedCollaborators = {};
+
+    for (final Researcher researcher in researcherToPublications.keys) {
+      if (!researchers.contains(researcher)) {
+        continue;
+      }
+
+      final Map<Researcher, int> weightedCollaborators = {};
+
+      for (final Publication publication in researcherToPublications[researcher]!) {
+        for (final Researcher collaborator in publication.researchers!) {
+          // only add collaborator if they are in the selected researchers
+          if (collaborator != researcher && researchers.contains(collaborator)) {
+            weightedCollaborators.update(collaborator, (value) => value + 1, ifAbsent: () => 1);
+          }
+        }
+      }
+
+      researcherToWeightedCollaborators[researcher] = weightedCollaborators;
+    }
+
+    return researcherToWeightedCollaborators;
+  }
+
+  Graph _getGraph(BuildContext context) {
     final Graph graph = Graph();
 
     // Create map from researcher to node
     final Map<Researcher, Node> researcherToNode = {};
 
     // List<Researcher> allResearcherList = [...researchers.students, ...researchers.professors];
-    Set<Researcher> allResearcherSetWithDups = <Researcher>{...researchers.students};
+    Set<Researcher> allResearcherSetWithDups = <Researcher>{...allResearchers!.students};
     allResearcherSetWithDups.addAll(selectedProfessors);
     Set<Researcher> allResearcherSet = {};
 
+    // Use the cached researcherToWeightedCollaborators map instead of recalculating it
     for (final Researcher researcher in allResearcherSetWithDups) {
-      // skip researchers who have no collaborators with other researchers
-      // loop over collaborators and check if they are in the set
-      for (final Researcher collaborator in researcher.collaborators) {
-        if (allResearcherSetWithDups.contains(collaborator)) {
-          allResearcherSet.add(researcher);
-        }
+      if (researcherToWeightedCollaborators[researcher] != null && researcherToWeightedCollaborators[researcher]!.isNotEmpty) {
+        allResearcherSet.add(researcher);
       }
     }
 
@@ -402,7 +471,10 @@ class _LabGraphState extends State<LabGraph> {
     // Add edges for each collaborator
     for (final Researcher researcher in allResearcherSet) {
       final Node source = researcherToNode[researcher]!;
-      for (final Researcher collaborator in researcher.collaborators) {
+      final weightedCollaborators = researcherToWeightedCollaborators[researcher] ?? {};
+      for (final MapEntry<Researcher, int> entry in weightedCollaborators.entries) {
+        final Researcher collaborator = entry.key;
+        final int weight = entry.value;
         final Node? target = researcherToNode[collaborator];
         if (target != null) {
           // only add edge if source is alphabetically less than target
@@ -410,7 +482,7 @@ class _LabGraphState extends State<LabGraph> {
             graph.addEdge(source, target,
               paint: Paint()
                 ..color = Theme.of(context).colorScheme.primary
-                ..strokeWidth = 1.5
+                ..strokeWidth = log(weight + 1) / log(2) + 1
                 ..style = PaintingStyle.stroke
             );
           }
@@ -435,7 +507,11 @@ class _LabGraphState extends State<LabGraph> {
 
   void _updateGraph() {
     setState(() {
-      graph = _getGraph(widget.context, allResearchers!);
+      // Update the weighted collaborators map when professors are selected/deselected
+      final researchers = <Researcher>{...allResearchers!.students};
+      researchers.addAll(selectedProfessors);
+      researcherToWeightedCollaborators = _getResearcherToWeightedCollaborators(researchers);
+      graph = _getGraph(widget.context);
       unconnectedStudents = _getUnconnectedStudents(graph!, allResearchers!);
     });
   }
@@ -694,7 +770,7 @@ class _LabGraphState extends State<LabGraph> {
   }
 
   Widget displayProfessor(BuildContext context, ProfessorResearcher professor) {
-    final int degree = professor.collaborators.length;
+    final int degree = researcherToWeightedCollaborators[professor]?.length ?? 0;
     final double size = (log(degree) + 1) * 30.0;
     final Color color = professorColors[professor]!;
 
@@ -739,6 +815,8 @@ class _LabGraphState extends State<LabGraph> {
           backgroundColor: professorColors[professor],
           avatarIcon: Icons.school,
           allResearchers: allResearchers,
+          researcherToPublications: researcherToPublications,
+          weightedCollaborators: _getWeightedCollaborators(professor),
         );
       },
     );
@@ -784,6 +862,8 @@ class _LabGraphState extends State<LabGraph> {
           researcher: student,
           avatarIcon: Icons.person,
           allResearchers: allResearchers,
+          researcherToPublications: researcherToPublications,
+          weightedCollaborators: _getWeightedCollaborators(student),
         );
       },
     );
@@ -795,6 +875,9 @@ class ResearcherDetailsModal extends StatelessWidget {
   final Color? backgroundColor;
   final IconData avatarIcon;
   final AllResearchers? allResearchers;
+  final Map<Researcher, Set<Publication>> researcherToPublications;
+  // final Map<Researcher, Map<Researcher, int>> researcherToWeightedCollaborators;
+  final Map<Researcher, int> weightedCollaborators;
 
   const ResearcherDetailsModal({
     super.key,
@@ -802,12 +885,16 @@ class ResearcherDetailsModal extends StatelessWidget {
     this.backgroundColor,
     required this.avatarIcon,
     required this.allResearchers,
+    required this.researcherToPublications,
+    required this.weightedCollaborators,
   });
 
   List<Widget> _buildDetails(BuildContext context) {
     final List<Widget> details = [];
-    final facultyCollaborators = researcher.collaborators.whereType<ProfessorResearcher>().length;
-    final studentCollaborators = researcher.collaborators.whereType<StudentResearcher>().length;
+
+    final collaborators = weightedCollaborators.keys.toList();
+    final facultyCollaborators = collaborators.whereType<ProfessorResearcher>().length;
+    final studentCollaborators = collaborators.whereType<StudentResearcher>().length;
 
     // Add researcher-specific details
     if (researcher is StudentResearcher) {
@@ -816,19 +903,19 @@ class ResearcherDetailsModal extends StatelessWidget {
         details.add(_buildInfoCard(
           context,
           Icons.supervisor_account,
-          'Advisors',
+          student.advisors!.length == 1 ? 'Advisor' : 'Advisors',
           student.advisors!.map((a) => a.name).join(", "),
         ));
       }
 
-      details.add(_buildInfoCard(
-        context,
-        Icons.school,
-        'Graduation Status',
-        student.hasDoctorate
-          ? (student.year != null ? '${student.year} (PhD)' : 'Unknown (PhD)')
-          : 'PhD not yet awarded',
-      ));
+      if (student.hasDoctorate) {
+        details.add(_buildInfoCard(
+          context,
+          Icons.school,
+          'Graduation Year',
+          student.year != null ? '${student.year} (PhD)' : 'Unknown (PhD)',
+        ));
+      }
 
       if (student.thesisTitle != null) {
         details.add(_buildInfoCard(
@@ -889,25 +976,351 @@ class ResearcherDetailsModal extends StatelessWidget {
       }
     }
 
+    // Add publications by type if available
+    final publications = _getResearcherPublications();
+    if (publications.isNotEmpty) {
+      final publicationsByType = _getPublicationsByType(publications);
+      if (publicationsByType.isNotEmpty) {
+        details.add(_buildInfoCard(
+          context,
+          Icons.category,
+          'Publications by Type',
+          '',
+          customContent: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: publicationsByType.entries.map((entry) =>
+              Padding(
+                padding: const EdgeInsets.only(bottom: 4),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: SelectableText(_formatPublicationType(entry.key)),
+                    ),
+                    SelectableText(
+                      entry.value.toString(),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ).toList(),
+          ),
+        ));
+      }
+    }
+
     // Add shared collaboration details
-    if (researcher.collaborators.isNotEmpty) {
+    if (collaborators.isNotEmpty) {
       details.add(_buildInfoCard(
         context,
         Icons.people_alt,
         'Research Collaborations',
-        '${facultyCollaborators > 0 ? '$facultyCollaborators faculty' : ''}'
-        '${facultyCollaborators > 0 && studentCollaborators > 0 ? ' and ' : ''}'
-        '${studentCollaborators > 0 ? '$studentCollaborators student' : ''}'
-        ' co-author${(studentCollaborators == 0 && facultyCollaborators == 1) || studentCollaborators == 1 ? '' : 's'} in the lab',
+        '',
+        customContent: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            if (facultyCollaborators > 0)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 4),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: SelectableText('Faculty Co-authors'),
+                    ),
+                    SelectableText(
+                      facultyCollaborators.toString(),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            if (studentCollaborators > 0)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 4),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: SelectableText('Student Co-authors'),
+                    ),
+                    SelectableText(
+                      studentCollaborators.toString(),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+          ],
+        ),
+      ));
+
+      // Add top collaborators
+      final topCollaborators = _getTopCollaborators(publications);
+      if (topCollaborators.isNotEmpty) {
+        details.add(_buildInfoCard(
+          context,
+          Icons.star,
+          'Top Lab Collaborators',
+          '',
+          customContent: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: topCollaborators.entries.take(3).map((entry) =>
+              Padding(
+                padding: const EdgeInsets.only(bottom: 4),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: SelectableText(entry.key.name),
+                    ),
+                    SelectableText(
+                      '${entry.value} paper${entry.value == 1 ? '' : 's'}',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ).toList(),
+          ),
+        ));
+      }
+
+      // Add recent collaborators
+      final recentCollaborators = _getRecentCollaborators(publications);
+      if (recentCollaborators.isNotEmpty) {
+        details.add(_buildInfoCard(
+          context,
+          Icons.update,
+          'Recent Lab Collaborators',
+          '',
+          customContent: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: recentCollaborators.take(3).map((collabData) =>
+              Padding(
+                padding: const EdgeInsets.only(bottom: 4),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: SelectableText((collabData['researcher'] as Researcher).name),
+                    ),
+                    SelectableText(
+                      (collabData['year'] as int).toString(),
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ).toList(),
+          ),
+        ));
+      }
+    }
+
+    // Add recent publications if available
+    if (publications.isNotEmpty) {
+      details.add(_buildInfoCard(
+        context,
+        Icons.article,
+        'Recent Publications',
+        '',
+        customContent: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: publications.take(3).map((pub) =>
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: SelectableText(
+                          pub.title,
+                          style: const TextStyle(fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      SelectableText(
+                        pub.year.toString(),
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 2),
+                  SelectableText(
+                    pub.authors.map((a) => a.name.replaceAll(RegExp(r'\s\d+$'), '')).join(', '),
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      fontStyle: FontStyle.italic,
+                    ),
+                    maxLines: 1,
+                  ),
+                ],
+              ),
+            )
+          ).toList(),
+        ),
       ));
     }
 
     return details;
   }
 
+  List<Publication> _getResearcherPublications() {
+    // Get publications directly from the passed map
+    final publications = researcherToPublications[researcher] ?? {};
+
+    // Remove duplicates based on normalized titles
+    final uniquePublications = _removeDuplicatePublications(publications.toList());
+
+    // Sort by year (descending) and then by mdate if available
+    uniquePublications.sort((a, b) {
+      // First sort by year (descending)
+      final yearComparison = b.year.compareTo(a.year);
+      if (yearComparison != 0) {
+        return yearComparison;
+      }
+
+      // If years are the same, sort by mdate (descending)
+      return b.mdate.seconds.compareTo(a.mdate.seconds);
+    });
+
+    return uniquePublications;
+  }
+
+  /// Removes duplicate publications based on normalized titles
+  List<Publication> _removeDuplicatePublications(List<Publication> publications) {
+    // Map to track seen normalized titles
+    final seenTitles = <String, Publication>{};
+
+    for (final pub in publications) {
+      // Normalize the title: lowercase and remove non-alphanumeric characters
+      final normalizedTitle = _normalizeTitle(pub.title);
+
+      // If we haven't seen this title before, or if this publication is newer (by mdate)
+      // than the one we've seen, keep this one
+      if (!seenTitles.containsKey(normalizedTitle) ||
+          pub.mdate.seconds > seenTitles[normalizedTitle]!.mdate.seconds) {
+        seenTitles[normalizedTitle] = pub;
+      }
+    }
+
+    // Return the unique publications
+    return seenTitles.values.toList();
+  }
+
+  /// Normalizes a title by converting to lowercase and removing non-alphanumeric characters
+  String _normalizeTitle(String title) {
+    return title.toLowerCase().replaceAll(RegExp(r'[^a-z0-9]'), '');
+  }
+
+  /// Returns a map of publication types to counts
+  Map<PublicationType, int> _getPublicationsByType(List<Publication> publications) {
+    final typeCount = <PublicationType, int>{};
+
+    for (final pub in publications) {
+      typeCount.update(pub.type, (count) => count + 1, ifAbsent: () => 1);
+    }
+
+    // Sort by count (descending)
+    final sortedEntries = typeCount.entries.toList()
+      ..sort((a, b) => b.value.compareTo(a.value));
+
+    return Map.fromEntries(sortedEntries);
+  }
+
+  /// Formats a publication type for display
+  String _formatPublicationType(PublicationType type) {
+    switch (type) {
+      case PublicationType.article:
+        return 'Journal Articles';
+      case PublicationType.inproceedings:
+        return 'Conference Papers';
+      case PublicationType.proceedings:
+        return 'Proceedings';
+      case PublicationType.book:
+        return 'Books';
+      case PublicationType.incollection:
+        return 'Book Chapters';
+      case PublicationType.phdthesis:
+        return 'PhD Theses';
+      case PublicationType.unknown:
+        return 'Other Publications';
+    }
+  }
+
+  /// Returns a list of recent lab collaborators with their most recent collaboration year
+  List<Map<String, dynamic>> _getRecentCollaborators(List<Publication> publications) {
+    // Sort publications by date (most recent first)
+    final sortedPubs = List<Publication>.from(publications)
+      ..sort((a, b) => b.mdate.seconds.compareTo(a.mdate.seconds));
+
+    // Map to track the most recent collaborators we've seen
+    final recentCollaborators = <String, Map<String, dynamic>>{};
+
+    // Loop through publications in order of recency
+    for (final pub in sortedPubs) {
+      // Skip if this publication doesn't have researchers listed
+      if (pub.researchers == null || pub.researchers!.isEmpty) continue;
+
+      // Find collaborators in this publication
+      for (final labMember in pub.researchers!) {
+        // Skip if this is the researcher we're looking at
+        if (labMember.name == researcher.name) continue;
+
+        if (!recentCollaborators.containsKey(labMember.name)) {
+          recentCollaborators[labMember.name] = {
+            'researcher': labMember,
+            'year': pub.year,
+          };
+
+          if (recentCollaborators.length >= 5) break;
+        }
+      }
+
+      if (recentCollaborators.length >= 5) break;
+    }
+
+    return recentCollaborators.values.toList();
+  }
+
+  /// Returns a map of top collaborators sorted by number of shared papers
+  Map<dynamic, int> _getTopCollaborators(List<Publication> publications) {
+    // Filter to only include lab collaborators (researchers in the system)
+    final labCollaborators = <dynamic, int>{};
+    for (final entry in weightedCollaborators.entries) {
+      labCollaborators[entry.key] = entry.value;
+    }
+
+    // Sort by count (descending)
+    final sortedEntries = labCollaborators.entries.toList()
+      ..sort((a, b) => b.value.compareTo(a.value));
+
+    return Map.fromEntries(sortedEntries);
+  }
+
   Widget _buildInfoCard(BuildContext context, IconData icon, String label, String value, {Widget? customContent}) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surfaceContainerHighest.withAlpha(77),
@@ -959,12 +1372,13 @@ class ResearcherDetailsModal extends StatelessWidget {
         borderRadius: BorderRadius.circular(24),
       ),
       child: Container(
-        constraints: const BoxConstraints(maxWidth: 500),
+        constraints: const BoxConstraints(maxWidth: 800, maxHeight: 700),
         padding: const EdgeInsets.all(24),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            // Header - Fixed at the top
             Row(
               children: [
                 CardHeaderIcon(
@@ -1026,7 +1440,32 @@ class ResearcherDetailsModal extends StatelessWidget {
               padding: EdgeInsets.symmetric(vertical: 16),
               child: Divider(),
             ),
-            ..._buildDetails(context),
+
+            // Content - Scrollable
+            Expanded(
+              child: SingleChildScrollView(
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    // Determine the number of columns based on available width
+                    final crossAxisCount = constraints.maxWidth > 600 ? 2 : 1;
+
+                    return MasonryGridView.count(
+                      crossAxisCount: crossAxisCount,
+                      mainAxisSpacing: 16,
+                      crossAxisSpacing: 16,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: _buildDetails(context).length,
+                      itemBuilder: (context, index) {
+                        return _buildDetails(context)[index];
+                      },
+                    );
+                  },
+                ),
+              ),
+            ),
+
+            // Footer - Fixed at the bottom
             const SizedBox(height: 24),
             Align(
               alignment: Alignment.centerRight,

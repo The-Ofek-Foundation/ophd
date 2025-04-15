@@ -41,12 +41,14 @@ dependencies:
   cupertino_icons: ^1.0.5
   firebase_core: ^3.10.1
   firebase_analytics: ^11.4.1
+  cloud_firestore: ^5.6.6
   theme_provider: ^0.6.0
   font_awesome_flutter: ^10.4.0
   url_launcher: ^6.1.11
   flutter_scatter: ^0.2.0
   flutter_svg: ^2.0.9
   intl: any
+  flutter_staggered_grid_view: ^0.7.0
   flutter_markdown: ^0.7.6+1
   flutter_localizations:
     sdk: flutter
@@ -144,7 +146,7 @@ flutter:
     - assets/images/amp_patent.png
     - assets/images/synopsys_team.jpg
     - assets/pdfs/resume.pdf
-  
+
   fonts:
     - family: RobotoMono
       fonts:
@@ -153,5 +155,5 @@ flutter:
           style: italic
         - asset: fonts/Roboto_Mono/RobotoMono-VariableFont_wght.ttf
           weight: 400
-  
+
   generate: true

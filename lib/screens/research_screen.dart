@@ -1121,7 +1121,7 @@ class ResearcherDetailsModal extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
-                      child: SelectableText((collabData['researcher'] as Researcher).name),
+                      child: _emphasizedText(context, (collabData['researcher'] as Researcher).name),
                     ),
                     SelectableText(
                       (collabData['year'] as int).toString(),
@@ -1172,7 +1172,8 @@ class ResearcherDetailsModal extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 2),
-                  SelectableText(
+                  _emphasizedText(
+                    context,
                     pub.authors.map((a) => a.name.replaceAll(RegExp(r'\s\d+$'), '')).join(', '),
                     style: TextStyle(
                       fontSize: 12,
@@ -1239,6 +1240,43 @@ class ResearcherDetailsModal extends StatelessWidget {
   /// Normalizes a title by converting to lowercase and removing non-alphanumeric characters
   String _normalizeTitle(String title) {
     return title.toLowerCase().replaceAll(RegExp(r'[^a-z0-9]'), '');
+  }
+
+  // Helper function to emphasize Ofek's name
+  Widget _emphasizedText(BuildContext context, String text, {TextStyle? style, int? maxLines}) {
+    if (text.contains('Ofek Gila')) {
+      // Split the text around Ofek's name
+      final parts = text.split('Ofek Gila');
+
+      return RichText(
+        maxLines: maxLines,
+        overflow: maxLines != null ? TextOverflow.ellipsis : TextOverflow.clip,
+        text: TextSpan(
+          style: style,
+          children: [
+            for (int i = 0; i < parts.length; i++) ...[
+              TextSpan(text: parts[i]),
+              if (i < parts.length - 1)
+                TextSpan(
+                  text: 'Ofek Gila',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.tertiary,
+                    fontWeight: FontWeight.bold,
+                    fontSize: style?.fontSize,
+                    fontStyle: style?.fontStyle,
+                  ),
+                ),
+            ],
+          ],
+        ),
+      );
+    } else {
+      return SelectableText(
+        text,
+        style: style,
+        maxLines: maxLines,
+      );
+    }
   }
 
   /// Returns a map of publication types to counts
@@ -1385,7 +1423,8 @@ class ResearcherDetailsModal extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SelectableText(
+                      _emphasizedText(
+                        context,
                         researcher.name,
                         style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                           fontWeight: FontWeight.bold,
@@ -1935,6 +1974,43 @@ class LabHighlights extends StatelessWidget {
     );
   }
 
+  // Helper function to emphasize Ofek's name
+  Widget _emphasizedText(BuildContext context, String text, {TextStyle? style, int? maxLines}) {
+    if (text.contains('Ofek Gila')) {
+      // Split the text around Ofek's name
+      final parts = text.split('Ofek Gila');
+
+      return RichText(
+        maxLines: maxLines,
+        overflow: maxLines != null ? TextOverflow.ellipsis : TextOverflow.clip,
+        text: TextSpan(
+          style: style,
+          children: [
+            for (int i = 0; i < parts.length; i++) ...[
+              TextSpan(text: parts[i]),
+              if (i < parts.length - 1)
+                TextSpan(
+                  text: 'Ofek Gila',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.tertiary,
+                    fontWeight: FontWeight.bold,
+                    fontSize: style?.fontSize,
+                    fontStyle: style?.fontStyle,
+                  ),
+                ),
+            ],
+          ],
+        ),
+      );
+    } else {
+      return SelectableText(
+        text,
+        style: style,
+        maxLines: maxLines,
+      );
+    }
+  }
+
   Widget _buildStatRow(BuildContext context, String label, String value) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1948,7 +2024,8 @@ class LabHighlights extends StatelessWidget {
             ),
           ),
         ),
-        SelectableText(
+        _emphasizedText(
+          context,
           value,
           style: TextStyle(
             fontWeight: FontWeight.bold,
@@ -1979,7 +2056,7 @@ class LabHighlights extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
-                  child: SelectableText(s.name),
+                  child: _emphasizedText(context, s.name),
                 ),
                 SelectableText(
                   s.year.toString(),
@@ -2133,7 +2210,7 @@ class LabHighlights extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
-                        child: SelectableText(studentsByTotalCollabs.first.key.name),
+                        child: _emphasizedText(context, studentsByTotalCollabs.first.key.name),
                       ),
                       SelectableText(
                         '${studentsByTotalCollabs.first.value['total']} collaborators',
@@ -2207,7 +2284,7 @@ class LabHighlights extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
-                        child: SelectableText(studentsByStudentCollabs.first.key.name),
+                        child: _emphasizedText(context, studentsByStudentCollabs.first.key.name),
                       ),
                       SelectableText(
                         '${studentsByStudentCollabs.first.value['student']} collaborators',
@@ -2260,7 +2337,7 @@ class LabHighlights extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
-                        child: SelectableText(studentsByProfessorCollabs.first.key.name),
+                        child: _emphasizedText(context, studentsByProfessorCollabs.first.key.name),
                       ),
                       SelectableText(
                         '${studentsByProfessorCollabs.first.value['professor']} collaborators',
@@ -2366,7 +2443,7 @@ class LabHighlights extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
-                        child: SelectableText(facultyByTotalCollabs.first.key.name),
+                        child: _emphasizedText(context, facultyByTotalCollabs.first.key.name),
                       ),
                       SelectableText(
                         '${facultyByTotalCollabs.first.value['total']} collaborators',
@@ -2440,7 +2517,7 @@ class LabHighlights extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
-                        child: SelectableText(facultyByStudentCollabs.first.key.name),
+                        child: _emphasizedText(context, facultyByStudentCollabs.first.key.name),
                       ),
                       SelectableText(
                         '${facultyByStudentCollabs.first.value['student']} collaborators',
@@ -2493,7 +2570,7 @@ class LabHighlights extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
-                        child: SelectableText(facultyByProfessorCollabs.first.key.name),
+                        child: _emphasizedText(context, facultyByProfessorCollabs.first.key.name),
                       ),
                       SelectableText(
                         '${facultyByProfessorCollabs.first.value['professor']} collaborators',
@@ -2585,7 +2662,8 @@ class LabHighlights extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 2),
-                SelectableText(
+                _emphasizedText(
+                  context,
                   pub.authors.map((a) => a.name.replaceAll(RegExp(r'\s\d+$'), '')).join(', '),
                   style: TextStyle(
                     fontSize: 12,
@@ -2638,7 +2716,7 @@ class LabHighlights extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
-                  child: SelectableText(entry.key.name),
+                  child: _emphasizedText(context, entry.key.name),
                 ),
                 SelectableText(
                   '${entry.value} papers',
@@ -2690,7 +2768,7 @@ class LabHighlights extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
-                  child: SelectableText(entry.key.name),
+                  child: _emphasizedText(context, entry.key.name),
                 ),
                 SelectableText(
                   '${entry.value} papers',
@@ -2740,7 +2818,7 @@ class LabHighlights extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
-                  child: SelectableText(entry.key.name),
+                  child: _emphasizedText(context, entry.key.name),
                 ),
                 SelectableText(
                   '${entry.value.length} graduates',

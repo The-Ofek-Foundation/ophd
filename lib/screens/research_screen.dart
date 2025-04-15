@@ -10,6 +10,7 @@ import 'package:graphview/GraphView.dart';
 import 'package:ophd/api/fetch_publications.dart';
 import 'package:ophd/api/fetch_researchers.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:fl_chart/fl_chart.dart';
 
 import 'package:ophd/data/authors.dart';
 import 'package:ophd/data/okabe_ito.dart';
@@ -762,6 +763,13 @@ class _LabGraphState extends State<LabGraph> {
                     ],
                   ),
                 ),
+                const SizedBox(height: 24),
+                LabHighlights(
+                  allResearchers: allResearchers!,
+                  publications: publications!,
+                  researcherToPublications: researcherToPublications,
+                  researcherToWeightedCollaborators: researcherToWeightedCollaborators,
+                ),
               ],
             ),
         ],
@@ -1471,5 +1479,1350 @@ class ResearcherDetailsModal extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class LabHighlights extends StatelessWidget {
+  final AllResearchers allResearchers;
+  final List<Publication> publications;
+  final Map<Researcher, Set<Publication>> researcherToPublications;
+  final Map<Researcher, Map<Researcher, int>> researcherToWeightedCollaborators;
+
+  const LabHighlights({
+    super.key,
+    required this.allResearchers,
+    required this.publications,
+    required this.researcherToPublications,
+    required this.researcherToWeightedCollaborators,
+  });
+
+  /// Generates a complete weighted collaborators map that includes all researchers
+  Map<Researcher, Map<Researcher, int>> _getCompleteWeightedCollaboratorsMap() {
+    final Map<Researcher, Map<Researcher, int>> completeMap = {};
+    final Set<Researcher> allResearchersSet = <Researcher>{};
+
+    // Add all students and professors to the set
+    allResearchersSet.addAll(allResearchers.students);
+    allResearchersSet.addAll(allResearchers.professors);
+
+    // For each researcher, calculate their weighted collaborators
+    for (final researcher in allResearchersSet) {
+      if (!researcherToPublications.containsKey(researcher)) continue;
+
+      final Map<Researcher, int> weightedCollaborators = {};
+
+      for (final publication in researcherToPublications[researcher]!) {
+        if (publication.researchers == null) continue;
+
+        for (final collaborator in publication.researchers!) {
+          if (collaborator != researcher) {
+            weightedCollaborators.update(collaborator, (value) => value + 1, ifAbsent: () => 1);
+          }
+        }
+      }
+
+      completeMap[researcher] = weightedCollaborators;
+    }
+
+    return completeMap;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Generate a complete weighted collaborators map for all researchers
+    final completeCollaboratorsMap = _getCompleteWeightedCollaboratorsMap();
+
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surfaceContainerHighest.withAlpha(77),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: Theme.of(context).colorScheme.outlineVariant,
+          width: 1,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              const CardHeaderIcon(
+                icon: Icons.insights,
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SelectableText(
+                      'Lab Highlights',
+                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    SelectableText(
+                      'Key statistics and insights about the lab',
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.secondary,
+                        fontFamily: 'RobotoMono',
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 16),
+            child: Divider(),
+          ),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              // Determine the number of columns based on available width
+              final crossAxisCount = constraints.maxWidth > 600 ? 2 : 1;
+
+              return MasonryGridView.count(
+                crossAxisCount: crossAxisCount,
+                mainAxisSpacing: 16,
+                crossAxisSpacing: 16,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: _buildHighlightCards(context, completeCollaboratorsMap).length,
+                itemBuilder: (context, index) {
+                  return _buildHighlightCards(context, completeCollaboratorsMap)[index];
+                },
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  List<Widget> _buildHighlightCards(BuildContext context, Map<Researcher, Map<Researcher, int>> completeCollaboratorsMap) {
+    final List<Widget> cards = [];
+
+    // Get all unique publications and collaborations
+    final allPublications = <Publication>{};
+    final collaborations = <Publication>{};
+
+    for (final publications in researcherToPublications.values) {
+      allPublications.addAll(publications);
+    }
+
+    // Find collaborations (papers with at least two lab researchers)
+    for (final pub in allPublications) {
+      if (pub.researchers != null && pub.researchers!.length >= 2) {
+        collaborations.add(pub);
+      }
+    }
+
+    final uniquePublications = _removeDuplicatePublications(allPublications.toList());
+    final uniqueCollaborations = _removeDuplicatePublications(collaborations.toList());
+
+    // Lab overview stats
+    cards.add(_buildLabOverviewStatsCard(context, uniquePublications.length, uniqueCollaborations.length));
+
+    // Publications per year chart
+    cards.add(_buildPublicationsPerYearCard(context));
+
+    // Collaborations per year chart
+    cards.add(_buildCollaborationsPerYearCard(context, uniqueCollaborations));
+
+    // Recent graduates (last 3)
+    cards.add(_buildRecentGraduatesCard(context));
+
+    // Recent current student papers (last 3)
+    cards.add(_buildRecentStudentPapersCard(context, false));
+
+    // Recent graduated student papers (last 3)
+    cards.add(_buildRecentStudentPapersCard(context, true));
+
+    // Recent faculty papers (last 3)
+    cards.add(_buildRecentFacultyPapersCard(context));
+
+    // Well connected current students
+    cards.add(_buildWellConnectedStudentsCard(context, completeCollaboratorsMap, false));
+
+    // Well connected graduated students
+    cards.add(_buildWellConnectedStudentsCard(context, completeCollaboratorsMap, true));
+
+    // Well connected faculty
+    cards.add(_buildWellConnectedFacultyCard(context, completeCollaboratorsMap));
+
+    // Prolific current students
+    cards.add(_buildProlificStudentsCard(context, false));
+
+    // Prolific graduated students
+    cards.add(_buildProlificStudentsCard(context, true));
+
+    // Prolific faculty
+    cards.add(_buildProlificFacultyCard(context));
+
+    // Faculty with most graduates
+    cards.add(_buildFacultyWithMostGraduatesCard(context));
+
+    return cards;
+  }
+
+  Widget _buildPublicationsPerYearCard(BuildContext context) {
+    // Count publications per year
+    final publicationsPerYear = <int, int>{};
+
+    // Get all unique publications
+    final allPublications = <Publication>{};
+    for (final publications in researcherToPublications.values) {
+      allPublications.addAll(publications);
+    }
+    final uniquePublications = _removeDuplicatePublications(allPublications.toList());
+
+    // Count publications per year
+    for (final pub in uniquePublications) {
+      publicationsPerYear.update(pub.year, (value) => value + 1, ifAbsent: () => 1);
+    }
+
+    // Sort years
+    final sortedYears = publicationsPerYear.keys.toList()..sort();
+
+    // Create line chart data
+    final spots = <FlSpot>[];
+    for (int i = 0; i < sortedYears.length; i++) {
+      final year = sortedYears[i];
+      final count = publicationsPerYear[year]!;
+      spots.add(FlSpot(year.toDouble(), count.toDouble()));
+    }
+
+    return _buildInfoCard(
+      context,
+      Icons.show_chart,
+      'Publications Per Year',
+      '',
+      customContent: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const SizedBox(height: 8),
+          SizedBox(
+            height: 200,
+            child: LineChart(
+              LineChartData(
+                minX: sortedYears.isEmpty ? 0 : sortedYears.first.toDouble() - 0.5,
+                maxX: sortedYears.isEmpty ? 0 : sortedYears.last.toDouble() + 0.5,
+                minY: 0,
+                maxY: (publicationsPerYear.values.isEmpty ? 0 : publicationsPerYear.values.reduce(max).toDouble()) * 1.2,
+                lineBarsData: [
+                  LineChartBarData(
+                    spots: spots,
+                    isCurved: true,
+                    color: Theme.of(context).colorScheme.primary,
+                    barWidth: 3,
+                    isStrokeCapRound: true,
+                    dotData: FlDotData(show: true),
+                    belowBarData: BarAreaData(
+                      show: true,
+                      color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
+                    ),
+                  ),
+                ],
+                titlesData: FlTitlesData(
+                  leftTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      reservedSize: 30,
+                      getTitlesWidget: (value, meta) {
+                        if (value == 0) return const SizedBox();
+                        if (value % 1 != 0) return const SizedBox();
+
+                        return SideTitleWidget(
+                          axisSide: meta.axisSide,
+                          child: Text(
+                            value.toInt().toString(),
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                              fontSize: 10,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  bottomTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      interval: sortedYears.length > 20 ? 5 : (sortedYears.length > 10 ? 2 : 1),
+                      getTitlesWidget: (value, meta) {
+                        if (value % 1 != 0) return const SizedBox();
+
+                        return SideTitleWidget(
+                          axisSide: meta.axisSide,
+                          child: Text(
+                            value.toInt().toString(),
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                              fontSize: 10,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                  topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                ),
+                gridData: FlGridData(
+                  drawHorizontalLine: true,
+                  horizontalInterval: 1,
+                  getDrawingHorizontalLine: (value) => FlLine(
+                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
+                    strokeWidth: 1,
+                  ),
+                  drawVerticalLine: false,
+                ),
+                borderData: FlBorderData(show: false),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCollaborationsPerYearCard(BuildContext context, List<Publication> collaborations) {
+    // Count collaborations per year
+    final collaborationsPerYear = <int, int>{};
+
+    // Count collaborations per year
+    for (final pub in collaborations) {
+      collaborationsPerYear.update(pub.year, (value) => value + 1, ifAbsent: () => 1);
+    }
+
+    // Sort years
+    final sortedYears = collaborationsPerYear.keys.toList()..sort();
+
+    // Create line chart data
+    final spots = <FlSpot>[];
+    for (int i = 0; i < sortedYears.length; i++) {
+      final year = sortedYears[i];
+      final count = collaborationsPerYear[year]!;
+      spots.add(FlSpot(year.toDouble(), count.toDouble()));
+    }
+
+    return _buildInfoCard(
+      context,
+      Icons.show_chart,
+      'Collaborations Per Year',
+      '',
+      customContent: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const SizedBox(height: 8),
+          SizedBox(
+            height: 200,
+            child: LineChart(
+              LineChartData(
+                minX: sortedYears.isEmpty ? 0 : sortedYears.first.toDouble() - 0.5,
+                maxX: sortedYears.isEmpty ? 0 : sortedYears.last.toDouble() + 0.5,
+                minY: 0,
+                maxY: (collaborationsPerYear.values.isEmpty ? 0 : collaborationsPerYear.values.reduce(max).toDouble()) * 1.2,
+                lineBarsData: [
+                  LineChartBarData(
+                    spots: spots,
+                    isCurved: true,
+                    color: Theme.of(context).colorScheme.secondary,
+                    barWidth: 3,
+                    isStrokeCapRound: true,
+                    dotData: FlDotData(show: true),
+                    belowBarData: BarAreaData(
+                      show: true,
+                      color: Theme.of(context).colorScheme.secondary.withOpacity(0.2),
+                    ),
+                  ),
+                ],
+                titlesData: FlTitlesData(
+                  leftTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      reservedSize: 30,
+                      getTitlesWidget: (value, meta) {
+                        if (value == 0) return const SizedBox();
+                        if (value % 1 != 0) return const SizedBox();
+
+                        return SideTitleWidget(
+                          axisSide: meta.axisSide,
+                          child: Text(
+                            value.toInt().toString(),
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                              fontSize: 10,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  bottomTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      interval: sortedYears.length > 20 ? 5 : (sortedYears.length > 10 ? 2 : 1),
+                      getTitlesWidget: (value, meta) {
+                        if (value % 1 != 0) return const SizedBox();
+
+                        return SideTitleWidget(
+                          axisSide: meta.axisSide,
+                          child: Text(
+                            value.toInt().toString(),
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                              fontSize: 10,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                  topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                ),
+                gridData: FlGridData(
+                  drawHorizontalLine: true,
+                  horizontalInterval: 1,
+                  getDrawingHorizontalLine: (value) => FlLine(
+                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
+                    strokeWidth: 1,
+                  ),
+                  drawVerticalLine: false,
+                ),
+                borderData: FlBorderData(show: false),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLabOverviewStatsCard(BuildContext context, int publicationCount, int collaborationCount) {
+    // Count current students (not graduated)
+    final currentStudentCount = allResearchers.students.where((s) => !s.hasDoctorate).length;
+
+    // Count graduated students
+    final graduatedStudentCount = allResearchers.students.where((s) => s.hasDoctorate).length;
+
+    // Count faculty members
+    final facultyCount = allResearchers.professors.length;
+
+    return _buildInfoCard(
+      context,
+      Icons.analytics,
+      'Lab Overview',
+      '',
+      customContent: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _buildStatRow(context, 'Current Students', currentStudentCount.toString()),
+          const SizedBox(height: 4),
+          _buildStatRow(context, 'Graduated Students', graduatedStudentCount.toString()),
+          const SizedBox(height: 4),
+          _buildStatRow(context, 'Faculty Members', facultyCount.toString()),
+          const SizedBox(height: 4),
+          _buildStatRow(context, 'Distinct Publications', publicationCount.toString()),
+          const SizedBox(height: 4),
+          _buildStatRow(context, 'Lab Collaborations', collaborationCount.toString()),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatRow(BuildContext context, String label, String value) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(
+          child: SelectableText(
+            label,
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
+          ),
+        ),
+        SelectableText(
+          value,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Theme.of(context).colorScheme.secondary,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildRecentGraduatesCard(BuildContext context) {
+    final graduatedStudents = allResearchers.students
+        .where((s) => s.hasDoctorate && s.year != null)
+        .toList()
+        ..sort((a, b) => (b.year ?? 0).compareTo(a.year ?? 0));
+
+    return _buildInfoCard(
+      context,
+      Icons.school,
+      'Recent Graduates',
+      '',
+      customContent: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: graduatedStudents.take(3).map((s) =>
+          Padding(
+            padding: const EdgeInsets.only(bottom: 4),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: SelectableText(s.name),
+                ),
+                SelectableText(
+                  s.year.toString(),
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
+                ),
+              ],
+            ),
+          )
+        ).toList(),
+      ),
+    );
+  }
+
+  Widget _buildRecentStudentPapersCard(BuildContext context, bool graduated) {
+    // Get all student publications
+    final studentPublications = <Publication>{};
+    for (final student in allResearchers.students.where((s) => s.hasDoctorate == graduated)) {
+      if (researcherToPublications.containsKey(student)) {
+        studentPublications.addAll(researcherToPublications[student]!);
+      }
+    }
+
+    // Sort by year (descending) and then by mdate
+    final sortedPubs = studentPublications.toList()
+      ..sort((a, b) {
+        final yearComparison = b.year.compareTo(a.year);
+        if (yearComparison != 0) return yearComparison;
+        return b.mdate.seconds.compareTo(a.mdate.seconds);
+      });
+
+    // Remove duplicates
+    final uniquePubs = _removeDuplicatePublications(sortedPubs);
+
+    return _buildInfoCard(
+      context,
+      Icons.article,
+      graduated ? 'Recent Graduated Student Papers' : 'Recent Current Student Papers',
+      '',
+      customContent: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: uniquePubs.take(3).map((pub) =>
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: SelectableText(
+                        pub.title,
+                        style: const TextStyle(fontWeight: FontWeight.w500),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    SelectableText(
+                      pub.year.toString(),
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 2),
+                SelectableText(
+                  pub.authors.map((a) => a.name.replaceAll(RegExp(r'\s\d+$'), '')).join(', '),
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    fontStyle: FontStyle.italic,
+                  ),
+                  maxLines: 1,
+                ),
+              ],
+            ),
+          )
+        ).toList(),
+      ),
+    );
+  }
+
+  Widget _buildWellConnectedStudentsCard(BuildContext context, Map<Researcher, Map<Researcher, int>> completeCollaboratorsMap, bool graduated) {
+    // Calculate student collaborations
+    final studentCollabStats = <StudentResearcher, Map<String, int>>{};
+
+    // Filter students based on graduation status
+    final filteredStudents = allResearchers.students.where((s) => s.hasDoctorate == graduated);
+
+    for (final student in filteredStudents) {
+      if (!completeCollaboratorsMap.containsKey(student)) continue;
+
+      final collaborators = completeCollaboratorsMap[student]!;
+      int studentCollaboratorCount = 0;
+      int professorCollaboratorCount = 0;
+      int totalCollaboratorCount = 0;
+
+      for (final entry in collaborators.entries) {
+        final collaborator = entry.key;
+
+        if (collaborator is StudentResearcher) {
+          studentCollaboratorCount++;
+        } else if (collaborator is ProfessorResearcher) {
+          professorCollaboratorCount++;
+        }
+        totalCollaboratorCount++;
+      }
+
+      studentCollabStats[student] = {
+        'student': studentCollaboratorCount,
+        'professor': professorCollaboratorCount,
+        'total': totalCollaboratorCount,
+      };
+    }
+
+    // Get top students by different metrics
+    final studentsByStudentCollabs = studentCollabStats.entries.toList()
+      ..sort((a, b) => b.value['student']!.compareTo(a.value['student']!));
+
+    final studentsByProfessorCollabs = studentCollabStats.entries.toList()
+      ..sort((a, b) => b.value['professor']!.compareTo(a.value['professor']!));
+
+    final studentsByTotalCollabs = studentCollabStats.entries.toList()
+      ..sort((a, b) => b.value['total']!.compareTo(a.value['total']!));
+
+    return _buildInfoCard(
+      context,
+      Icons.people,
+      graduated ? 'Well-Connected Graduated Students' : 'Well-Connected Current Students',
+      '',
+      customContent: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          if (studentsByTotalCollabs.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SelectableText(
+                    'Most Total Collaborations',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: SelectableText(studentsByTotalCollabs.first.key.name),
+                      ),
+                      SelectableText(
+                        '${studentsByTotalCollabs.first.value['total']} collaborators',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 2),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: SelectableText(
+                          'Students:',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ),
+                      SelectableText(
+                        '${studentsByTotalCollabs.first.value['student']} collaborators',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: SelectableText(
+                          'Faculty:',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ),
+                      SelectableText(
+                        '${studentsByTotalCollabs.first.value['professor']} collaborators',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          if (studentsByStudentCollabs.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SelectableText(
+                    'Most Student Collaborations',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: SelectableText(studentsByStudentCollabs.first.key.name),
+                      ),
+                      SelectableText(
+                        '${studentsByStudentCollabs.first.value['student']} collaborators',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 2),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: SelectableText(
+                          'Faculty:',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ),
+                      SelectableText(
+                        '${studentsByStudentCollabs.first.value['professor']} collaborators',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          if (studentsByProfessorCollabs.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SelectableText(
+                    'Most Faculty Collaborations',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: SelectableText(studentsByProfessorCollabs.first.key.name),
+                      ),
+                      SelectableText(
+                        '${studentsByProfessorCollabs.first.value['professor']} collaborators',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 2),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: SelectableText(
+                          'Students:',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ),
+                      SelectableText(
+                        '${studentsByProfessorCollabs.first.value['student']} collaborators',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildWellConnectedFacultyCard(BuildContext context, Map<Researcher, Map<Researcher, int>> completeCollaboratorsMap) {
+    // Calculate faculty collaborations
+    final facultyCollabStats = <ProfessorResearcher, Map<String, int>>{};
+
+    for (final professor in allResearchers.professors) {
+      if (!completeCollaboratorsMap.containsKey(professor)) continue;
+
+      final collaborators = completeCollaboratorsMap[professor]!;
+      int studentCollaboratorCount = 0;
+      int professorCollaboratorCount = 0;
+      int totalCollaboratorCount = 0;
+
+      for (final entry in collaborators.entries) {
+        final collaborator = entry.key;
+
+        if (collaborator is StudentResearcher) {
+          studentCollaboratorCount++;
+        } else if (collaborator is ProfessorResearcher) {
+          professorCollaboratorCount++;
+        }
+        totalCollaboratorCount++;
+      }
+
+      facultyCollabStats[professor] = {
+        'student': studentCollaboratorCount,
+        'professor': professorCollaboratorCount,
+        'total': totalCollaboratorCount,
+      };
+    }
+
+    // Get top faculty by different metrics
+    final facultyByStudentCollabs = facultyCollabStats.entries.toList()
+      ..sort((a, b) => b.value['student']!.compareTo(a.value['student']!));
+
+    final facultyByProfessorCollabs = facultyCollabStats.entries.toList()
+      ..sort((a, b) => b.value['professor']!.compareTo(a.value['professor']!));
+
+    final facultyByTotalCollabs = facultyCollabStats.entries.toList()
+      ..sort((a, b) => b.value['total']!.compareTo(a.value['total']!));
+
+    return _buildInfoCard(
+      context,
+      Icons.people,
+      'Well-Connected Faculty',
+      '',
+      customContent: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          if (facultyByTotalCollabs.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SelectableText(
+                    'Most Total Collaborations',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: SelectableText(facultyByTotalCollabs.first.key.name),
+                      ),
+                      SelectableText(
+                        '${facultyByTotalCollabs.first.value['total']} collaborators',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 2),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: SelectableText(
+                          'Students:',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ),
+                      SelectableText(
+                        '${facultyByTotalCollabs.first.value['student']} collaborators',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: SelectableText(
+                          'Faculty:',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ),
+                      SelectableText(
+                        '${facultyByTotalCollabs.first.value['professor']} collaborators',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          if (facultyByStudentCollabs.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SelectableText(
+                    'Most Student Collaborations',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: SelectableText(facultyByStudentCollabs.first.key.name),
+                      ),
+                      SelectableText(
+                        '${facultyByStudentCollabs.first.value['student']} collaborators',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 2),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: SelectableText(
+                          'Faculty:',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ),
+                      SelectableText(
+                        '${facultyByStudentCollabs.first.value['professor']} collaborators',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          if (facultyByProfessorCollabs.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SelectableText(
+                    'Most Faculty Collaborations',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: SelectableText(facultyByProfessorCollabs.first.key.name),
+                      ),
+                      SelectableText(
+                        '${facultyByProfessorCollabs.first.value['professor']} collaborators',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 2),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: SelectableText(
+                          'Students:',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ),
+                      SelectableText(
+                        '${facultyByProfessorCollabs.first.value['student']} collaborators',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRecentFacultyPapersCard(BuildContext context) {
+    // Get all faculty publications
+    final facultyPublications = <Publication>{};
+    for (final professor in allResearchers.professors) {
+      if (researcherToPublications.containsKey(professor)) {
+        facultyPublications.addAll(researcherToPublications[professor]!);
+      }
+    }
+
+    // Sort by year (descending) and then by mdate
+    final sortedPubs = facultyPublications.toList()
+      ..sort((a, b) {
+        final yearComparison = b.year.compareTo(a.year);
+        if (yearComparison != 0) return yearComparison;
+        return b.mdate.seconds.compareTo(a.mdate.seconds);
+      });
+
+    // Remove duplicates
+    final uniquePubs = _removeDuplicatePublications(sortedPubs);
+
+    return _buildInfoCard(
+      context,
+      Icons.article,
+      'Recent Faculty Papers',
+      '',
+      customContent: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: uniquePubs.take(3).map((pub) =>
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: SelectableText(
+                        pub.title,
+                        style: const TextStyle(fontWeight: FontWeight.w500),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    SelectableText(
+                      pub.year.toString(),
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 2),
+                SelectableText(
+                  pub.authors.map((a) => a.name.replaceAll(RegExp(r'\s\d+$'), '')).join(', '),
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    fontStyle: FontStyle.italic,
+                  ),
+                  maxLines: 1,
+                ),
+              ],
+            ),
+          )
+        ).toList(),
+      ),
+    );
+  }
+
+  Widget _buildProlificStudentsCard(BuildContext context, bool graduated) {
+    // Calculate publication counts for students (excluding informal journals)
+    final studentPubCounts = <StudentResearcher, int>{};
+
+    for (final student in allResearchers.students.where((s) => s.hasDoctorate == graduated)) {
+      if (!researcherToPublications.containsKey(student)) continue;
+
+      final pubs = researcherToPublications[student]!;
+      final academicPubs = pubs.where((pub) =>
+        (pub.type == PublicationType.article || pub.type == PublicationType.inproceedings) &&
+        pub.publtype != 'informal'
+      ).length;
+
+      if (academicPubs > 0) {
+        studentPubCounts[student] = academicPubs;
+      }
+    }
+
+    // Sort by publication count
+    final sortedStudents = studentPubCounts.entries.toList()
+      ..sort((a, b) => b.value.compareTo(a.value));
+
+    return _buildInfoCard(
+      context,
+      Icons.auto_awesome,
+      graduated ? 'Prolific Graduated Students' : 'Prolific Current Students',
+      '',
+      customContent: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: sortedStudents.take(3).map((entry) =>
+          Padding(
+            padding: const EdgeInsets.only(bottom: 4),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: SelectableText(entry.key.name),
+                ),
+                SelectableText(
+                  '${entry.value} papers',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
+                ),
+              ],
+            ),
+          )
+        ).toList(),
+      ),
+    );
+  }
+
+  Widget _buildProlificFacultyCard(BuildContext context) {
+    // Calculate publication counts for faculty (excluding informal journals)
+    final facultyPubCounts = <ProfessorResearcher, int>{};
+
+    for (final professor in allResearchers.professors) {
+      if (!researcherToPublications.containsKey(professor)) continue;
+
+      final pubs = researcherToPublications[professor]!;
+      final academicPubs = pubs.where((pub) =>
+        (pub.type == PublicationType.article || pub.type == PublicationType.inproceedings) &&
+        pub.publtype != 'informal'
+      ).length;
+
+      if (academicPubs > 0) {
+        facultyPubCounts[professor] = academicPubs;
+      }
+    }
+
+    // Sort by publication count
+    final sortedFaculty = facultyPubCounts.entries.toList()
+      ..sort((a, b) => b.value.compareTo(a.value));
+
+    return _buildInfoCard(
+      context,
+      Icons.auto_awesome,
+      'Prolific Faculty',
+      '',
+      customContent: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: sortedFaculty.take(3).map((entry) =>
+          Padding(
+            padding: const EdgeInsets.only(bottom: 4),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: SelectableText(entry.key.name),
+                ),
+                SelectableText(
+                  '${entry.value} papers',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
+                ),
+              ],
+            ),
+          )
+        ).toList(),
+      ),
+    );
+  }
+
+  Widget _buildFacultyWithMostGraduatesCard(BuildContext context) {
+    // Count graduates for each professor
+    final graduatesByProfessor = <ProfessorResearcher, List<StudentResearcher>>{};
+
+    for (final professor in allResearchers.professors) {
+      final graduates = allResearchers.students.where((s) =>
+        s.hasDoctorate &&
+        s.advisors != null &&
+        s.advisors!.any((a) => a.name == professor.name)
+      ).toList();
+
+      if (graduates.isNotEmpty) {
+        graduatesByProfessor[professor] = graduates;
+      }
+    }
+
+    // Sort by number of graduates
+    final sortedProfessors = graduatesByProfessor.entries.toList()
+      ..sort((a, b) => b.value.length.compareTo(a.value.length));
+
+    return _buildInfoCard(
+      context,
+      Icons.school,
+      'Faculty with Most Graduates',
+      '',
+      customContent: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: sortedProfessors.take(3).map((entry) =>
+          Padding(
+            padding: const EdgeInsets.only(bottom: 4),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: SelectableText(entry.key.name),
+                ),
+                SelectableText(
+                  '${entry.value.length} graduates',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
+                ),
+              ],
+            ),
+          )
+        ).toList(),
+      ),
+    );
+  }
+
+  Widget _buildInfoCard(BuildContext context, IconData icon, String label, String value, {Widget? customContent}) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surfaceContainerHighest.withAlpha(77),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: Theme.of(context).colorScheme.outlineVariant,
+          width: 1,
+        ),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(
+            icon,
+            size: 24,
+            color: Theme.of(context).colorScheme.secondary,
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SelectableText(
+                  label,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                customContent ?? SelectableText(
+                  value,
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Removes duplicate publications based on normalized titles
+  List<Publication> _removeDuplicatePublications(List<Publication> publications) {
+    // Map to track seen normalized titles
+    final seenTitles = <String, Publication>{};
+
+    for (final pub in publications) {
+      // Normalize the title: lowercase and remove non-alphanumeric characters
+      final normalizedTitle = _normalizeTitle(pub.title);
+
+      // If we haven't seen this title before, or if this publication is newer (by mdate)
+      // than the one we've seen, keep this one
+      if (!seenTitles.containsKey(normalizedTitle) ||
+          pub.mdate.seconds > seenTitles[normalizedTitle]!.mdate.seconds) {
+        seenTitles[normalizedTitle] = pub;
+      }
+    }
+
+    // Return the unique publications
+    return seenTitles.values.toList();
+  }
+
+  /// Normalizes a title by converting to lowercase and removing non-alphanumeric characters
+  String _normalizeTitle(String title) {
+    return title.toLowerCase().replaceAll(RegExp(r'[^a-z0-9]'), '');
   }
 }

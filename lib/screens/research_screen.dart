@@ -1483,7 +1483,17 @@ class ResearcherDetailsModal extends StatelessWidget {
                 child: LayoutBuilder(
                   builder: (context, constraints) {
                     // Determine the number of columns based on available width
-                    final crossAxisCount = constraints.maxWidth > 600 ? 2 : 1;
+                    int crossAxisCount;
+
+                    if (constraints.maxWidth < 600) {
+                      crossAxisCount = 1; // Phone portrait
+                    } else if (constraints.maxWidth < 900) {
+                      crossAxisCount = 2; // Tablet or phone landscape
+                    } else if (constraints.maxWidth < 1200) {
+                      crossAxisCount = 3; // Small desktop or laptop
+                    } else {
+                      crossAxisCount = 4; // Large desktop
+                    }
 
                     return MasonryGridView.count(
                       crossAxisCount: crossAxisCount,
@@ -1534,6 +1544,17 @@ class LabHighlights extends StatelessWidget {
     required this.researcherToPublications,
     required this.researcherToWeightedCollaborators,
   });
+
+  // Helper function to format numbers with commas
+  String _formatNumber(int number) {
+    if (number >= 1000) {
+      return number.toString().replaceAllMapped(
+        RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+        (Match m) => '${m[1]},'
+      );
+    }
+    return number.toString();
+  }
 
   /// Generates a complete weighted collaborators map that includes all researchers
   Map<Researcher, Map<Researcher, int>> _getCompleteWeightedCollaboratorsMap() {
@@ -1621,7 +1642,17 @@ class LabHighlights extends StatelessWidget {
           LayoutBuilder(
             builder: (context, constraints) {
               // Determine the number of columns based on available width
-              final crossAxisCount = constraints.maxWidth > 600 ? 2 : 1;
+              int crossAxisCount;
+
+              if (constraints.maxWidth < 600) {
+                crossAxisCount = 1; // Phone portrait
+              } else if (constraints.maxWidth < 900) {
+                crossAxisCount = 2; // Tablet or phone landscape
+              } else if (constraints.maxWidth < 1200) {
+                crossAxisCount = 3; // Small desktop or laptop
+              } else {
+                crossAxisCount = 4; // Large desktop
+              }
 
               return MasonryGridView.count(
                 crossAxisCount: crossAxisCount,
@@ -1960,15 +1991,15 @@ class LabHighlights extends StatelessWidget {
       customContent: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _buildStatRow(context, 'Current Students', currentStudentCount.toString()),
+          _buildStatRow(context, 'Current Students', _formatNumber(currentStudentCount)),
           const SizedBox(height: 4),
-          _buildStatRow(context, 'Graduated Students', graduatedStudentCount.toString()),
+          _buildStatRow(context, 'Graduated Students', _formatNumber(graduatedStudentCount)),
           const SizedBox(height: 4),
-          _buildStatRow(context, 'Faculty Members', facultyCount.toString()),
+          _buildStatRow(context, 'Faculty Members', _formatNumber(facultyCount)),
           const SizedBox(height: 4),
-          _buildStatRow(context, 'Distinct Publications', publicationCount.toString()),
+          _buildStatRow(context, 'Distinct Publications', _formatNumber(publicationCount)),
           const SizedBox(height: 4),
-          _buildStatRow(context, 'Lab Collaborations', collaborationCount.toString()),
+          _buildStatRow(context, 'Lab Collaborations', _formatNumber(collaborationCount)),
         ],
       ),
     );
@@ -2049,7 +2080,7 @@ class LabHighlights extends StatelessWidget {
       '',
       customContent: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: graduatedStudents.take(3).map((s) =>
+        children: graduatedStudents.take(5).map((s) =>
           Padding(
             padding: const EdgeInsets.only(bottom: 4),
             child: Row(
@@ -2099,7 +2130,7 @@ class LabHighlights extends StatelessWidget {
       '',
       customContent: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: uniquePubs.take(3).map((pub) =>
+        children: uniquePubs.take(5).map((pub) =>
           Padding(
             padding: const EdgeInsets.only(bottom: 8),
             child: Column(
@@ -2213,7 +2244,7 @@ class LabHighlights extends StatelessWidget {
                         child: _emphasizedText(context, studentsByTotalCollabs.first.key.name),
                       ),
                       SelectableText(
-                        '${studentsByTotalCollabs.first.value['total']} collaborators',
+                        '${_formatNumber(studentsByTotalCollabs.first.value['total']!)} collaborators',
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.secondary,
                         ),
@@ -2234,7 +2265,7 @@ class LabHighlights extends StatelessWidget {
                         ),
                       ),
                       SelectableText(
-                        '${studentsByTotalCollabs.first.value['student']} collaborators',
+                        '${_formatNumber(studentsByTotalCollabs.first.value['student']!)} collaborators',
                         style: TextStyle(
                           fontSize: 12,
                           color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -2255,7 +2286,7 @@ class LabHighlights extends StatelessWidget {
                         ),
                       ),
                       SelectableText(
-                        '${studentsByTotalCollabs.first.value['professor']} collaborators',
+                        '${_formatNumber(studentsByTotalCollabs.first.value['professor']!)} collaborators',
                         style: TextStyle(
                           fontSize: 12,
                           color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -2287,7 +2318,7 @@ class LabHighlights extends StatelessWidget {
                         child: _emphasizedText(context, studentsByStudentCollabs.first.key.name),
                       ),
                       SelectableText(
-                        '${studentsByStudentCollabs.first.value['student']} collaborators',
+                        '${_formatNumber(studentsByStudentCollabs.first.value['student']!)} collaborators',
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.secondary,
                         ),
@@ -2308,7 +2339,7 @@ class LabHighlights extends StatelessWidget {
                         ),
                       ),
                       SelectableText(
-                        '${studentsByStudentCollabs.first.value['professor']} collaborators',
+                        '${_formatNumber(studentsByStudentCollabs.first.value['professor']!)} collaborators',
                         style: TextStyle(
                           fontSize: 12,
                           color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -2340,7 +2371,7 @@ class LabHighlights extends StatelessWidget {
                         child: _emphasizedText(context, studentsByProfessorCollabs.first.key.name),
                       ),
                       SelectableText(
-                        '${studentsByProfessorCollabs.first.value['professor']} collaborators',
+                        '${_formatNumber(studentsByProfessorCollabs.first.value['professor']!)} collaborators',
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.secondary,
                         ),
@@ -2361,7 +2392,7 @@ class LabHighlights extends StatelessWidget {
                         ),
                       ),
                       SelectableText(
-                        '${studentsByProfessorCollabs.first.value['student']} collaborators',
+                        '${_formatNumber(studentsByProfessorCollabs.first.value['student']!)} collaborators',
                         style: TextStyle(
                           fontSize: 12,
                           color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -2446,7 +2477,7 @@ class LabHighlights extends StatelessWidget {
                         child: _emphasizedText(context, facultyByTotalCollabs.first.key.name),
                       ),
                       SelectableText(
-                        '${facultyByTotalCollabs.first.value['total']} collaborators',
+                        '${_formatNumber(facultyByTotalCollabs.first.value['total']!)} collaborators',
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.secondary,
                         ),
@@ -2467,7 +2498,7 @@ class LabHighlights extends StatelessWidget {
                         ),
                       ),
                       SelectableText(
-                        '${facultyByTotalCollabs.first.value['student']} collaborators',
+                        '${_formatNumber(facultyByTotalCollabs.first.value['student']!)} collaborators',
                         style: TextStyle(
                           fontSize: 12,
                           color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -2488,7 +2519,7 @@ class LabHighlights extends StatelessWidget {
                         ),
                       ),
                       SelectableText(
-                        '${facultyByTotalCollabs.first.value['professor']} collaborators',
+                        '${_formatNumber(facultyByTotalCollabs.first.value['professor']!)} collaborators',
                         style: TextStyle(
                           fontSize: 12,
                           color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -2520,7 +2551,7 @@ class LabHighlights extends StatelessWidget {
                         child: _emphasizedText(context, facultyByStudentCollabs.first.key.name),
                       ),
                       SelectableText(
-                        '${facultyByStudentCollabs.first.value['student']} collaborators',
+                        '${_formatNumber(facultyByStudentCollabs.first.value['student']!)} collaborators',
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.secondary,
                         ),
@@ -2541,7 +2572,7 @@ class LabHighlights extends StatelessWidget {
                         ),
                       ),
                       SelectableText(
-                        '${facultyByStudentCollabs.first.value['professor']} collaborators',
+                        '${_formatNumber(facultyByStudentCollabs.first.value['professor']!)} collaborators',
                         style: TextStyle(
                           fontSize: 12,
                           color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -2573,7 +2604,7 @@ class LabHighlights extends StatelessWidget {
                         child: _emphasizedText(context, facultyByProfessorCollabs.first.key.name),
                       ),
                       SelectableText(
-                        '${facultyByProfessorCollabs.first.value['professor']} collaborators',
+                        '${_formatNumber(facultyByProfessorCollabs.first.value['professor']!)} collaborators',
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.secondary,
                         ),
@@ -2594,7 +2625,7 @@ class LabHighlights extends StatelessWidget {
                         ),
                       ),
                       SelectableText(
-                        '${facultyByProfessorCollabs.first.value['student']} collaborators',
+                        '${_formatNumber(facultyByProfessorCollabs.first.value['student']!)} collaborators',
                         style: TextStyle(
                           fontSize: 12,
                           color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -2637,7 +2668,7 @@ class LabHighlights extends StatelessWidget {
       '',
       customContent: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: uniquePubs.take(3).map((pub) =>
+        children: uniquePubs.take(5).map((pub) =>
           Padding(
             padding: const EdgeInsets.only(bottom: 8),
             child: Column(
@@ -2709,7 +2740,7 @@ class LabHighlights extends StatelessWidget {
       '',
       customContent: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: sortedStudents.take(3).map((entry) =>
+        children: sortedStudents.take(5).map((entry) =>
           Padding(
             padding: const EdgeInsets.only(bottom: 4),
             child: Row(
@@ -2761,7 +2792,7 @@ class LabHighlights extends StatelessWidget {
       '',
       customContent: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: sortedFaculty.take(3).map((entry) =>
+        children: sortedFaculty.take(5).map((entry) =>
           Padding(
             padding: const EdgeInsets.only(bottom: 4),
             child: Row(
@@ -2771,7 +2802,7 @@ class LabHighlights extends StatelessWidget {
                   child: _emphasizedText(context, entry.key.name),
                 ),
                 SelectableText(
-                  '${entry.value} papers',
+                  '${_formatNumber(entry.value)} papers',
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.secondary,
                   ),
@@ -2811,7 +2842,7 @@ class LabHighlights extends StatelessWidget {
       '',
       customContent: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: sortedProfessors.take(3).map((entry) =>
+        children: sortedProfessors.take(5).map((entry) =>
           Padding(
             padding: const EdgeInsets.only(bottom: 4),
             child: Row(
@@ -2821,7 +2852,7 @@ class LabHighlights extends StatelessWidget {
                   child: _emphasizedText(context, entry.key.name),
                 ),
                 SelectableText(
-                  '${entry.value.length} graduates',
+                  '${_formatNumber(entry.value.length)} graduates',
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.secondary,
                   ),

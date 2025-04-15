@@ -168,5 +168,73 @@
 				"type": "String"
 			}
 		}
+	},
+	"advisor": "{count, plural, =1{מנחה} other{מנחים}}",
+	"@advisor": {
+		"placeholders": {
+			"count": {
+				"type": "int"
+			}
+		}
+	},
+	"graduationYear": "שנת סיום",
+	"@graduationYear": {},
+	"thesisTitle": "כותרת התזה",
+	"@thesisTitle": {},
+	"graduateStudents": "תלמידי מחקר",
+	"@graduateStudents": {},
+	"current": "נוכחי: {count}",
+	"@current": {
+		"placeholders": {
+			"count": {
+				"type": "int"
+			}
+		}
+	},
+	"studentCount": "{count, plural, =1{סטודנט} other{סטודנטים}}",
+	"@studentCount": {
+		"placeholders": {
+			"count": {
+				"type": "int"
+			}
+		}
+	},
+	"recentGraduates": "בוגרים אחרונים",
+	"@recentGraduates": {},
+	"publicationsByType": "פרסומים לפי סוג",
+	"@publicationsByType": {},
+	"researchCollaborations": "שיתופי פעולה מחקריים",
+	"@researchCollaborations": {},
+	"facultyCoauthors": "שותפי כתיבה מהסגל",
+	"@facultyCoauthors": {},
+	"studentCoauthors": "שותפי כתיבה סטודנטים",
+	"@studentCoauthors": {},
+	"topLabCollaborators": "שותפי מעבדה מובילים",
+	"@topLabCollaborators": {},
+	"recentLabCollaborators": "שותפי מעבדה אחרונים",
+	"@recentLabCollaborators": {},
+	"recentPublications": "פרסומים אחרונים",
+	"@recentPublications": {},
+	"paperCount": "{count, plural, =1{מאמר} other{מאמרים}}",
+	"@paperCount": {
+		"placeholders": {
+			"count": {
+				"type": "int"
+			}
+		}
+	},
+	"visitWebsite": "בקר באתר",
+	"@visitWebsite": {},
+	"viewOnDblp": "צפה ב-DBLP",
+	"@viewOnDblp": {},
+	"done": "סיום",
+	"@done": {},
+	"publicationType": "{type, select, article {מאמרי עת} inproceedings {מאמרי כנסים} proceedings {כנסים} book {ספרים} incollection {פרקי ספרים} phdthesis {תזות דוקטורט} unknown {פרסומים אחרים} other {{type}}}",
+	"@publicationType": {
+		"placeholders": {
+			"type": {
+				"type": "String"
+			}
+		}
 	}
 }

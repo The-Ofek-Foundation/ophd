@@ -14,7 +14,7 @@ class Layout extends StatefulWidget {
   const Layout({super.key, required this.pageDetails});
 
   @override
-  State<Layout> createState() => LayoutState(); 
+  State<Layout> createState() => LayoutState();
 }
 
 class LayoutState extends State<Layout> {
@@ -46,10 +46,12 @@ class LayoutState extends State<Layout> {
 
   Widget _getLocaleSwitch() {
     final localeProvider = Provider.of<LocaleProvider>(context);
-    return SizedBox(
-      height: 30,
-      width: 80,  // Make even more compact
-      child: SegmentedButton<String>(
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 5),
+      child: SizedBox(
+        height: 30,
+        width: 80,  // Make even more compact
+        child: SegmentedButton<String>(
         segments: [
           ButtonSegment<String>(
             value: 'en',
@@ -107,7 +109,8 @@ class LayoutState extends State<Layout> {
         ),
         showSelectedIcon: false,
       ),
-    );
+    ));
+
   }
 
   void _updateContrastFromTheme() {
@@ -151,7 +154,7 @@ class LayoutState extends State<Layout> {
 
     final WidgetStateProperty<Icon?> thumbIcon =
       WidgetStateProperty.resolveWith<Icon?>(
-        (Set<WidgetState> states)  => 
+        (Set<WidgetState> states)  =>
           states.contains(WidgetState.selected) ? const Icon(Icons.dark_mode)
           : const Icon(Icons.light_mode),
     );

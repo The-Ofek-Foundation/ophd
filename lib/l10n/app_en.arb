@@ -160,5 +160,73 @@
 				"type": "String"
 			}
 		}
+	},
+	"advisor": "{count, plural, =1{Advisor} other{Advisors}}",
+	"@advisor": {
+		"placeholders": {
+			"count": {
+				"type": "int"
+			}
+		}
+	},
+	"graduationYear": "Graduation Year",
+	"@graduationYear": {},
+	"thesisTitle": "Thesis Title",
+	"@thesisTitle": {},
+	"graduateStudents": "Graduate Students",
+	"@graduateStudents": {},
+	"current": "Current: {count}",
+	"@current": {
+		"placeholders": {
+			"count": {
+				"type": "int"
+			}
+		}
+	},
+	"studentCount": "{count, plural, =1{student} other{students}}",
+	"@studentCount": {
+		"placeholders": {
+			"count": {
+				"type": "int"
+			}
+		}
+	},
+	"recentGraduates": "Recent Graduates",
+	"@recentGraduates": {},
+	"publicationsByType": "Publications by Type",
+	"@publicationsByType": {},
+	"researchCollaborations": "Research Collaborations",
+	"@researchCollaborations": {},
+	"facultyCoauthors": "Faculty Co-authors",
+	"@facultyCoauthors": {},
+	"studentCoauthors": "Student Co-authors",
+	"@studentCoauthors": {},
+	"topLabCollaborators": "Top Lab Collaborators",
+	"@topLabCollaborators": {},
+	"recentLabCollaborators": "Recent Lab Collaborators",
+	"@recentLabCollaborators": {},
+	"recentPublications": "Recent Publications",
+	"@recentPublications": {},
+	"paperCount": "{count, plural, =1{paper} other{papers}}",
+	"@paperCount": {
+		"placeholders": {
+			"count": {
+				"type": "int"
+			}
+		}
+	},
+	"visitWebsite": "Visit website",
+	"@visitWebsite": {},
+	"viewOnDblp": "View on DBLP",
+	"@viewOnDblp": {},
+	"done": "Done",
+	"@done": {},
+	"publicationType": "{type, select, article {Journal Articles} inproceedings {Conference Papers} proceedings {Proceedings} book {Books} incollection {Book Chapters} phdthesis {PhD Theses} unknown {Other Publications} other {{type}}}",
+	"@publicationType": {
+		"placeholders": {
+			"type": {
+				"type": "String"
+			}
+		}
 	}
 }

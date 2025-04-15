@@ -876,7 +876,6 @@ class ResearcherDetailsModal extends StatelessWidget {
   final IconData avatarIcon;
   final AllResearchers? allResearchers;
   final Map<Researcher, Set<Publication>> researcherToPublications;
-  // final Map<Researcher, Map<Researcher, int>> researcherToWeightedCollaborators;
   final Map<Researcher, int> weightedCollaborators;
 
   const ResearcherDetailsModal({
@@ -903,7 +902,7 @@ class ResearcherDetailsModal extends StatelessWidget {
         details.add(_buildInfoCard(
           context,
           Icons.supervisor_account,
-          student.advisors!.length == 1 ? 'Advisor' : 'Advisors',
+          AppLocalizations.of(context)!.advisor(student.advisors!.length),
           student.advisors!.map((a) => a.name).join(", "),
         ));
       }
@@ -912,7 +911,7 @@ class ResearcherDetailsModal extends StatelessWidget {
         details.add(_buildInfoCard(
           context,
           Icons.school,
-          'Graduation Year',
+          AppLocalizations.of(context)!.graduationYear,
           student.year != null ? '${student.year} (PhD)' : 'Unknown (PhD)',
         ));
       }
@@ -921,7 +920,7 @@ class ResearcherDetailsModal extends StatelessWidget {
         details.add(_buildInfoCard(
           context,
           Icons.menu_book,
-          'Thesis Title',
+          AppLocalizations.of(context)!.thesisTitle,
           student.thesisTitle!,
         ));
       }
@@ -941,17 +940,15 @@ class ResearcherDetailsModal extends StatelessWidget {
       details.add(_buildInfoCard(
         context,
         Icons.groups,
-        'Graduate Students',
-        '${currentStudents > 0 ? 'Current: $currentStudents\n' : ''}'
-        '${graduatedStudents.length} ${graduatedStudents.length == 1 ? 'student' : 'students'}'
-        '${yearRange != null ? ' ($yearRange)' : ''}',
+        AppLocalizations.of(context)!.graduateStudents,
+        '${currentStudents > 0 ? '${AppLocalizations.of(context)!.current(currentStudents)}\n' : ''}${graduatedStudents.length} ${AppLocalizations.of(context)!.studentCount(graduatedStudents.length)}${yearRange != null ? ' ($yearRange)' : ''}',
       ));
 
       if (graduatedStudents.isNotEmpty) {
         details.add(_buildInfoCard(
           context,
           Icons.history_edu,
-          'Recent Graduates',
+          AppLocalizations.of(context)!.recentGraduates,
           '',
           customContent: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -977,14 +974,15 @@ class ResearcherDetailsModal extends StatelessWidget {
     }
 
     // Add publications by type if available
-    final publications = _getResearcherPublications();
+    final publications = _getResearcherPublications(true);
+    final allPublications = _getResearcherPublications(false);
     if (publications.isNotEmpty) {
-      final publicationsByType = _getPublicationsByType(publications);
+      final publicationsByType = _getPublicationsByType(allPublications);
       if (publicationsByType.isNotEmpty) {
         details.add(_buildInfoCard(
           context,
           Icons.category,
-          'Publications by Type',
+          AppLocalizations.of(context)!.publicationsByType,
           '',
           customContent: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -995,7 +993,7 @@ class ResearcherDetailsModal extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
-                      child: SelectableText(_formatPublicationType(entry.key)),
+                      child: SelectableText(_formatPublicationType(context, entry.key)),
                     ),
                     SelectableText(
                       entry.value.toString(),
@@ -1018,7 +1016,7 @@ class ResearcherDetailsModal extends StatelessWidget {
       details.add(_buildInfoCard(
         context,
         Icons.people_alt,
-        'Research Collaborations',
+        AppLocalizations.of(context)!.researchCollaborations,
         '',
         customContent: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -1030,7 +1028,7 @@ class ResearcherDetailsModal extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
-                      child: SelectableText('Faculty Co-authors'),
+                      child: SelectableText(AppLocalizations.of(context)!.facultyCoauthors),
                     ),
                     SelectableText(
                       facultyCollaborators.toString(),
@@ -1049,7 +1047,7 @@ class ResearcherDetailsModal extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
-                      child: SelectableText('Student Co-authors'),
+                      child: SelectableText(AppLocalizations.of(context)!.studentCoauthors),
                     ),
                     SelectableText(
                       studentCollaborators.toString(),
@@ -1071,7 +1069,7 @@ class ResearcherDetailsModal extends StatelessWidget {
         details.add(_buildInfoCard(
           context,
           Icons.star,
-          'Top Lab Collaborators',
+          AppLocalizations.of(context)!.topLabCollaborators,
           '',
           customContent: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -1085,7 +1083,7 @@ class ResearcherDetailsModal extends StatelessWidget {
                       child: SelectableText(entry.key.name),
                     ),
                     SelectableText(
-                      '${entry.value} paper${entry.value == 1 ? '' : 's'}',
+                      '${entry.value} ${AppLocalizations.of(context)!.paperCount(entry.value)}',
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.secondary,
                       ),
@@ -1104,7 +1102,7 @@ class ResearcherDetailsModal extends StatelessWidget {
         details.add(_buildInfoCard(
           context,
           Icons.update,
-          'Recent Lab Collaborators',
+          AppLocalizations.of(context)!.recentLabCollaborators,
           '',
           customContent: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -1137,7 +1135,7 @@ class ResearcherDetailsModal extends StatelessWidget {
       details.add(_buildInfoCard(
         context,
         Icons.article,
-        'Recent Publications',
+        AppLocalizations.of(context)!.recentPublications,
         '',
         customContent: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -1186,15 +1184,16 @@ class ResearcherDetailsModal extends StatelessWidget {
     return details;
   }
 
-  List<Publication> _getResearcherPublications() {
+  List<Publication> _getResearcherPublications(bool removeDuplicates) {
     // Get publications directly from the passed map
-    final publications = researcherToPublications[researcher] ?? {};
+    var publications = researcherToPublications[researcher]?.toList() ?? [];
 
-    // Remove duplicates based on normalized titles
-    final uniquePublications = _removeDuplicatePublications(publications.toList());
+    if (removeDuplicates) {
+      publications = _removeDuplicatePublications(publications);
+    }
 
     // Sort by year (descending) and then by mdate if available
-    uniquePublications.sort((a, b) {
+    publications.sort((a, b) {
       // First sort by year (descending)
       final yearComparison = b.year.compareTo(a.year);
       if (yearComparison != 0) {
@@ -1205,7 +1204,7 @@ class ResearcherDetailsModal extends StatelessWidget {
       return b.mdate.seconds.compareTo(a.mdate.seconds);
     });
 
-    return uniquePublications;
+    return publications;
   }
 
   /// Removes duplicate publications based on normalized titles
@@ -1250,23 +1249,10 @@ class ResearcherDetailsModal extends StatelessWidget {
   }
 
   /// Formats a publication type for display
-  String _formatPublicationType(PublicationType type) {
-    switch (type) {
-      case PublicationType.article:
-        return 'Journal Articles';
-      case PublicationType.inproceedings:
-        return 'Conference Papers';
-      case PublicationType.proceedings:
-        return 'Proceedings';
-      case PublicationType.book:
-        return 'Books';
-      case PublicationType.incollection:
-        return 'Book Chapters';
-      case PublicationType.phdthesis:
-        return 'PhD Theses';
-      case PublicationType.unknown:
-        return 'Other Publications';
-    }
+  String _formatPublicationType(BuildContext context, PublicationType type) {
+    // Convert enum to string for use with localization
+    final typeString = type.toString().split('.').last;
+    return AppLocalizations.of(context)!.publicationType(typeString);
   }
 
   /// Returns a list of recent lab collaborators with their most recent collaboration year
@@ -1414,12 +1400,15 @@ class ResearcherDetailsModal extends StatelessWidget {
                       foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
                     ),
                     icon: const Icon(Icons.language),
-                    tooltip: 'Visit website',
+                    tooltip: AppLocalizations.of(context)!.visitWebsite,
                     onPressed: () => launchURL(researcher.url!),
                   ),
                 if (researcher.dblpPid.isNotEmpty)
                   Padding(
-                    padding: const EdgeInsets.only(left: 8),
+                    padding: EdgeInsets.only(
+                      left: Directionality.of(context) == TextDirection.ltr ? 8 : 0,
+                      right: Directionality.of(context) == TextDirection.rtl ? 8 : 0,
+                    ),
                     child: IconButton.filledTonal(
                       style: IconButton.styleFrom(
                         backgroundColor: Theme.of(context).colorScheme.primaryContainer,
@@ -1430,7 +1419,7 @@ class ResearcherDetailsModal extends StatelessWidget {
                         width: 24,
                         height: 24,
                       ),
-                      tooltip: 'View on DBLP',
+                      tooltip: AppLocalizations.of(context)!.viewOnDblp,
                       onPressed: () => launchURL('https://dblp.org/pid/${researcher.dblpPid}'),
                     ),
                   ),
@@ -1475,7 +1464,7 @@ class ResearcherDetailsModal extends StatelessWidget {
                 ),
                 onPressed: () => Navigator.of(context).pop(),
                 icon: const Icon(Icons.check_circle),
-                label: const Text('Done'),
+                label: Text(AppLocalizations.of(context)!.done),
               ),
             ),
           ],

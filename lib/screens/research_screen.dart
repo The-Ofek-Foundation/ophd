@@ -25,6 +25,7 @@ class ResearchPage extends StatelessWidget {
           CardWrapper(child: _buildPrimaryResearchBlock(context)),
           CardWrapper(child: _buildContributorsBlock(context)),
           CardWrapper(child: _buildErdosNumberBlock(context)),
+          CardWrapper(child: _buildLabReferenceBlock(context)),
         ]
       ))
     );
@@ -247,6 +248,46 @@ class ResearchPage extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildLabReferenceBlock(context) {
+    return Row(
+      children: [
+        const CardHeaderIcon(
+          icon: Icons.account_tree,
+        ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SelectableText(
+                "About my Lab",
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 4),
+              SelectableText(
+                "I have a whole cool page about my lab, check it out!",
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.secondary,
+                  fontFamily: 'RobotoMono',
+                ),
+              ),
+            ],
+          ),
+        ),
+        IconButton(
+          icon: const Icon(Icons.groups, size: 64),
+          onPressed: () => {
+            Navigator.pushNamed(context, '/lab')
+          },
+          tooltip: "View Lab Page",
+          visualDensity: VisualDensity.compact,
+        ),            
+      ],
     );
   }
 }

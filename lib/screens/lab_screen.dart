@@ -1,6 +1,8 @@
+import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:ophd/data/lab_screen_cache.dart';
 import 'package:ophd/generated/l10n/app_localizations.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/svg.dart';
@@ -16,6 +18,47 @@ import 'package:ophd/utils/screen_utils.dart';
 import 'package:ophd/widgets/card_header_icon.dart';
 import 'package:ophd/widgets/refresh.dart';
 import 'package:ophd/widgets/standard_card.dart';
+import 'package:skeletonizer/skeletonizer.dart';
+
+class LabScreenCache {
+  static void printSampleDataForCache(AllResearchers allResearchers, Map<Researcher, Set<Publication>> researcherToPublicationsMap) {
+    // first, sample 5 researchers of each type
+    final sampleResearchers = <Researcher>{};
+    sampleResearchers.addAll(allResearchers.students.where(LabUtils.isCurrentStudent).take(5));
+    sampleResearchers.addAll(allResearchers.students.where(LabUtils.isNonPostDocGraduated).take(5));
+    sampleResearchers.addAll(allResearchers.students.where(LabUtils.isPostDoc).take(5));
+    sampleResearchers.addAll(allResearchers.professors.where(LabUtils.isCurrentFaculty).take(5));
+    sampleResearchers.addAll(allResearchers.professors.where(LabUtils.isEmeritusFaculty).take(5));
+
+    final sampleAllResearchers = AllResearchers(students: sampleResearchers.whereType<StudentResearcher>().toList(), professors: sampleResearchers.whereType<ProfessorResearcher>().toList());
+
+    // then, sample 1 publication for each researcher
+    final samplePublications = <Publication>{};
+    for (final researcher in sampleResearchers) {
+      final publications = researcherToPublicationsMap[researcher];
+      if (publications != null &&publications.isNotEmpty) {
+        samplePublications.add(publications.first);
+      }
+    }
+
+    // ignore: avoid_print
+    print(jsonEncode(sampleAllResearchers.toJson()));
+    // ignore: avoid_print
+    print(jsonEncode(samplePublications.map((p) => p.toJson()).toList()));
+  }
+
+  static AllResearchers getSampleAllResearchers() {
+    return AllResearchers.fromJson(jsonDecode(allResearcherCache));
+  }
+
+  static List<Publication> getSamplePublications(AllResearchers allResearchers) {
+    final publications = (jsonDecode(publicationCache) as List<dynamic>).map((p) => Publication.fromJson(p)).toList();
+
+    linkPublicationsToResearchers(publications, allResearchers);
+
+    return publications;
+  }
+}
 
 class LabPage extends StatefulWidget {
   const LabPage({super.key});
@@ -68,6 +111,12 @@ class _LabPageState extends State<LabPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Use sample data for skeleton loading
+    final sampleAllResearchers = isLoading && errorMessage == null ? LabScreenCache.getSampleAllResearchers() : allResearchers!;
+    final samplePublications = isLoading && errorMessage == null ? LabScreenCache.getSamplePublications(sampleAllResearchers) : publications!;
+    final sampleResearcherToPublicationsMap = isLoading && errorMessage == null ?
+        LabUtils.getResearcherToPublicationsMap(samplePublications) : researcherToPublicationsMap!;
+
     return Padding(
       padding: const EdgeInsets.all(20),
       child: SingleChildScrollView(
@@ -76,28 +125,30 @@ class _LabPageState extends State<LabPage> {
             CardWrapper(
               child: _buildLabInfoBlock(context),
             ),
-            // Only show the lab graph when data is loaded successfully
-            if (!isLoading && errorMessage == null)
-              const SizedBox(height: 20),
-            if (!isLoading && errorMessage == null)
-              CardItself(
-                child: LabGraph(
-                  allResearchers: allResearchers!,
-                  publications: publications!,
-                  researcherToPublicationsMap: researcherToPublicationsMap!,
+            // Show skeleton or actual content
+            const SizedBox(height: 20),
+            Skeletonizer(
+              enabled: isLoading,
+              child: CardItself(
+                child: isLoading || errorMessage == null ? LabGraph(
+                  allResearchers: sampleAllResearchers,
+                  publications: samplePublications,
+                  researcherToPublicationsMap: sampleResearcherToPublicationsMap,
                   onRefresh: _loadData,
-                ),
+                ) : const SizedBox(),
               ),
-            if (!isLoading && errorMessage == null)
-              const SizedBox(height: 20),
-            if (!isLoading && errorMessage == null)
-              CardItself(
-                child: LabHighlights(
-                  allResearchers: allResearchers!,
-                  publications: publications!,
-                  researcherToPublicationsMap: researcherToPublicationsMap!,
-                ),
+            ),
+            const SizedBox(height: 20),
+            Skeletonizer(
+              enabled: isLoading,
+              child: CardItself(
+                child: isLoading || errorMessage == null ? LabHighlights(
+                  allResearchers: sampleAllResearchers,
+                  publications: samplePublications,
+                  researcherToPublicationsMap: sampleResearcherToPublicationsMap,
+                ) : const SizedBox(),
               ),
+            ),
           ],
         ),
       ),
@@ -106,34 +157,56 @@ class _LabPageState extends State<LabPage> {
 
   Widget _buildLabInfoBlock(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Text(
-              'Lab Page',
-              style: Theme.of(context).textTheme.headlineMedium,
+            const CardHeaderIcon(
+              icon: Icons.account_tree,
             ),
-            if (isLoading || errorMessage != null)
-              RefreshButton(
-                onPressed: _loadData,
-                tooltip: AppLocalizations.of(context)!.label("Sync"),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SelectableText(
+                    'UCI Theory Lab',
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  SelectableText(
+                    'Exploring theoretical computer science since 1975',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.secondary,
+                      fontFamily: 'RobotoMono',
+                    ),
+                  ),
+                ],
               ),
+            ),
+            if (isLoading)
+              RefreshButton(
+                forceLoading: true,
+                tooltip: 'Loading Lab Data',
+              ),
+            if (!isLoading && errorMessage == null)
+              RefreshButton(
+                onPressed: () async {
+                  await updateDatabase();
+                  await _loadData();
+                },
+                tooltip: 'Sync Database',
+              )
           ],
         ),
         const SizedBox(height: 16),
-        if (isLoading)
-          const Center(
-            child: Column(
-              children: [
-                CircularProgressIndicator(),
-                SizedBox(height: 16),
-                Text('Loading lab data...'),
-              ],
-            ),
-          )
-        else if (errorMessage != null)
+        const Padding(
+          padding: EdgeInsets.symmetric(vertical: 8),
+          child: Divider(),
+        ),
+        if (errorMessage != null)
           Center(
             child: Column(
               children: [
@@ -147,9 +220,15 @@ class _LabPageState extends State<LabPage> {
                 ),
               ],
             ),
-          )          else
-          // Just show the success message, graph is now a separate component
-          const Text('Lab data loaded successfully!'),
+          )
+        else
+          SelectableText(
+            'This page showcases the Theory Lab at the University of California, Irvine. '
+            'It includes a visualization of lab collaborations, highlights of research achievements, '
+            'and statistics about publications, students, and faculty members over the years.',
+            style: Theme.of(context).textTheme.bodyLarge,
+            textAlign: TextAlign.start,
+          ),
       ],
     );
   }

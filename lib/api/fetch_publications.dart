@@ -21,7 +21,7 @@ Future<List<Publication>> fetchPublications({AllResearchers? allResearchers}) as
 
       // If allResearchers is provided, link the publications to the researchers
       if (allResearchers != null) {
-        _linkPublicationsToResearchers(publications, allResearchers);
+        linkPublicationsToResearchers(publications, allResearchers);
       }
 
       return publications;
@@ -34,7 +34,7 @@ Future<List<Publication>> fetchPublications({AllResearchers? allResearchers}) as
 }
 
 /// Links publications to researchers based on the researcherNames field
-void _linkPublicationsToResearchers(List<Publication> publications, AllResearchers allResearchers) {
+void linkPublicationsToResearchers(List<Publication> publications, AllResearchers allResearchers) {
   // Create a map of researcher names to researcher objects
   final nameToResearcher = <String, Researcher>{};
   for (final student in allResearchers.students) {

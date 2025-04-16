@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
 class RefreshButton extends StatefulWidget {
-  final Future<void> Function() onPressed;
+  final Future<void> Function()? onPressed;
   final String tooltip;
+  final bool forceLoading;
 
-  const RefreshButton({super.key, required this.onPressed, required this.tooltip});
+  const RefreshButton({super.key, this.onPressed, required this.tooltip, this.forceLoading = false});
 
   @override
   RefreshButtonState createState() => RefreshButtonState();
@@ -20,6 +21,9 @@ class RefreshButtonState extends State<RefreshButton> with SingleTickerProviderS
       duration: const Duration(seconds: 2),
       vsync: this,
     );
+    if (widget.forceLoading) {
+      _controller.repeat();
+    }
   }
 
   @override
@@ -29,9 +33,19 @@ class RefreshButtonState extends State<RefreshButton> with SingleTickerProviderS
   }
 
   Future<void> _refresh() async {
-    _controller.repeat();
-    await widget.onPressed();
-    _controller.stop();
+    if (widget.onPressed == null) {
+      return;
+    }
+
+    if (!widget.forceLoading) {
+      _controller.repeat();
+    }
+
+    await widget.onPressed!();
+
+    if (!widget.forceLoading) {
+      _controller.stop();
+    }
   }
 
   @override

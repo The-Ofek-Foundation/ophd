@@ -117,18 +117,19 @@ class AllResearchers {
     for (final student in allResearchers.students) {
       nameToResearcher[student.name] = student;
     }
+
     for (final professor in allResearchers.professors) {
       nameToResearcher[professor.name] = professor;
     }
 
     for (final student in allResearchers.students) {
-      student.collaborators = student.collaboratorNames.map((name) => nameToResearcher[name]!).toList();
-      student.advisors = student.advisorNames?.map((name) => nameToResearcher[name]!).toList() ?? [];
+      student.collaborators = student.collaboratorNames.where(nameToResearcher.containsKey).map((name) => nameToResearcher[name]!).toList();
+      student.advisors = student.advisorNames?.where(nameToResearcher.containsKey).map((name) => nameToResearcher[name]!).toList() ?? [];
     }
 
     for (final professor in allResearchers.professors) {
-      professor.collaborators = professor.collaboratorNames.map((name) => nameToResearcher[name]!).toList();
-      professor.students = professor.studentNames?.map((name) => nameToResearcher[name]!).toList() ?? [];
+      professor.collaborators = professor.collaboratorNames.where(nameToResearcher.containsKey).map((name) => nameToResearcher[name]!).toList();
+      professor.students = professor.studentNames?.where(nameToResearcher.containsKey).map((name) => nameToResearcher[name]!).toList() ?? [];
     }
 
     return allResearchers;

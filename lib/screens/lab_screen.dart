@@ -122,10 +122,10 @@ class _LabPageState extends State<LabPage> {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            CardWrapper(
-              child: _buildLabInfoBlock(context),
-            ),
+            CardWrapper(child: _buildLabInfoBlock(context)),
             // Show skeleton or actual content
+            const SizedBox(height: 20),
+            CardWrapper(child: _buildDisclaimerBlock(context)),
             const SizedBox(height: 20),
             Skeletonizer(
               enabled: isLoading,
@@ -229,6 +229,70 @@ class _LabPageState extends State<LabPage> {
             style: Theme.of(context).textTheme.bodyLarge,
             textAlign: TextAlign.start,
           ),
+      ],
+    );
+  }
+
+  Widget _buildDisclaimerBlock(BuildContext context) {
+    // block that states that the data is from DBLP, that there may be missing stuff, etc.,
+    return Column(
+      children: [
+        Row(
+          children: [
+            const CardHeaderIcon(
+              icon: Icons.warning_amber,
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SelectableText(
+                    'Disclaimer',
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  SelectableText(
+                    'Data may not be 100% accurate',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.secondary,
+                      fontFamily: 'RobotoMono',
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        const Padding(
+          padding: EdgeInsets.symmetric(vertical: 8),
+          child: Divider(),
+        ),
+        SelectableText.rich(
+          TextSpan(
+            children: [
+              TextSpan(text: 'Knowledge of lab members is taken from '),
+              TextSpan(
+                text: 'David Eppstein\'s fabulous UCI computer science theory page',
+                style: TextStyle(color: Theme.of(context).colorScheme.primary),
+                recognizer: TapGestureRecognizer()
+                  ..onTap = () => launchURL('https://ics.uci.edu/~theory/'),
+              ),
+              TextSpan(text: '. The rest of the data is taken from '),
+              TextSpan(
+                text: 'DBLP',
+                style: TextStyle(color: Theme.of(context).colorScheme.primary),
+                recognizer: TapGestureRecognizer()
+                  ..onTap = () => launchURL('https://dblp.org/'),
+              ),
+              TextSpan(text: ', which is a database of computer science publications. DBLP was chosen because it assigns each researcher a unique ID automatically, it includes historical data, and it is fairly comprehensive. Alternatives, such as Google Scholar and ORCID, require the user to manually create their profile. DBLP is not perfect, however, being less comprehensive than Google Scholar, and not containing citation information which would have been nice to have. That being said, if there are any publications or changes you would like me to manually add, please contact me.'),
+            ],
+          ),
+          style: Theme.of(context).textTheme.bodyLarge,
+        )
       ],
     );
   }

@@ -13,7 +13,6 @@ import 'package:ophd/models/publication.dart';
 import 'package:ophd/models/researcher.dart';
 import 'package:ophd/utils/lab_utils.dart';
 import 'package:ophd/utils/screen_utils.dart';
-import 'package:ophd/utils/ui_utils.dart';
 import 'package:ophd/widgets/card_header_icon.dart';
 import 'package:ophd/widgets/refresh.dart';
 import 'package:ophd/widgets/standard_card.dart';
@@ -56,7 +55,7 @@ class _LabPageState extends State<LabPage> {
       final publicationData = await fetchPublications(allResearchers: allResearchers);
       setState(() {
         publications = publicationData;
-        researcherToPublicationsMap = getResearcherToPublicationsMap(publications!);
+        researcherToPublicationsMap = LabUtils.getResearcherToPublicationsMap(publications!);
         isLoading = false;
       });
     } catch (error) {
@@ -377,7 +376,7 @@ class _LabGraphState extends State<LabGraph> {
               children: [
                 Container(
                   padding: const EdgeInsets.all(16),
-                  decoration: UIUtils.getCommonContainerDecoration(context),
+                  decoration: LabUtils.getCommonContainerDecoration(context),
                   child: Wrap(
                     spacing: 10,
                     runSpacing: 10,
@@ -417,7 +416,7 @@ class _LabGraphState extends State<LabGraph> {
                 ),
                 const SizedBox(height: 16),
                 Container(
-                  decoration: UIUtils.getCommonContainerDecoration(context),
+                  decoration: LabUtils.getCommonContainerDecoration(context),
                   child: LayoutBuilder(
                     builder: (context, constraints) {
                       var width = max(constraints.maxWidth, 1000.0);
@@ -451,7 +450,7 @@ class _LabGraphState extends State<LabGraph> {
                 const SizedBox(height: 24),
                 Container(
                   padding: const EdgeInsets.all(24),
-                  decoration: UIUtils.getCommonContainerDecoration(context),
+                  decoration: LabUtils.getCommonContainerDecoration(context),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -583,7 +582,7 @@ class _LabGraphState extends State<LabGraph> {
           useProfileImage: isOfek,
           allResearchers: widget.allResearchers,
           researcherToPublications: widget.researcherToPublicationsMap,
-          weightedCollaborators: getWeightedCollaborators(researcher, widget.researcherToPublicationsMap[researcher]),
+          weightedCollaborators: LabUtils.getWeightedCollaborators(researcher, widget.researcherToPublicationsMap[researcher]),
         );
       },
     );
@@ -653,7 +652,7 @@ class ResearcherDetailsModal extends StatelessWidget {
     if (researcher is StudentResearcher) {
       final student = researcher as StudentResearcher;
       if (student.advisors != null && student.advisors!.isNotEmpty) {
-        details.add(UIUtils.buildLabelValueCard(
+        details.add(LabUtils.buildLabelValueCard(
           context: context,
           icon: Icons.supervisor_account,
           title: AppLocalizations.of(context)!.advisor(student.advisors!.length),
@@ -664,7 +663,7 @@ class ResearcherDetailsModal extends StatelessWidget {
       }
 
       if (student.hasDoctorate) {
-        details.add(UIUtils.buildLabelValueCard(
+        details.add(LabUtils.buildLabelValueCard(
           context: context,
           icon: Icons.school,
           title: AppLocalizations.of(context)!.graduationYear,
@@ -675,7 +674,7 @@ class ResearcherDetailsModal extends StatelessWidget {
       }
 
       if (student.thesisTitle != null) {
-        details.add(UIUtils.buildLabelValueCard(
+        details.add(LabUtils.buildLabelValueCard(
           context: context,
           icon: Icons.menu_book,
           title: AppLocalizations.of(context)!.thesisTitle,
@@ -695,13 +694,13 @@ class ResearcherDetailsModal extends StatelessWidget {
         graduatedStudents.first.year == graduatedStudents.last.year ?
         graduatedStudents.first.year! : '${graduatedStudents.first.year!} – ${graduatedStudents.last.year!}';
 
-      details.add(UIUtils.buildLabelValueCard(
+      details.add(LabUtils.buildLabelValueCard(
         context: context,
         icon: Icons.groups,
         title: AppLocalizations.of(context)!.graduateStudents,
         items: [MapEntry(
           'Students',
-          '${UIUtils.formatNumber(graduatedStudents.length)}${yearRange != null ? ' ($yearRange)' : ''}'
+          '${LabUtils.formatNumber(graduatedStudents.length)}${yearRange != null ? ' ($yearRange)' : ''}'
         )],
         maxItems: 1,
         emphasizeNames: false,
@@ -712,7 +711,7 @@ class ResearcherDetailsModal extends StatelessWidget {
           MapEntry(s.name, s.year != null ? s.year!.toString() : 'Unknown')
         ).toList();
 
-        details.add(UIUtils.buildLabelValueCard(
+        details.add(LabUtils.buildLabelValueCard(
           context: context,
           icon: Icons.history_edu,
           title: AppLocalizations.of(context)!.recentGraduates,
@@ -722,16 +721,16 @@ class ResearcherDetailsModal extends StatelessWidget {
     }
 
     // Add publications by type if available
-    final publications = getSortedPublications(researcherToPublications[researcher], true);
-    final allPublications = getSortedPublications(researcherToPublications[researcher], false);
+    final publications = LabUtils.getSortedPublications(researcherToPublications[researcher], true);
+    final allPublications = LabUtils.getSortedPublications(researcherToPublications[researcher], false);
     if (publications.isNotEmpty) {
-      final publicationsByType = getPublicationsByType(allPublications);
+      final publicationsByType = LabUtils.getPublicationsByType(allPublications);
       if (publicationsByType.isNotEmpty) {
         final items = publicationsByType.entries.map((entry) =>
-          MapEntry(formatPublicationType(context, entry.key), UIUtils.formatNumber(entry.value))
+          MapEntry(LabUtils.formatPublicationType(context, entry.key), LabUtils.formatNumber(entry.value))
         ).toList();
 
-        details.add(UIUtils.buildLabelValueCard(
+        details.add(LabUtils.buildLabelValueCard(
           context: context,
           icon: Icons.category,
           title: AppLocalizations.of(context)!.publicationsByType,
@@ -746,14 +745,14 @@ class ResearcherDetailsModal extends StatelessWidget {
       final items = <MapEntry<String, String>>[];
 
       if (facultyCollaborators > 0) {
-        items.add(MapEntry(AppLocalizations.of(context)!.facultyCoauthors, UIUtils.formatNumber(facultyCollaborators)));
+        items.add(MapEntry(AppLocalizations.of(context)!.facultyCoauthors, LabUtils.formatNumber(facultyCollaborators)));
       }
 
       if (studentCollaborators > 0) {
-        items.add(MapEntry(AppLocalizations.of(context)!.studentCoauthors, UIUtils.formatNumber(studentCollaborators)));
+        items.add(MapEntry(AppLocalizations.of(context)!.studentCoauthors, LabUtils.formatNumber(studentCollaborators)));
       }
 
-      details.add(UIUtils.buildLabelValueCard(
+      details.add(LabUtils.buildLabelValueCard(
         context: context,
         icon: Icons.people_alt,
         title: AppLocalizations.of(context)!.researchCollaborations,
@@ -763,10 +762,10 @@ class ResearcherDetailsModal extends StatelessWidget {
       // Add top collaborators
       if (weightedCollaborators.isNotEmpty) {
         final topCollaborationItems = weightedCollaborators.entries.take(3).map((entry) =>
-          MapEntry(entry.key.name, '${UIUtils.formatNumber(entry.value)} ${AppLocalizations.of(context)!.paperCount(entry.value)}')
+          MapEntry(entry.key.name, '${LabUtils.formatNumber(entry.value)} ${AppLocalizations.of(context)!.paperCount(entry.value)}')
         ).toList();
 
-        details.add(UIUtils.buildLabelValueCard(
+        details.add(LabUtils.buildLabelValueCard(
           context: context,
           icon: Icons.star,
           title: AppLocalizations.of(context)!.topLabCollaborators,
@@ -775,13 +774,13 @@ class ResearcherDetailsModal extends StatelessWidget {
       }
 
       // Add recent collaborators
-      final recentCollaborators = getRecentCollaborators(researcher, publications);
+      final recentCollaborators = LabUtils.getRecentCollaborators(researcher, publications);
       if (recentCollaborators.isNotEmpty) {
         final recentCollaborationItems = recentCollaborators.take(3).map((collaborator) =>
           MapEntry(collaborator.researcher.name, collaborator.year.toString())
         ).toList();
 
-        details.add(UIUtils.buildLabelValueCard(
+        details.add(LabUtils.buildLabelValueCard(
           context: context,
           icon: Icons.update,
           title: AppLocalizations.of(context)!.recentLabCollaborators,
@@ -792,7 +791,7 @@ class ResearcherDetailsModal extends StatelessWidget {
 
     // Add recent publications if available
     if (publications.isNotEmpty) {
-      details.add(UIUtils.buildPublicationsCard(
+      details.add(LabUtils.buildPublicationsCard(
         context: context,
         icon: Icons.article,
         title: AppLocalizations.of(context)!.recentPublications,
@@ -841,7 +840,7 @@ class ResearcherDetailsModal extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      UIUtils.emphasizedText(
+                      LabUtils.emphasizedText(
                         context,
                         researcher.name,
                         style: Theme.of(context).textTheme.headlineSmall?.copyWith(
@@ -955,10 +954,10 @@ class LabHighlights extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Generate a complete weighted collaborators map for all researchers
-    final completeCollaboratorsMap = getCompleteWeightedCollaboratorsMap(researcherToPublicationsMap);
+    final completeCollaboratorsMap = LabUtils.getCompleteWeightedCollaboratorsMap(researcherToPublicationsMap);
 
-    final uniquePublications = removeDuplicatePublications(publications);
-    final uniqueCollaborations = uniquePublications.where(isCollaboration);
+    final uniquePublications = LabUtils.removeDuplicatePublications(publications);
+    final uniqueCollaborations = uniquePublications.where(LabUtils.isCollaboration);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1059,18 +1058,18 @@ class LabHighlights extends StatelessWidget {
 
     cards.add(_buildRecentGraduatesCard(context));
 
-    cards.add(_buildRecentPapersCard(context, Icons.article, 'Recent Current Student Papers', isCurrentStudentPaper, uniquePublications));
-    cards.add(_buildRecentPapersCard(context, Icons.article, 'Recent Graduated Student Papers', isGraduatedStudentPaper, uniquePublications));
-    cards.add(_buildRecentPapersCard(context, Icons.article, 'Recent Faculty Papers', isFacultyPaper, uniquePublications));
-    cards.add(_buildRecentPapersCard(context, Icons.people_alt, 'Recent Lab Collaborations', isCollaboration, uniqueCollaborations));
+    cards.add(_buildRecentPapersCard(context, Icons.article, 'Recent Current Student Papers', LabUtils.isCurrentStudentPaper, uniquePublications));
+    cards.add(_buildRecentPapersCard(context, Icons.article, 'Recent Graduated Student Papers', LabUtils.isGraduatedStudentPaper, uniquePublications));
+    cards.add(_buildRecentPapersCard(context, Icons.article, 'Recent Faculty Papers', LabUtils.isFacultyPaper, uniquePublications));
+    cards.add(_buildRecentPapersCard(context, Icons.people_alt, 'Recent Lab Collaborations', LabUtils.isCollaboration, uniqueCollaborations));
 
-    cards.add(_buildWellConnectedCard(context, completeCollaboratorsMap, isCurrentStudent, 'Well-Connected Current Students'));
-    cards.add(_buildWellConnectedCard(context, completeCollaboratorsMap, isGraduatedStudent, 'Well-Connected Graduated Students'));
-    cards.add(_buildWellConnectedCard(context, completeCollaboratorsMap, isFaculty, 'Well-Connected Faculty'));
+    cards.add(_buildWellConnectedCard(context, completeCollaboratorsMap, LabUtils.isCurrentStudent, 'Well-Connected Current Students'));
+    cards.add(_buildWellConnectedCard(context, completeCollaboratorsMap, LabUtils.isGraduatedStudent, 'Well-Connected Graduated Students'));
+    cards.add(_buildWellConnectedCard(context, completeCollaboratorsMap, LabUtils.isFaculty, 'Well-Connected Faculty'));
 
-    cards.add(_buildProlificResearchersCard(context, isCurrentStudent, 'Prolific Current Students'));
-    cards.add(_buildProlificResearchersCard(context, isGraduatedStudent, 'Prolific Graduated Students'));
-    cards.add(_buildProlificResearchersCard(context, isFaculty, 'Prolific Faculty'));
+    cards.add(_buildProlificResearchersCard(context, LabUtils.isCurrentStudent, 'Prolific Current Students'));
+    cards.add(_buildProlificResearchersCard(context, LabUtils.isGraduatedStudent, 'Prolific Graduated Students'));
+    cards.add(_buildProlificResearchersCard(context, LabUtils.isFaculty, 'Prolific Faculty'));
 
     cards.add(_buildFacultyWithMostGraduatesCard(context));
 
@@ -1086,7 +1085,7 @@ class LabHighlights extends StatelessWidget {
       publicationsPerYear.update(pub.year, (value) => value + 1, ifAbsent: () => 1);
     }
 
-    return UIUtils.buildYearlyLineChartCard(
+    return LabUtils.buildYearlyLineChartCard(
       context: context,
       icon: Icons.show_chart,
       title: 'Publications Per Year',
@@ -1106,7 +1105,7 @@ class LabHighlights extends StatelessWidget {
       collaborationsPerYear.update(pub.year, (value) => value + 1, ifAbsent: () => 1);
     }
 
-    return UIUtils.buildYearlyLineChartCard(
+    return LabUtils.buildYearlyLineChartCard(
       context: context,
       icon: Icons.show_chart,
       title: 'Collaborations Per Year',
@@ -1127,7 +1126,7 @@ class LabHighlights extends StatelessWidget {
       }
     }
 
-    return UIUtils.buildYearlyLineChartCard(
+    return LabUtils.buildYearlyLineChartCard(
       context: context,
       icon: Icons.school,
       title: 'Graduations Per Year',
@@ -1147,16 +1146,16 @@ class LabHighlights extends StatelessWidget {
     // Count faculty members
     final facultyCount = allResearchers.professors.length;
 
-    return UIUtils.buildLabelValueCard(
+    return LabUtils.buildLabelValueCard(
       context: context,
       icon: Icons.analytics,
       title: 'Lab Overview',
       items: [
-        MapEntry('Current Students', UIUtils.formatNumber(currentStudentCount)),
-        MapEntry('Graduated Students', UIUtils.formatNumber(graduatedStudentCount)),
-        MapEntry('Faculty Members', UIUtils.formatNumber(facultyCount)),
-        MapEntry('Distinct Publications', UIUtils.formatNumber(publicationCount)),
-        MapEntry('Lab Collaborations', UIUtils.formatNumber(collaborationCount)),
+        MapEntry('Current Students', LabUtils.formatNumber(currentStudentCount)),
+        MapEntry('Graduated Students', LabUtils.formatNumber(graduatedStudentCount)),
+        MapEntry('Faculty Members', LabUtils.formatNumber(facultyCount)),
+        MapEntry('Distinct Publications', LabUtils.formatNumber(publicationCount)),
+        MapEntry('Lab Collaborations', LabUtils.formatNumber(collaborationCount)),
         MapEntry('Years Active', '1975 – Present'),
       ],
       maxItems: 6,
@@ -1173,7 +1172,7 @@ class LabHighlights extends StatelessWidget {
       MapEntry(s.name, s.year.toString())
     ).toList();
 
-    return UIUtils.buildLabelValueCard(
+    return LabUtils.buildLabelValueCard(
       context: context,
       icon: Icons.school,
       title: 'Recent Graduates',
@@ -1182,9 +1181,9 @@ class LabHighlights extends StatelessWidget {
   }
 
   Widget _buildRecentPapersCard(BuildContext context, IconData icon, String title, bool Function(Publication) filter, Iterable<Publication> uniquePublications) {
-    final relevantPublications = getSortedPublications(uniquePublications.where(filter), false);
+    final relevantPublications = LabUtils.getSortedPublications(uniquePublications.where(filter), false);
 
-    return UIUtils.buildPublicationsCard(
+    return LabUtils.buildPublicationsCard(
       context: context,
       icon: icon,
       title: title,
@@ -1196,7 +1195,7 @@ class LabHighlights extends StatelessWidget {
   Widget _buildWellConnectedCard(BuildContext context, Map<Researcher, Map<Researcher, int>> completeCollaboratorsMap, bool Function(Researcher) filter, String title) {
     final filteredResearchers = completeCollaboratorsMap.keys.where(filter);
 
-    final collaborationOverviews = getCollaborationOverviewList(filteredResearchers, completeCollaboratorsMap);
+    final collaborationOverviews = LabUtils.getCollaborationOverviewList(filteredResearchers, completeCollaboratorsMap);
 
     final maxTotalOverview = collaborationOverviews.reduce((a, b) => a.totalCollaborations > b.totalCollaborations ? a : b);
     final maxStudentOverview = collaborationOverviews.reduce((a, b) => a.studentCollaborations > b.studentCollaborations ? a : b);
@@ -1227,10 +1226,10 @@ class LabHighlights extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
-                      child: UIUtils.emphasizedText(context, maxTotalOverview.researcher.name),
+                      child: LabUtils.emphasizedText(context, maxTotalOverview.researcher.name),
                     ),
                     SelectableText(
-                      '${UIUtils.formatNumber(maxTotalOverview.totalCollaborations)} collaborators',
+                      '${LabUtils.formatNumber(maxTotalOverview.totalCollaborations)} collaborators',
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.secondary,
                       ),
@@ -1251,7 +1250,7 @@ class LabHighlights extends StatelessWidget {
                       ),
                     ),
                     SelectableText(
-                      '${UIUtils.formatNumber(maxTotalOverview.studentCollaborations)} collaborators',
+                      '${LabUtils.formatNumber(maxTotalOverview.studentCollaborations)} collaborators',
                       style: TextStyle(
                         fontSize: 12,
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -1272,7 +1271,7 @@ class LabHighlights extends StatelessWidget {
                       ),
                     ),
                     SelectableText(
-                      '${UIUtils.formatNumber(maxTotalOverview.professorCollaborations)} collaborators',
+                      '${LabUtils.formatNumber(maxTotalOverview.professorCollaborations)} collaborators',
                       style: TextStyle(
                         fontSize: 12,
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -1300,10 +1299,10 @@ class LabHighlights extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
-                      child: UIUtils.emphasizedText(context, maxStudentOverview.researcher.name),
+                      child: LabUtils.emphasizedText(context, maxStudentOverview.researcher.name),
                     ),
                     SelectableText(
-                      '${UIUtils.formatNumber(maxStudentOverview.studentCollaborations)} collaborators',
+                      '${LabUtils.formatNumber(maxStudentOverview.studentCollaborations)} collaborators',
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.secondary,
                       ),
@@ -1324,7 +1323,7 @@ class LabHighlights extends StatelessWidget {
                       ),
                     ),
                     SelectableText(
-                      '${UIUtils.formatNumber(maxStudentOverview.professorCollaborations)} collaborators',
+                      '${LabUtils.formatNumber(maxStudentOverview.professorCollaborations)} collaborators',
                       style: TextStyle(
                         fontSize: 12,
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -1352,10 +1351,10 @@ class LabHighlights extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
-                      child: UIUtils.emphasizedText(context, maxProfessorOverview.researcher.name),
+                      child: LabUtils.emphasizedText(context, maxProfessorOverview.researcher.name),
                     ),
                     SelectableText(
-                      '${UIUtils.formatNumber(maxProfessorOverview.professorCollaborations)} collaborators',
+                      '${LabUtils.formatNumber(maxProfessorOverview.professorCollaborations)} collaborators',
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.secondary,
                       ),
@@ -1376,7 +1375,7 @@ class LabHighlights extends StatelessWidget {
                       ),
                     ),
                     SelectableText(
-                      '${UIUtils.formatNumber(maxProfessorOverview.studentCollaborations)} collaborators',
+                      '${LabUtils.formatNumber(maxProfessorOverview.studentCollaborations)} collaborators',
                       style: TextStyle(
                         fontSize: 12,
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -1396,18 +1395,18 @@ class LabHighlights extends StatelessWidget {
     final researcherToPublicationCountMap = <Researcher, int>{};
 
     for (final researcher in researcherToPublicationsMap.keys.where(filter)) {
-      researcherToPublicationCountMap[researcher] = removeDuplicatePublications(researcherToPublicationsMap[researcher]!.where(isFormalPublication)).length;
+      researcherToPublicationCountMap[researcher] = LabUtils.removeDuplicatePublications(researcherToPublicationsMap[researcher]!.where(LabUtils.isFormalPublication)).length;
     }
 
     final sortedResearchers = researcherToPublicationCountMap.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
 
-    return UIUtils.buildLabelValueCard(
+    return LabUtils.buildLabelValueCard(
       context: context,
       icon: Icons.auto_awesome,
       title: title,
       items: sortedResearchers.map((entry) =>
-        MapEntry(entry.key.name, '${UIUtils.formatNumber(entry.value)} papers')
+        MapEntry(entry.key.name, '${LabUtils.formatNumber(entry.value)} papers')
       ).toList(),
     );
   }
@@ -1432,21 +1431,21 @@ class LabHighlights extends StatelessWidget {
     final sortedProfessors = graduatesByProfessor.entries.toList()
       ..sort((a, b) => b.value.length.compareTo(a.value.length));
 
-    return UIUtils.buildLabelValueCard(
+    return LabUtils.buildLabelValueCard(
       context: context,
       icon: Icons.school,
       title: 'Faculty with Most Graduates',
       items: sortedProfessors.map((entry) =>
-        MapEntry(entry.key.name, '${UIUtils.formatNumber(entry.value.length)} graduates')
+        MapEntry(entry.key.name, '${LabUtils.formatNumber(entry.value.length)} graduates')
       ).toList(),
     );
   }
 
   Widget _buildPublicationTypesPieChartCard(BuildContext context, Iterable<Publication> publications) {
     // Get publications by type
-    final publicationsByType = getPublicationsByType(publications);
+    final publicationsByType = LabUtils.getPublicationsByType(publications);
 
-    return UIUtils.buildPublicationTypesBarChartCard(
+    return LabUtils.buildPublicationTypesBarChartCard(
       context: context,
       icon: Icons.bar_chart,
       title: 'Publication Types Distribution',

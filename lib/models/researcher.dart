@@ -9,7 +9,7 @@ class Researcher {
 
   @JsonKey(required: true)
   String dblpPid;
-  
+
   String? url;
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -41,6 +41,9 @@ class StudentResearcher extends Researcher {
   @JsonKey(name: 'advisors')
   List<String>? advisorNames;
 
+  @JsonKey(required: true)
+  bool isPostDoc;
+
   int? year;
 
   String? thesisTitle;
@@ -54,6 +57,7 @@ class StudentResearcher extends Researcher {
     required super.hasDoctorate,
     this.year,
     this.thesisTitle,
+    this.isPostDoc = false,
   });
 
   factory StudentResearcher.fromJson(Map<String, dynamic> json) => _$StudentResearcherFromJson(json);
@@ -73,6 +77,9 @@ class ProfessorResearcher extends Researcher {
   @JsonKey(required: true)
   String title;
 
+  @JsonKey(required: true)
+  bool isEmeritus;
+
   @JsonKey(includeFromJson: false)
   @override
   bool get hasDoctorate => true;
@@ -84,6 +91,7 @@ class ProfessorResearcher extends Researcher {
     required super.collaboratorNames,
     this.studentNames,
     required this.title,
+    this.isEmeritus = false,
   });
 
   factory ProfessorResearcher.fromJson(Map<String, dynamic> json) => _$ProfessorResearcherFromJson(json);

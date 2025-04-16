@@ -11,6 +11,7 @@ export type ResearcherEntry = {
 export type LabMemberEntry = ResearcherEntry & {
 	advisors: DocumentReference<AdvisorEntry>[];
 	hasDoctorate: boolean;
+	isPostDoc: boolean;
 	year?: number;
 	thesisTitle?: string;
 }
@@ -23,6 +24,7 @@ export type GraduatedLabMemberEntry = LabMemberEntry & {
 export type AdvisorEntry = ResearcherEntry & {
 	students: DocumentReference<LabMemberEntry>[];
 	title: string;
+	isEmeritus: boolean;
 }
 
 export type DblpPid = {

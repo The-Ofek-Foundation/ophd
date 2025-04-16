@@ -197,6 +197,7 @@ const getDoctorateStudents = async () => {
 			url: nameAndUrl.url,
 			year: parseInt(yearColumn) || previousYear,
 			hasDoctorate: true,
+			isPostDoc: false,
 		}
 		previousYear = student.year;
 		students.push(student);
@@ -223,6 +224,7 @@ const addStudents = async (students: Omit<LabMemberEntry, "advisors" | "dblpPid"
 			name: nameAndUrl.name,
 			url: nameAndUrl.url,
 			hasDoctorate: arePostDocs,
+			isPostDoc: arePostDocs,
 		};
 
 		students.push(student);
@@ -273,69 +275,105 @@ const getProfessors = async () => {
 		throw new Error("Failed to parse ul matches");
 	}
 
-	const ulContent = ulMatch[0] + ulMatch[2];
-
 	const professors = [];
-	const liMatches = ulContent.match(/<li>(.*?)<\/li>/sgu);
 
-	if (!liMatches) {
-		throw new Error("Failed to parse li matches");
+	// Process professors from ulMatch[0] (active faculty)
+	const activeLiMatches = ulMatch[0].match(/<li>(.*?)<\/li>/sgu);
+	if (activeLiMatches) {
+		for (const liMatch of activeLiMatches) {
+			const nameMatch = liMatch.match(/<a href="(.*?)">(.*?)<\/a>/su);
+			let title = "";
+
+			// Extract title by removing HTML tags and the professor's name
+			const liText = cleanHtml(liMatch);
+			if (nameMatch) {
+				const professorName = cleanHtml(nameMatch[2]);
+				title = liText.replace(professorName, "").trim();
+				// Remove any leading commas and whitespace
+				title = title.replace(/^,\s*/, "");
+				// Only keep the first title (before any comma or additional roles)
+				title = title.split(/,|\(/)[0].trim();
+
+				const professor: Omit<AdvisorEntry, "students" | "dblpPid" | "lastUpdate" | "collaborators"> = {
+					name: professorName,
+					url: nameMatch[1],
+					title: title || "Professor",
+					isEmeritus: false, // Active faculty are not emiratus
+				};
+
+				professors.push(professor);
+			} else {
+				const nameMatch = liMatch.match(/<b>(.*?)<\/b>/su);
+				if (!nameMatch) {
+					continue; // Skip if we can't parse the name
+				}
+
+				const professorName = cleanHtml(nameMatch[1]);
+				title = liText.replace(professorName, "").trim();
+				// Remove any leading commas and whitespace
+				title = title.replace(/^,\s*/, "");
+				// Only keep the first title (before any comma or additional roles)
+				title = title.split(/,|\(/)[0].trim();
+
+				const professor: Omit<AdvisorEntry, "students" | "dblpPid" | "lastUpdate" | "collaborators"> = {
+					name: professorName,
+					title: title || "Professor",
+					isEmeritus: false, // Active faculty are not emiratus
+				};
+
+				professors.push(professor);
+			}
+		}
 	}
 
-	for (const liMatch of liMatches) {
-		const nameMatch = liMatch.match(/<a href="(.*?)">(.*?)<\/a>/su);
-		let title = "";
+	// Process professors from ulMatch[2] (emiratus faculty)
+	if (ulMatch.length > 2) {
+		const emiratusLiMatches = ulMatch[2].match(/<li>(.*?)<\/li>/sgu);
+		if (emiratusLiMatches) {
+			for (const liMatch of emiratusLiMatches) {
+				const nameMatch = liMatch.match(/<a href="(.*?)">(.*?)<\/a>/su);
+				let title = "";
 
-		// Extract title by removing HTML tags and the professor's name
-		const liText = cleanHtml(liMatch);
-		if (nameMatch) {
-			const professorName = cleanHtml(nameMatch[2]);
-			title = liText.replace(professorName, "").trim();
-			// Remove any leading commas and whitespace
-			title = title.replace(/^,\s*/, "");
-			// Only keep the first title (before any comma or additional roles)
-			title = title.split(/,|\(/)[0].trim();
-		}
+				// Extract title by removing HTML tags and the professor's name
+				const liText = cleanHtml(liMatch);
+				if (nameMatch) {
+					const professorName = cleanHtml(nameMatch[2]);
+					title = liText.replace(professorName, "").trim();
+					// Remove any leading commas and whitespace
+					title = title.replace(/^,\s*/, "");
+					// Only keep the first title (before any comma or additional roles)
+					title = title.split(/,|\(/)[0].trim();
 
-		// Default to "Professor" if no title is found
-		title = title || "Professor";
+					const professor: Omit<AdvisorEntry, "students" | "dblpPid" | "lastUpdate" | "collaborators"> = {
+						name: professorName,
+						url: nameMatch[1],
+						title: title || "Professor",
+						isEmeritus: true, // Emiratus faculty
+					};
 
-		if (!nameMatch) {
-			const nameMatch = liMatch.match(/<b>(.*?)<\/b>/su);
-			if (!nameMatch) {
-				throw new Error("Failed to parse name match");
+					professors.push(professor);
+				} else {
+					const nameMatch = liMatch.match(/<b>(.*?)<\/b>/su);
+					if (!nameMatch) {
+						continue; // Skip if we can't parse the name
+					}
+
+					const professorName = cleanHtml(nameMatch[1]);
+					title = liText.replace(professorName, "").trim();
+					// Remove any leading commas and whitespace
+					title = title.replace(/^,\s*/, "");
+					// Only keep the first title (before any comma or additional roles)
+					title = title.split(/,|\(/)[0].trim();
+
+					const professor: Omit<AdvisorEntry, "students" | "dblpPid" | "lastUpdate" | "collaborators"> = {
+						name: professorName,
+						title: title || "Professor",
+						isEmeritus: true, // Emiratus faculty
+					};
+
+					professors.push(professor);
+				}
 			}
-
-			const professorName = cleanHtml(nameMatch[1]);
-			const liText = cleanHtml(liMatch);
-			title = liText.replace(professorName, "").trim();
-			// Remove any leading commas and whitespace
-			title = title.replace(/^,\s*/, "");
-			// Only keep the first title (before any comma or additional roles)
-			title = title.split(/,|\(/)[0].trim();
-
-			const professor: Omit<AdvisorEntry, "students" | "dblpPid" | "lastUpdate" | "collaborators"> = {
-				name: professorName,
-				title: title || "Professor",
-			};
-
-			professors.push(professor);
-		} else {
-			const professorName = cleanHtml(nameMatch[2]);
-			const liText = cleanHtml(liMatch);
-			title = liText.replace(professorName, "").trim();
-			// Remove any leading commas and whitespace
-			title = title.replace(/^,\s*/, "");
-			// Only keep the first title (before any comma or additional roles)
-			title = title.split(/,|\(/)[0].trim();
-
-			const professor: Omit<AdvisorEntry, "students" | "dblpPid" | "lastUpdate" | "collaborators"> = {
-				name: professorName,
-				url: nameMatch[1],
-				title: title || "Professor",
-			};
-
-			professors.push(professor);
 		}
 	}
 
@@ -356,6 +394,8 @@ interface ExtendedResearcher extends BaseResearcherEntry {
 	hasDoctorate?: boolean;
 	thesisTitle?: string;
 	year?: number;
+	isEmeritus?: boolean;
+	isPostDoc?: boolean;
 }
 
 const updateDblpPidMapping = async (dblpPid: string, researcherRef: DocumentReference<ResearcherEntry>) => {
@@ -388,7 +428,6 @@ const updateResearcher = async <T extends ExtendedResearcher>(
 	const updatedData = transformData(researcher);
 
 	let shouldUpdate = false;
-	// let forceUpdateCollaborators = false;
 
 	if (!docSnap.exists()) {
 		updatedData.name = researcher.name;
@@ -429,10 +468,11 @@ const updateLabProfessors = async () => {
 		await updateResearcher(professor, {
 			collection: "advisors",
 			getDocId: formatProfessorName,
-			transformData: (prof: Partial<ExtendedResearcher>) => ({
+			transformData: (prof: Partial<ExtendedResearcher> & { isEmeritus?: boolean }) => ({
 				name: prof.name,
 				...(prof.url ? { url: prof.url } : {}),
 				...(prof.title ? { title: prof.title } : {}),
+				...(typeof prof.isEmeritus === "boolean" ? { isEmeritus: prof.isEmeritus } : {}),
 				students: [],
 			}),
 		});
@@ -448,6 +488,7 @@ const updateLabStudents = async () => {
 			getDocId: (name) => name,
 			transformData: (stud: Partial<ExtendedResearcher>) => ({
 				...(typeof stud.hasDoctorate === "boolean" ? { hasDoctorate: stud.hasDoctorate } : {}),
+				...(typeof stud.isPostDoc === "boolean" ? { isPostDoc: stud.isPostDoc } : {}),
 				...(stud.thesisTitle ? { thesisTitle: stud.thesisTitle } : {}),
 				...(stud.year ? { year: stud.year } : {}),
 				...(stud.url ? { url: stud.url } : {}),
@@ -469,7 +510,8 @@ const updateLabStudents = async () => {
 						students: [docRef],
 						dblpPid: advisorDblpPid,
 						collaborators: [],
-						title: "Professor"
+						title: "Professor",
+						isEmeritus: false // Default to non-emiratus for new professors
 					} as AdvisorEntry);
 
 					await updateDblpPidMapping(advisorDblpPid, advisorRef);

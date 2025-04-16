@@ -34,7 +34,7 @@ Map<String, dynamic> _$ResearcherToJson(Researcher instance) =>
 StudentResearcher _$StudentResearcherFromJson(Map<String, dynamic> json) {
   $checkKeys(
     json,
-    requiredKeys: const ['name', 'dblpPid'],
+    requiredKeys: const ['name', 'dblpPid', 'isPostDoc'],
   );
   return StudentResearcher(
     name: json['name'] as String,
@@ -48,6 +48,7 @@ StudentResearcher _$StudentResearcherFromJson(Map<String, dynamic> json) {
     hasDoctorate: json['hasDoctorate'] as bool,
     year: (json['year'] as num?)?.toInt(),
     thesisTitle: json['thesisTitle'] as String?,
+    isPostDoc: json['isPostDoc'] as bool? ?? false,
   );
 }
 
@@ -59,6 +60,7 @@ Map<String, dynamic> _$StudentResearcherToJson(StudentResearcher instance) =>
       'collaborators': instance.collaboratorNames,
       'hasDoctorate': instance.hasDoctorate,
       'advisors': instance.advisorNames,
+      'isPostDoc': instance.isPostDoc,
       'year': instance.year,
       'thesisTitle': instance.thesisTitle,
     };
@@ -66,7 +68,7 @@ Map<String, dynamic> _$StudentResearcherToJson(StudentResearcher instance) =>
 ProfessorResearcher _$ProfessorResearcherFromJson(Map<String, dynamic> json) {
   $checkKeys(
     json,
-    requiredKeys: const ['name', 'dblpPid', 'title'],
+    requiredKeys: const ['name', 'dblpPid', 'title', 'isEmeritus'],
   );
   return ProfessorResearcher(
     name: json['name'] as String,
@@ -78,6 +80,7 @@ ProfessorResearcher _$ProfessorResearcherFromJson(Map<String, dynamic> json) {
     studentNames:
         (json['students'] as List<dynamic>?)?.map((e) => e as String).toList(),
     title: json['title'] as String,
+    isEmeritus: json['isEmeritus'] as bool? ?? false,
   );
 }
 
@@ -90,6 +93,7 @@ Map<String, dynamic> _$ProfessorResearcherToJson(
       'collaborators': instance.collaboratorNames,
       'students': instance.studentNames,
       'title': instance.title,
+      'isEmeritus': instance.isEmeritus,
     };
 
 AllResearchers _$AllResearchersFromJson(Map<String, dynamic> json) =>

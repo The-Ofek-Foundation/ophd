@@ -678,7 +678,7 @@ class ResearcherDetailsModal extends StatelessWidget {
           context: context,
           icon: Icons.menu_book,
           title: AppLocalizations.of(context)!.thesisTitle,
-          items: [MapEntry('', student.thesisTitle!)],
+          items: [MapEntry(student.thesisTitle!, '')],
           maxItems: 1,
           emphasizeNames: false,
         ));

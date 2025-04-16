@@ -164,16 +164,36 @@ class LabUtils {
     return AppLocalizations.of(context)!.publicationType(typeString);
   }
 
+  static bool isStudent(Researcher researcher) {
+    return researcher is StudentResearcher;
+  }
+
   static bool isCurrentStudent(Researcher researcher) {
-    return researcher is StudentResearcher && !researcher.hasDoctorate;
+    return isStudent(researcher) && !researcher.hasDoctorate;
   }
 
   static bool isGraduatedStudent(Researcher researcher) {
-    return researcher is StudentResearcher && researcher.hasDoctorate;
+    return isStudent(researcher) && researcher.hasDoctorate;
+  }
+
+  static bool isPostDoc(Researcher researcher) {
+    return isStudent(researcher) && (researcher as StudentResearcher).isPostDoc;
+  }
+
+  static bool isNonPostDocGraduated(Researcher researcher) {
+    return isGraduatedStudent(researcher) && !(researcher as StudentResearcher).isPostDoc;
   }
 
   static bool isFaculty(Researcher researcher) {
     return researcher is ProfessorResearcher;
+  }
+
+  static bool isCurrentFaculty(Researcher researcher) {
+    return isFaculty(researcher) && !(researcher as ProfessorResearcher).isEmeritus;
+  }
+
+  static bool isEmeritusFaculty(Researcher researcher) {
+    return isFaculty(researcher) && (researcher as ProfessorResearcher).isEmeritus;
   }
 
   static bool isCurrentStudentPaper(Publication publication) {
@@ -184,8 +204,24 @@ class LabUtils {
     return publication.researchers != null && publication.researchers!.any(isGraduatedStudent);
   }
 
+  static bool isPostDocPaper(Publication publication) {
+    return publication.researchers != null && publication.researchers!.any(isPostDoc);
+  }
+
+  static bool isNonPostDocGraduatedPaper(Publication publication) {
+    return publication.researchers != null && publication.researchers!.any(isNonPostDocGraduated);
+  }
+
   static bool isFacultyPaper(Publication publication) {
     return publication.researchers != null && publication.researchers!.any(isFaculty);
+  }
+
+  static bool isCurrentFacultyPaper(Publication publication) {
+    return publication.researchers != null && publication.researchers!.any(isCurrentFaculty);
+  }
+
+  static bool isEmeritusFacultyPaper(Publication publication) {
+    return publication.researchers != null && publication.researchers!.any(isEmeritusFaculty);
   }
 
   static bool isCollaboration(Publication publication) {

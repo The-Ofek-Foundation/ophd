@@ -953,12 +953,6 @@ class LabHighlights extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Generate a complete weighted collaborators map for all researchers
-    final completeCollaboratorsMap = LabUtils.getCompleteWeightedCollaboratorsMap(researcherToPublicationsMap);
-
-    final uniquePublications = LabUtils.removeDuplicatePublications(publications);
-    final uniqueCollaborations = uniquePublications.where(LabUtils.isCollaboration);
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -998,6 +992,12 @@ class LabHighlights extends StatelessWidget {
         ),
         LayoutBuilder(
           builder: (context, constraints) {
+            // Generate a complete weighted collaborators map for all researchers
+            final completeCollaboratorsMap = LabUtils.getCompleteWeightedCollaboratorsMap(researcherToPublicationsMap);
+
+            final uniquePublications = LabUtils.removeDuplicatePublications(publications);
+            final uniqueCollaborations = uniquePublications.where(LabUtils.isCollaboration);
+
             // Calculate column counts for both grids
             int chartCrossAxisCount = max(1, constraints.maxWidth ~/ 600);
             int mainCrossAxisCount = max(1, constraints.maxWidth ~/ 400);
@@ -1059,19 +1059,26 @@ class LabHighlights extends StatelessWidget {
     cards.add(_buildRecentGraduatesCard(context));
 
     cards.add(_buildRecentPapersCard(context, Icons.article, 'Recent Current Student Papers', LabUtils.isCurrentStudentPaper, uniquePublications));
-    cards.add(_buildRecentPapersCard(context, Icons.article, 'Recent Graduated Student Papers', LabUtils.isGraduatedStudentPaper, uniquePublications));
-    cards.add(_buildRecentPapersCard(context, Icons.article, 'Recent Faculty Papers', LabUtils.isFacultyPaper, uniquePublications));
+    cards.add(_buildRecentPapersCard(context, Icons.article, 'Recent Graduated Student Papers', LabUtils.isNonPostDocGraduatedPaper, uniquePublications));
+    cards.add(_buildRecentPapersCard(context, Icons.article, 'Recent Postdoc Papers', LabUtils.isPostDocPaper, uniquePublications));
+    cards.add(_buildRecentPapersCard(context, Icons.article, 'Recent Current Faculty Papers', LabUtils.isCurrentFacultyPaper, uniquePublications));
+    cards.add(_buildRecentPapersCard(context, Icons.article, 'Recent Emeritus Faculty Papers', LabUtils.isEmeritusFacultyPaper, uniquePublications));
     cards.add(_buildRecentPapersCard(context, Icons.people_alt, 'Recent Lab Collaborations', LabUtils.isCollaboration, uniqueCollaborations));
 
     cards.add(_buildWellConnectedCard(context, completeCollaboratorsMap, LabUtils.isCurrentStudent, 'Well-Connected Current Students'));
-    cards.add(_buildWellConnectedCard(context, completeCollaboratorsMap, LabUtils.isGraduatedStudent, 'Well-Connected Graduated Students'));
-    cards.add(_buildWellConnectedCard(context, completeCollaboratorsMap, LabUtils.isFaculty, 'Well-Connected Faculty'));
+    cards.add(_buildWellConnectedCard(context, completeCollaboratorsMap, LabUtils.isNonPostDocGraduated, 'Well-Connected Graduated Students'));
+    cards.add(_buildWellConnectedCard(context, completeCollaboratorsMap, LabUtils.isPostDoc, 'Well-Connected Postdocs'));
+    cards.add(_buildWellConnectedCard(context, completeCollaboratorsMap, LabUtils.isCurrentFaculty, 'Well-Connected Current Faculty'));
+    cards.add(_buildWellConnectedCard(context, completeCollaboratorsMap, LabUtils.isEmeritusFaculty, 'Well-Connected Emeritus Faculty'));
 
     cards.add(_buildProlificResearchersCard(context, LabUtils.isCurrentStudent, 'Prolific Current Students'));
-    cards.add(_buildProlificResearchersCard(context, LabUtils.isGraduatedStudent, 'Prolific Graduated Students'));
-    cards.add(_buildProlificResearchersCard(context, LabUtils.isFaculty, 'Prolific Faculty'));
+    cards.add(_buildProlificResearchersCard(context, LabUtils.isNonPostDocGraduated, 'Prolific Graduated Students'));
+    cards.add(_buildProlificResearchersCard(context, LabUtils.isPostDoc, 'Prolific Postdocs'));
+    cards.add(_buildProlificResearchersCard(context, LabUtils.isCurrentFaculty, 'Prolific Current Faculty'));
+    cards.add(_buildProlificResearchersCard(context, LabUtils.isEmeritusFaculty, 'Prolific Emeritus Faculty'));
 
-    cards.add(_buildFacultyWithMostGraduatesCard(context));
+    cards.add(_buildFacultyWithMostGraduatesCard(context, LabUtils.isCurrentFaculty, 'Current Faculty with Most Graduates'));
+    cards.add(_buildFacultyWithMostGraduatesCard(context, LabUtils.isEmeritusFaculty, 'Emeritus Faculty with Most Graduates'));
 
     return cards;
   }
@@ -1137,14 +1144,11 @@ class LabHighlights extends StatelessWidget {
   }
 
   Widget _buildLabOverviewStatsCard(BuildContext context, int publicationCount, int collaborationCount) {
-    // Count current students (not graduated)
-    final currentStudentCount = allResearchers.students.where((s) => !s.hasDoctorate).length;
-
-    // Count graduated students
-    final graduatedStudentCount = allResearchers.students.where((s) => s.hasDoctorate).length;
-
-    // Count faculty members
-    final facultyCount = allResearchers.professors.length;
+    final currentStudentCount = allResearchers.students.where(LabUtils.isCurrentStudent).length;
+    final graduatedStudentCount = allResearchers.students.where(LabUtils.isNonPostDocGraduated).length;
+    final postDocCount = allResearchers.students.where(LabUtils.isPostDoc).length;
+    final currentFacultyCount = allResearchers.professors.where(LabUtils.isCurrentFaculty).length;
+    final emeritusFacultyCount = allResearchers.professors.where(LabUtils.isEmeritusFaculty).length;
 
     return LabUtils.buildLabelValueCard(
       context: context,
@@ -1153,7 +1157,9 @@ class LabHighlights extends StatelessWidget {
       items: [
         MapEntry('Current Students', LabUtils.formatNumber(currentStudentCount)),
         MapEntry('Graduated Students', LabUtils.formatNumber(graduatedStudentCount)),
-        MapEntry('Faculty Members', LabUtils.formatNumber(facultyCount)),
+        MapEntry('Postdocs', LabUtils.formatNumber(postDocCount)),
+        MapEntry('Current Faculty', LabUtils.formatNumber(currentFacultyCount)),
+        MapEntry('Emeritus Faculty', LabUtils.formatNumber(emeritusFacultyCount)),
         MapEntry('Distinct Publications', LabUtils.formatNumber(publicationCount)),
         MapEntry('Lab Collaborations', LabUtils.formatNumber(collaborationCount)),
         MapEntry('Years Active', '1975 – Present'),
@@ -1229,7 +1235,7 @@ class LabHighlights extends StatelessWidget {
                       child: LabUtils.emphasizedText(context, maxTotalOverview.researcher.name),
                     ),
                     SelectableText(
-                      '${LabUtils.formatNumber(maxTotalOverview.totalCollaborations)} collaborators',
+                      '${LabUtils.formatNumber(maxTotalOverview.totalCollaborations)} ${maxTotalOverview.totalCollaborations == 1 ? 'collaborator' : 'collaborators'}',
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.secondary,
                       ),
@@ -1250,7 +1256,7 @@ class LabHighlights extends StatelessWidget {
                       ),
                     ),
                     SelectableText(
-                      '${LabUtils.formatNumber(maxTotalOverview.studentCollaborations)} collaborators',
+                      '${LabUtils.formatNumber(maxTotalOverview.studentCollaborations)} ${maxTotalOverview.studentCollaborations == 1 ? 'collaborator' : 'collaborators'}',
                       style: TextStyle(
                         fontSize: 12,
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -1271,7 +1277,7 @@ class LabHighlights extends StatelessWidget {
                       ),
                     ),
                     SelectableText(
-                      '${LabUtils.formatNumber(maxTotalOverview.professorCollaborations)} collaborators',
+                      '${LabUtils.formatNumber(maxTotalOverview.professorCollaborations)} ${maxProfessorOverview.professorCollaborations == 1 ? 'collaborator' : 'collaborators'}',
                       style: TextStyle(
                         fontSize: 12,
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -1302,7 +1308,7 @@ class LabHighlights extends StatelessWidget {
                       child: LabUtils.emphasizedText(context, maxStudentOverview.researcher.name),
                     ),
                     SelectableText(
-                      '${LabUtils.formatNumber(maxStudentOverview.studentCollaborations)} collaborators',
+                      '${LabUtils.formatNumber(maxStudentOverview.studentCollaborations)} ${maxStudentOverview.studentCollaborations == 1 ? 'collaborator' : 'collaborators'}',
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.secondary,
                       ),
@@ -1323,7 +1329,7 @@ class LabHighlights extends StatelessWidget {
                       ),
                     ),
                     SelectableText(
-                      '${LabUtils.formatNumber(maxStudentOverview.professorCollaborations)} collaborators',
+                      '${LabUtils.formatNumber(maxStudentOverview.professorCollaborations)} ${maxStudentOverview.professorCollaborations == 1 ? 'collaborator' : 'collaborators'}',
                       style: TextStyle(
                         fontSize: 12,
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -1354,7 +1360,7 @@ class LabHighlights extends StatelessWidget {
                       child: LabUtils.emphasizedText(context, maxProfessorOverview.researcher.name),
                     ),
                     SelectableText(
-                      '${LabUtils.formatNumber(maxProfessorOverview.professorCollaborations)} collaborators',
+                      '${LabUtils.formatNumber(maxProfessorOverview.professorCollaborations)} ${maxProfessorOverview.professorCollaborations == 1 ? 'collaborator' : 'collaborators'}',
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.secondary,
                       ),
@@ -1375,7 +1381,7 @@ class LabHighlights extends StatelessWidget {
                       ),
                     ),
                     SelectableText(
-                      '${LabUtils.formatNumber(maxProfessorOverview.studentCollaborations)} collaborators',
+                      '${LabUtils.formatNumber(maxProfessorOverview.studentCollaborations)} ${maxProfessorOverview.studentCollaborations == 1 ? 'collaborator' : 'collaborators'}',
                       style: TextStyle(
                         fontSize: 12,
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -1406,16 +1412,16 @@ class LabHighlights extends StatelessWidget {
       icon: Icons.auto_awesome,
       title: title,
       items: sortedResearchers.map((entry) =>
-        MapEntry(entry.key.name, '${LabUtils.formatNumber(entry.value)} papers')
+        MapEntry(entry.key.name, '${LabUtils.formatNumber(entry.value)} ${entry.value == 1 ? 'paper' : 'papers'}')
       ).toList(),
     );
   }
 
-  Widget _buildFacultyWithMostGraduatesCard(BuildContext context) {
+  Widget _buildFacultyWithMostGraduatesCard(BuildContext context, bool Function(Researcher) filter, String title) {
     // Count graduates for each professor
     final graduatesByProfessor = <ProfessorResearcher, List<StudentResearcher>>{};
 
-    for (final professor in allResearchers.professors) {
+    for (final professor in allResearchers.professors.where(filter)) {
       final graduates = allResearchers.students.where((s) =>
         s.hasDoctorate &&
         s.advisors != null &&
@@ -1434,9 +1440,9 @@ class LabHighlights extends StatelessWidget {
     return LabUtils.buildLabelValueCard(
       context: context,
       icon: Icons.school,
-      title: 'Faculty with Most Graduates',
+      title: title,
       items: sortedProfessors.map((entry) =>
-        MapEntry(entry.key.name, '${LabUtils.formatNumber(entry.value.length)} graduates')
+        MapEntry(entry.key.name, '${LabUtils.formatNumber(entry.value.length)} ${entry.value.length == 1 ? 'graduate' : 'graduates'}')
       ).toList(),
     );
   }

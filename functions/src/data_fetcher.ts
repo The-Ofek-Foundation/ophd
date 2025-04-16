@@ -298,7 +298,7 @@ const getProfessors = async () => {
 					name: professorName,
 					url: nameMatch[1],
 					title: title || "Professor",
-					isEmeritus: false, // Active faculty are not emiratus
+					isEmeritus: false,
 				};
 
 				professors.push(professor);
@@ -318,7 +318,7 @@ const getProfessors = async () => {
 				const professor: Omit<AdvisorEntry, "students" | "dblpPid" | "lastUpdate" | "collaborators"> = {
 					name: professorName,
 					title: title || "Professor",
-					isEmeritus: false, // Active faculty are not emiratus
+					isEmeritus: false,
 				};
 
 				professors.push(professor);
@@ -326,11 +326,11 @@ const getProfessors = async () => {
 		}
 	}
 
-	// Process professors from ulMatch[2] (emiratus faculty)
+	// Process professors from ulMatch[2] (emeritus faculty)
 	if (ulMatch.length > 2) {
-		const emiratusLiMatches = ulMatch[2].match(/<li>(.*?)<\/li>/sgu);
-		if (emiratusLiMatches) {
-			for (const liMatch of emiratusLiMatches) {
+		const emeritusLiMatches = ulMatch[2].match(/<li>(.*?)<\/li>/sgu);
+		if (emeritusLiMatches) {
+			for (const liMatch of emeritusLiMatches) {
 				const nameMatch = liMatch.match(/<a href="(.*?)">(.*?)<\/a>/su);
 				let title = "";
 
@@ -348,7 +348,7 @@ const getProfessors = async () => {
 						name: professorName,
 						url: nameMatch[1],
 						title: title || "Professor",
-						isEmeritus: true, // Emiratus faculty
+						isEmeritus: true,
 					};
 
 					professors.push(professor);
@@ -368,7 +368,7 @@ const getProfessors = async () => {
 					const professor: Omit<AdvisorEntry, "students" | "dblpPid" | "lastUpdate" | "collaborators"> = {
 						name: professorName,
 						title: title || "Professor",
-						isEmeritus: true, // Emiratus faculty
+						isEmeritus: true,
 					};
 
 					professors.push(professor);
@@ -511,7 +511,7 @@ const updateLabStudents = async () => {
 						dblpPid: advisorDblpPid,
 						collaborators: [],
 						title: "Professor",
-						isEmeritus: false // Default to non-emiratus for new professors
+						isEmeritus: false // Default to non-emeritus for new professors
 					} as AdvisorEntry);
 
 					await updateDblpPidMapping(advisorDblpPid, advisorRef);

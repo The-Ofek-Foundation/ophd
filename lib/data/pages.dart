@@ -6,6 +6,7 @@ import 'package:ophd/models/social_link.dart';
 import 'package:ophd/screens/about_screen.dart';
 import 'package:ophd/screens/education_screen.dart';
 import 'package:ophd/screens/industry_screen.dart';
+import 'package:ophd/screens/lab_screen.dart';
 import 'package:ophd/screens/publication_screen.dart';
 import 'package:ophd/screens/research_screen.dart';
 
@@ -46,11 +47,18 @@ final List<PageDetails> pages = [
     index: 4
   ),
   PageDetails(
+    icon: Icons.groups,
+    label: 'Lab',
+    page: const LabPage(),
+    pathname: '/lab',
+    index: 5
+  ),
+  PageDetails(
     icon: Icons.contact_mail,
     label: 'Contact',
     page: AboutPage(socials: socials.where((social) => social.types.contains(SocialType.contact)).toList()),
     pathname: '/contact',
-    index: 5
+    index: 6
   ),
 ];
 

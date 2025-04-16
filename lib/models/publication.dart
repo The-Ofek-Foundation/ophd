@@ -73,7 +73,7 @@ class PublicationAuthor {
 
 /// Represents a publication entry from the database.
 @JsonSerializable()
-class Publication {
+class Publication implements Comparable<Publication> {
   /// DBLP key (unique identifier).
   @JsonKey(required: true)
   String dblpKey;
@@ -183,7 +183,15 @@ class Publication {
 
   Map<String, dynamic> toJson() => _$PublicationToJson(this);
 
+  @override
+  int compareTo(Publication other) {
+    final yearComparison = other.year.compareTo(year);
+    if (yearComparison != 0) {
+      return yearComparison;
+    }
 
+    return other.mdate.seconds.compareTo(mdate.seconds);
+  }
 }
 
 

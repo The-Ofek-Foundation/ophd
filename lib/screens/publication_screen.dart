@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:ophd/generated/l10n/app_localizations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:ophd/data/papers.dart';
@@ -71,11 +71,11 @@ class PublicationPage extends StatelessWidget {
 
   Widget _buildPaperBlock(BuildContext context, Paper paper, {double width = 800}) {
     Widget body = ClickableMarkdown(data: paper.description);
-    
+
     Widget? image = paper.imagePath != null ? ExpandableImage(
       imagePath: paper.imagePath!,
     ) : null;
-    
+
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         return Column(
@@ -106,10 +106,10 @@ class PublicationPage extends StatelessWidget {
                     children: [
                       InkWell(
                         child: Text(
-                          constraints.maxWidth > width ? 
-                            '${AppLocalizations.of(context)!.conference(paper.conference.shortName)} (${paper.conference.shortName})' : 
-                            (constraints.maxWidth / 2 > width / 3 ? 
-                              AppLocalizations.of(context)!.conference(paper.conference.shortName) : 
+                          constraints.maxWidth > width ?
+                            '${AppLocalizations.of(context)!.conference(paper.conference.shortName)} (${paper.conference.shortName})' :
+                            (constraints.maxWidth / 2 > width / 3 ?
+                              AppLocalizations.of(context)!.conference(paper.conference.shortName) :
                               paper.conference.shortName),
                           style: TextStyle(
                             color: Theme.of(context).colorScheme.secondary,

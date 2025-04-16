@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:ophd/generated/l10n/app_localizations.dart';
 import 'package:ophd/data/pages.dart';
 import 'package:ophd/models/page.dart';
 import 'package:ophd/providers/locale_provider.dart';

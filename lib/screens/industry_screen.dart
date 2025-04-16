@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:ophd/generated/l10n/app_localizations.dart';
 import 'package:ophd/data/jobs.dart';
 import 'package:ophd/data/social_links.dart';
 import 'package:ophd/models/job.dart';
@@ -164,7 +164,7 @@ class JobBody extends StatelessWidget {
         ));
       }
     }
-    
+
     Widget? images = job.imagePaths != null ? Column(
       children: imagesAndSpacers,
     ) : null;

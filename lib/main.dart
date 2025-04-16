@@ -5,7 +5,7 @@ import 'package:ophd/models/page.dart';
 import 'package:ophd/providers/locale_provider.dart';
 import 'package:ophd/widgets/layout.dart';
 import 'package:theme_provider/theme_provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:ophd/generated/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 void main() => runApp(const App());

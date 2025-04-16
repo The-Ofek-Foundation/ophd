@@ -8,7 +8,7 @@ import 'package:ophd/models/researcher.dart';
 
 import 'package:collection/collection.dart';
 
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:ophd/generated/l10n/app_localizations.dart';
 
 class ResearcherYear {
   final Researcher researcher;
@@ -126,7 +126,7 @@ class LabUtils {
 
     // Loop through publications in order of recency
     for (final publication in sortedPublications) {
-      // Skip if this publication doesn't have researchers listed 
+      // Skip if this publication doesn't have researchers listed
       if (publication.researchers == null || publication.researchers!.isEmpty) continue;
 
       // Find collaborators in this publication

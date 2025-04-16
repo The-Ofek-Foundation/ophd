@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:ophd/generated/l10n/app_localizations.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -999,8 +999,8 @@ class LabHighlights extends StatelessWidget {
         LayoutBuilder(
           builder: (context, constraints) {
             // Calculate column counts for both grids
+            int chartCrossAxisCount = max(1, constraints.maxWidth ~/ 600);
             int mainCrossAxisCount = max(1, constraints.maxWidth ~/ 400);
-            int chartCrossAxisCount = max(1, mainCrossAxisCount ~/ 2);
 
             // Create chart cards separately
             final List<Widget> chartCards = [

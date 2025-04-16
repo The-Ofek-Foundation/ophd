@@ -1,7 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:ophd/generated/l10n/app_localizations.dart';
 import 'package:ophd/widgets/clickable_image.dart';
 import 'package:ophd/widgets/launchable_icon_button.dart';
 import 'package:ophd/widgets/leading_trailing_mid.dart';
@@ -95,7 +95,7 @@ class EducationPage extends StatelessWidget {
 
   Widget _buildEducationBlock(BuildContext context, {double width = 500}) {
     final localizations = AppLocalizations.of(context)!;
-    
+
     UCILogo({double? width}) => ClickableImage(
       image: const AssetImage('assets/images/UCI_logo_256.png'),
       link: "https://uci.edu/",
@@ -210,7 +210,7 @@ class DegreeWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     final String localizedHonors = honors == 'Summa Cum Laude' ? localizations.summa : localizations.magna;
-    
+
     return SelectableText.rich(
       TextSpan(
         children: [

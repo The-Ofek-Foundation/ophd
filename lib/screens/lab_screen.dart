@@ -1177,6 +1177,7 @@ class LabHighlights extends StatelessWidget {
       title: 'Publications Per Year',
       dataByYear: publicationsPerYear,
       lineColor: Theme.of(context).colorScheme.secondary,
+      tooltipTextColor: Theme.of(context).colorScheme.onSecondary,
       yAxisLabel: 'Publications',
       height: 308,
     );
@@ -1197,6 +1198,7 @@ class LabHighlights extends StatelessWidget {
       title: 'Collaborations Per Year',
       dataByYear: collaborationsPerYear,
       lineColor: Theme.of(context).colorScheme.secondary,
+      tooltipTextColor: Theme.of(context).colorScheme.onSecondary,
       yAxisLabel: 'Collaborations',
     );
   }
@@ -1218,6 +1220,7 @@ class LabHighlights extends StatelessWidget {
       title: 'Graduations Per Year',
       dataByYear: graduationsPerYear,
       lineColor: Theme.of(context).colorScheme.tertiary,
+      tooltipTextColor: Theme.of(context).colorScheme.onTertiary,
       yAxisLabel: 'Graduations',
     );
   }

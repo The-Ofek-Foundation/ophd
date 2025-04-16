@@ -352,6 +352,7 @@ class LabUtils {
     required String title,
     required Map<int, int> dataByYear,
     Color? lineColor,
+    Color? tooltipTextColor,
     String? yAxisLabel,
     double height = 200,
   }) {
@@ -414,6 +415,21 @@ class LabUtils {
                           ),
                         ),
                       ],
+                      lineTouchData: LineTouchData(
+                        touchTooltipData: LineTouchTooltipData(
+                          tooltipBgColor: chartColor.withAlpha(204),
+                          getTooltipItems: (List<LineBarSpot> touchedSpots) {
+                            return touchedSpots.map((LineBarSpot touchedSpot) {
+                              final year = touchedSpot.x.toInt();
+                              final count = touchedSpot.y.toInt();
+                              return LineTooltipItem(
+                                '$year: ${formatNumber(count)}',
+                                TextStyle(color: tooltipTextColor ?? Theme.of(context).colorScheme.onSurface, fontWeight: FontWeight.bold),
+                              );
+                            }).toList();
+                          },
+                        ),
+                      ),
                       titlesData: FlTitlesData(
                         leftTitles: AxisTitles(
                           axisNameWidget: yAxisLabel != null ? Text(

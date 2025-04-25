@@ -698,7 +698,7 @@ class LabUtils {
     // We use log10(n + 1) to handle zero values and make small values more visible
     double logTransform(double value) {
       // Add 1 to avoid log(0) which is undefined
-      return value <= 0 ? 0 : math.log(value + 1) / math.ln10;
+      return value <= 0 ? 0 : math.log(value) / math.ln10;
     }
     // Define colors for each publication type
     final typeColors = {
@@ -853,7 +853,7 @@ class LabUtils {
                                   getTitlesWidget: (value, meta) {
                                     // For logarithmic scale, we want to show powers of 10
                                     // Convert the logarithmic value back to the original scale for display
-                                    final originalValue = math.pow(10, value).toInt() - 1;
+                                    final originalValue = math.pow(10, value).toInt();
 
                                     // Only show specific values on the logarithmic scale
                                     if (![0, 1, 2, 3, 4].contains(value.round())) {

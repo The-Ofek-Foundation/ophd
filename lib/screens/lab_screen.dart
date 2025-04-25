@@ -190,6 +190,7 @@ class _LabPageState extends State<LabPage> {
               RefreshButton(
                 forceLoading: true,
                 tooltip: 'Loading Lab Data',
+                key: UniqueKey(),
               ),
             if (!isLoading && errorMessage == null)
               RefreshButton(
@@ -198,6 +199,7 @@ class _LabPageState extends State<LabPage> {
                   await _loadData();
                 },
                 tooltip: 'Sync Database',
+                key: UniqueKey(),
               )
           ],
         ),

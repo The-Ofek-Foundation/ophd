@@ -68,8 +68,10 @@ const fetchWithErrorHandling = async (url: string, name?: string) => {
 const fetchDblpPid = async (name: string): Promise<string> => {
 	logger.info("Fetching DBLP PID for", name);
 
+	const nameQuery = name.split(" ").map(word => word + "$").join(" ");
+
 	try {
-		const response = await fetch(DBLP_AUTHOR_LOOKUP_URL + name);
+		const response = await fetch(DBLP_AUTHOR_LOOKUP_URL + nameQuery);
 		const data = await response.json() as DblpResponse;
 
 		const hit = data?.result?.hits?.hit?.[0];
@@ -135,7 +137,7 @@ const fetchPapers = async (dblpPid: string, dblpPidMapping: Map<string, Document
 	}
 }
 
-const fetchAllPapers = async (updatedAfter: Timestamp) => {
+const fetchAllPapers = async (updatedAfter: Timestamp, forcedDblpPids: Set<string>) => {
 	const dblpPidMapping = await fetchDblpPidMapping();
 	const dblpPids = Array.from(dblpPidMapping.keys());
 	const papers = (await Promise.all(dblpPids.map(pid => fetchPapers(pid, dblpPidMapping))));
@@ -143,7 +145,9 @@ const fetchAllPapers = async (updatedAfter: Timestamp) => {
 	const uniquePapers = new Map<string, PublicationEntry>();
 
 	papers.flat().forEach(paper => {
-		if (paper.mdate.toMillis() < updatedAfter.toMillis()) {
+		const forceUpdatePaper = forcedDblpPids.size > 0 && paper.authors.some(author => author.pid && forcedDblpPids.has(author.pid));
+
+		if (!forceUpdatePaper && paper.mdate.toMillis() < updatedAfter.toMillis()) {
 			return;
 		}
 
@@ -463,9 +467,10 @@ const updateResearcher = async <T extends ExtendedResearcher>(
 
 const updateLabProfessors = async () => {
 	const professors = await getProfessors();
+	const newDblpPids = [];
 
 	for (const professor of professors) {
-		await updateResearcher(professor, {
+		const { updatedData } = await updateResearcher(professor, {
 			collection: "advisors",
 			getDocId: formatProfessorName,
 			transformData: (prof: Partial<ExtendedResearcher> & { isEmeritus?: boolean }) => ({
@@ -476,14 +481,21 @@ const updateLabProfessors = async () => {
 				students: [],
 			}),
 		});
+
+		if (updatedData.dblpPid) {
+			newDblpPids.push(updatedData.dblpPid);
+		}
 	}
+
+	return newDblpPids;
 }
 
 const updateLabStudents = async () => {
 	const students = await getLabStudents();
+	const newDblpPids = [];
 
 	for (const student of students) {
-		const { docRef, shouldUpdate } = await updateResearcher(student, {
+		const { docRef, updatedData, shouldUpdate } = await updateResearcher(student, {
 			collection: "lab-members",
 			getDocId: (name) => name,
 			transformData: (stud: Partial<ExtendedResearcher>) => ({
@@ -494,6 +506,10 @@ const updateLabStudents = async () => {
 				...(stud.url ? { url: stud.url } : {}),
 			}),
 		});
+
+		if (updatedData.dblpPid) {
+			newDblpPids.push(updatedData.dblpPid);
+		}
 
 		// Handle advisors separately since it's unique to students
 		if (shouldUpdate && "advisors" in student) {
@@ -523,6 +539,8 @@ const updateLabStudents = async () => {
 			}
 		}
 	}
+
+	return newDblpPids;
 }
 
 // for example: "Thomas A. Standish" should become "T. Standish"
@@ -607,15 +625,15 @@ export const updateDatabase = onRequest({
 }, async (request, response) => {
 	corsHandler(request, response, async () => {
 		try {
-			await updateLabProfessors();
-			await updateLabStudents();
+			const newDblpPids = await updateLabProfessors();
+			newDblpPids.push(...await updateLabStudents());
 
 			console.log("Updated researchers");
 
 			const mostRecentMDate = await getMostRecentMdate();
 			const onlyUpdateAfter = Timestamp.fromMillis(mostRecentMDate.toMillis() - MONTH);
 
-			const papers = await fetchAllPapers(onlyUpdateAfter);
+			const papers = await fetchAllPapers(onlyUpdateAfter, new Set(newDblpPids));
 
 			console.log("Fetched", papers.size, "relevant papers");
 
@@ -661,6 +679,15 @@ export const updatePublicationsForResearcher = onRequest({
 						await deleteDoc(doc(db, "publications", publication.dblpKey.replaceAll("/", "-")));
 					}
 				}
+			}
+
+			// check if researcher has a dblpPid
+			if (!researcherDoc.data().dblpPid) {
+				const dblpPid = await fetchDblpPid(researcherDoc.data().name);
+				if (!dblpPid) {
+					throw new Error("No DBLP PID found for researcher");
+				}
+				await updateDblpPidMapping(dblpPid, researcherRef);
 			}
 
 			const papers = await fetchPapers(researcherDoc.data().dblpPid, await fetchDblpPidMapping());

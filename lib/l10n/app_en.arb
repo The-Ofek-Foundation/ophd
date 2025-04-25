@@ -228,5 +228,9 @@
 				"type": "String"
 			}
 		}
-	}
+	},
+	"noInformationAvailable": "No Information Available",
+	"@noInformationAvailable": {},
+	"noInformationAvailableDescription": "There is currently no information available about this researcher in our database. This could be because they have not yet published any papers that appear in DBLP, or their publications have not been linked to their profile.",
+	"@noInformationAvailableDescription": {}
 }

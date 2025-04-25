@@ -356,4 +356,10 @@ class AppLocalizationsHe extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get noInformationAvailable => 'אין מידע זמין';
+
+  @override
+  String get noInformationAvailableDescription => 'אין כרגע מידע זמין על חוקר זה במאגר שלנו. ייתכן שהם עדיין לא פרסמו מאמרים שמופיעים ב-DBLP, או שהפרסומים שלהם לא קושרו לפרופיל שלהם.';
 }

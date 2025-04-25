@@ -520,6 +520,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{type, select, article {Journal Articles} inproceedings {Conference Papers} proceedings {Proceedings} book {Books} incollection {Book Chapters} phdthesis {PhD Theses} unknown {Other Publications} other {{type}}}'**
   String publicationType(String type);
+
+  /// No description provided for @noInformationAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No Information Available'**
+  String get noInformationAvailable;
+
+  /// No description provided for @noInformationAvailableDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'There is currently no information available about this researcher in our database. This could be because they have not yet published any papers that appear in DBLP, or their publications have not been linked to their profile.'**
+  String get noInformationAvailableDescription;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

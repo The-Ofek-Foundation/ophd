@@ -236,5 +236,9 @@
 				"type": "String"
 			}
 		}
-	}
+	},
+	"noInformationAvailable": "אין מידע זמין",
+	"@noInformationAvailable": {},
+	"noInformationAvailableDescription": "אין כרגע מידע זמין על חוקר זה במאגר שלנו. ייתכן שהם עדיין לא פרסמו מאמרים שמופיעים ב-DBLP, או שהפרסומים שלהם לא קושרו לפרופיל שלהם.",
+	"@noInformationAvailableDescription": {}
 }

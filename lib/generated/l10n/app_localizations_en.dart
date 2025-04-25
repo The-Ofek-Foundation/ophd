@@ -341,4 +341,10 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get noInformationAvailable => 'No Information Available';
+
+  @override
+  String get noInformationAvailableDescription => 'There is currently no information available about this researcher in our database. This could be because they have not yet published any papers that appear in DBLP, or their publications have not been linked to their profile.';
 }

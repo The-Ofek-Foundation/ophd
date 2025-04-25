@@ -786,12 +786,70 @@ class ResearcherDetailsModal extends StatelessWidget {
     required this.weightedCollaborators,
   });
 
+  Widget _buildNoDataCard(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: LabUtils.getCommonContainerDecoration(context),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(
+            Icons.info_outline,
+            size: 24,
+            color: Theme.of(context).colorScheme.secondary,
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SelectableText(
+                  AppLocalizations.of(context)!.noInformationAvailable,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                SelectableText(
+                  AppLocalizations.of(context)!.noInformationAvailableDescription,
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   List<Widget> _buildDetails(BuildContext context) {
     final List<Widget> details = [];
 
     final collaborators = weightedCollaborators.keys.toList();
     final facultyCollaborators = collaborators.whereType<ProfessorResearcher>().length;
     final studentCollaborators = collaborators.whereType<StudentResearcher>().length;
+
+    // Get publications for this researcher
+    final publications = LabUtils.getSortedPublications(researcherToPublications[researcher], true);
+    final allPublications = LabUtils.getSortedPublications(researcherToPublications[researcher], false);
+
+    // Check if we have any data to display
+    bool hasAdvisorInfo = researcher is StudentResearcher &&
+                          (researcher as StudentResearcher).advisors != null &&
+                          (researcher as StudentResearcher).advisors!.isNotEmpty;
+    bool hasGraduationInfo = researcher is StudentResearcher && (researcher as StudentResearcher).hasDoctorate;
+    bool hasThesisInfo = researcher is StudentResearcher && (researcher as StudentResearcher).thesisTitle != null;
+    bool hasStudentInfo = researcher is ProfessorResearcher && allResearchers != null;
+    bool hasPublications = publications.isNotEmpty;
+    bool hasCollaborators = collaborators.isNotEmpty;
+
+    // If we don't have any data to display, show a message
+    if (!hasAdvisorInfo && !hasGraduationInfo && !hasThesisInfo &&
+        !hasStudentInfo && !hasPublications && !hasCollaborators) {
+      details.add(_buildNoDataCard(context));
+      return details;
+    }
 
     // Add researcher-specific details
     if (researcher is StudentResearcher) {
@@ -866,8 +924,6 @@ class ResearcherDetailsModal extends StatelessWidget {
     }
 
     // Add publications by type if available
-    final publications = LabUtils.getSortedPublications(researcherToPublications[researcher], true);
-    final allPublications = LabUtils.getSortedPublications(researcherToPublications[researcher], false);
     if (publications.isNotEmpty) {
       final publicationsByType = LabUtils.getPublicationsByType(allPublications);
       if (publicationsByType.isNotEmpty) {

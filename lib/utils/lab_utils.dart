@@ -485,7 +485,7 @@ class LabUtils {
 
                               return SideTitleWidget(
                                 axisSide: meta.axisSide,
-                                child: Text(
+                                child: SelectableText(
                                   value.toInt().toString(),
                                   style: TextStyle(
                                     color: Theme.of(context).colorScheme.onSurface.withAlpha((0.7 * 255).round()),
@@ -497,7 +497,7 @@ class LabUtils {
                           ),
                         ),
                         bottomTitles: AxisTitles(
-                          axisNameWidget: Text(
+                          axisNameWidget: SelectableText(
                             'Year',
                             style: TextStyle(
                               color: Theme.of(context).colorScheme.onSurface.withAlpha((0.7 * 255).round()),
@@ -512,7 +512,7 @@ class LabUtils {
 
                               return SideTitleWidget(
                                 axisSide: meta.axisSide,
-                                child: Text(
+                                child: SelectableText(
                                   value.toInt().toString(),
                                   style: TextStyle(
                                     color: Theme.of(context).colorScheme.onSurface.withAlpha((0.7 * 255).round()),
@@ -875,14 +875,14 @@ class LabUtils {
                                       final typeLabel = formatPublicationType(context, type);
                                       return SideTitleWidget(
                                         axisSide: meta.axisSide,
-                                        child: Text(
+                                        child: SelectableText(
                                           typeLabel,
                                           style: TextStyle(
                                             color: Theme.of(context).colorScheme.onSurface,
                                             fontSize: 10,
                                             fontWeight: FontWeight.bold,
+                                            overflow: TextOverflow.ellipsis,
                                           ),
-                                          overflow: TextOverflow.ellipsis,
                                         ),
                                       );
                                     }
@@ -906,7 +906,7 @@ class LabUtils {
 
                                     return SideTitleWidget(
                                       axisSide: meta.axisSide,
-                                      child: Text(
+                                      child: SelectableText(
                                         formatNumber(originalValue),
                                         style: TextStyle(
                                           color: Theme.of(context).colorScheme.onSurface.withAlpha((0.7 * 255).round()),
@@ -983,12 +983,12 @@ class LabUtils {
                                   ),
                                 ),
                                 const SizedBox(width: 4),
-                                Text(
+                                SelectableText(
                                   item.key,
                                   style: const TextStyle(fontSize: 10),
                                 ),
                                 const SizedBox(width: 4),
-                                Text(
+                                SelectableText(
                                   item.value,
                                   style: TextStyle(
                                     fontSize: 10,

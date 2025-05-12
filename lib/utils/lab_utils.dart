@@ -27,6 +27,10 @@ class ResearcherCollaborationOverview {
 }
 
 class LabUtils {
+  //----------------------------------------------------------------------------
+  // DATA PROCESSING - PUBLICATIONS AND RESEARCHERS
+  //----------------------------------------------------------------------------
+
   static Map<Researcher, Set<Publication>> getResearcherToPublicationsMap(List<Publication> publications) {
     final Map<Researcher, Set<Publication>> researcherToPublications = {};
 
@@ -80,6 +84,10 @@ class LabUtils {
     return completeMap;
   }
 
+  //----------------------------------------------------------------------------
+  // TITLE NORMALIZATION AND PUBLICATION FILTERING
+  //----------------------------------------------------------------------------
+
   /// Normalizes a title by converting to lowercase and removing non-alphanumeric characters
   static String normalizeTitle(String title) {
     return title.toLowerCase().replaceAll(RegExp(r'[^a-z0-9]'), '');
@@ -117,52 +125,9 @@ class LabUtils {
     return publications.sorted();
   }
 
-  /// Returns a list of recent lab collaborators with their most recent collaboration year
-  static List<ResearcherYear> getRecentCollaborators(Researcher researcher, Iterable<Publication> publications) {
-    final sortedPublications = publications.sorted();
-
-    // Map to track the most recent collaborators we've seen
-    final recentCollaborators = <Researcher, int>{};
-
-    // Loop through publications in order of recency
-    for (final publication in sortedPublications) {
-      // Skip if this publication doesn't have researchers listed
-      if (publication.researchers == null || publication.researchers!.isEmpty) continue;
-
-      // Find collaborators in this publication
-      for (final labMember in publication.researchers!) {
-        // Skip if this is the researcher we're looking at
-        if (labMember == researcher) continue;
-
-        if (!recentCollaborators.containsKey(labMember)) {
-          recentCollaborators[labMember] = publication.year;
-        }
-      }
-    }
-
-    return recentCollaborators.entries.map((entry) => ResearcherYear(entry.key, entry.value)).toList();
-  }
-
-  static Map<PublicationType, int> getPublicationsByType(Iterable<Publication> publications) {
-    final typeCount = <PublicationType, int>{};
-
-    for (final pub in publications) {
-      typeCount.update(pub.type, (count) => count + 1, ifAbsent: () => 1);
-    }
-
-    // Sort by count (descending)
-    final sortedEntries = typeCount.entries.toList()
-      ..sort((a, b) => b.value.compareTo(a.value));
-
-    return Map.fromEntries(sortedEntries);
-  }
-
-  /// Formats a publication type for display
-  static String formatPublicationType(BuildContext context, PublicationType type) {
-    // Convert enum to string for use with localization
-    final typeString = type.toString().split('.').last;
-    return AppLocalizations.of(context)!.publicationType(typeString);
-  }
+  //----------------------------------------------------------------------------
+  // RESEARCHER CLASSIFICATION FUNCTIONS
+  //----------------------------------------------------------------------------
 
   static bool isStudent(Researcher researcher) {
     return researcher is StudentResearcher;
@@ -196,6 +161,24 @@ class LabUtils {
     return isFaculty(researcher) && (researcher as ProfessorResearcher).isEmeritus;
   }
 
+  //----------------------------------------------------------------------------
+  // PUBLICATION CLASSIFICATION FUNCTIONS
+  //----------------------------------------------------------------------------
+
+  static Map<PublicationType, int> getPublicationsByType(Iterable<Publication> publications) {
+    final typeCount = <PublicationType, int>{};
+
+    for (final pub in publications) {
+      typeCount.update(pub.type, (count) => count + 1, ifAbsent: () => 1);
+    }
+
+    // Sort by count (descending)
+    final sortedEntries = typeCount.entries.toList()
+      ..sort((a, b) => b.value.compareTo(a.value));
+
+    return Map.fromEntries(sortedEntries);
+  }
+
   static bool isCurrentStudentPaper(Publication publication) {
     return publication.researchers != null && publication.researchers!.any(isCurrentStudent);
   }
@@ -224,6 +207,44 @@ class LabUtils {
     return publication.researchers != null && publication.researchers!.any(isEmeritusFaculty);
   }
 
+  static bool isInformalPublication(Publication publication) {
+    return (publication.publtype != null && publication.publtype == 'informal') || publication.type == PublicationType.phdthesis;
+  }
+
+  static bool isFormalPublication(Publication publication) {
+    return !isInformalPublication(publication);
+  }
+
+  //----------------------------------------------------------------------------
+  // COLLABORATION FUNCTIONS
+  //----------------------------------------------------------------------------
+
+  /// Returns a list of recent lab collaborators with their most recent collaboration year
+  static List<ResearcherYear> getRecentCollaborators(Researcher researcher, Iterable<Publication> publications) {
+    final sortedPublications = publications.sorted();
+
+    // Map to track the most recent collaborators we've seen
+    final recentCollaborators = <Researcher, int>{};
+
+    // Loop through publications in order of recency
+    for (final publication in sortedPublications) {
+      // Skip if this publication doesn't have researchers listed
+      if (publication.researchers == null || publication.researchers!.isEmpty) continue;
+
+      // Find collaborators in this publication
+      for (final labMember in publication.researchers!) {
+        // Skip if this is the researcher we're looking at
+        if (labMember == researcher) continue;
+
+        if (!recentCollaborators.containsKey(labMember)) {
+          recentCollaborators[labMember] = publication.year;
+        }
+      }
+    }
+
+    return recentCollaborators.entries.map((entry) => ResearcherYear(entry.key, entry.value)).toList();
+  }
+
   static bool isCollaboration(Publication publication) {
     return publication.researchers != null && publication.researchers!.length >= 2;
   }
@@ -249,12 +270,15 @@ class LabUtils {
     return overviewList;
   }
 
-  static bool isInformalPublication(Publication publication) {
-    return (publication.publtype != null && publication.publtype == 'informal') || publication.type == PublicationType.phdthesis;
-  }
+  //----------------------------------------------------------------------------
+  // FORMATTING AND UTILITY FUNCTIONS
+  //----------------------------------------------------------------------------
 
-  static bool isFormalPublication(Publication publication) {
-    return !isInformalPublication(publication);
+  /// Formats a publication type for display
+  static String formatPublicationType(BuildContext context, PublicationType type) {
+    // Convert enum to string for use with localization
+    final typeString = type.toString().split('.').last;
+    return AppLocalizations.of(context)!.publicationType(typeString);
   }
 
   static final numberFormatter = NumberFormat.decimalPatternDigits(
@@ -266,6 +290,10 @@ class LabUtils {
   static String formatNumber(int number) {
     return numberFormatter.format(number);
   }
+
+  //----------------------------------------------------------------------------
+  // UI COMPONENTS AND STYLING
+  //----------------------------------------------------------------------------
 
   /// Returns a common container decoration used throughout the app
   static BoxDecoration getCommonContainerDecoration(BuildContext context) {
@@ -332,6 +360,10 @@ class LabUtils {
       ],
     );
   }
+
+  //----------------------------------------------------------------------------
+  // CHART UTILITIES AND WIDGETS
+  //----------------------------------------------------------------------------
 
   /// Calculates the optimal interval for grid lines based on the maximum value
   /// This prevents the chart from having too many grid lines when the values are large
@@ -515,6 +547,10 @@ class LabUtils {
     );
   }
 
+  //----------------------------------------------------------------------------
+  // CARD WIDGETS
+  //----------------------------------------------------------------------------
+
   /// Creates a card for displaying a list of publications
   /// Used for sections like Recent Publications, Recent Student Papers, etc.
   static Widget buildPublicationsCard({
@@ -648,6 +684,10 @@ class LabUtils {
     );
   }
 
+  //----------------------------------------------------------------------------
+  // TEXT EMPHASIS
+  //----------------------------------------------------------------------------
+
   /// Creates text with emphasis on specific name mentions
   /// Emphasizes 'Ofek Gila' in the text with a different color and bold style
   static Widget emphasizedText(BuildContext context, String text, {TextStyle? style, int? maxLines}) {
@@ -685,6 +725,10 @@ class LabUtils {
       );
     }
   }
+
+  //----------------------------------------------------------------------------
+  // SPECIALIZED CHARTS
+  //----------------------------------------------------------------------------
 
   /// Creates a stacked horizontal bar chart for displaying publication types distribution
   /// with a logarithmic y-axis scale

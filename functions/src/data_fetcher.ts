@@ -261,7 +261,11 @@ const getLabStudents = async () => {
 	const doctorateStudents = await getDoctorateStudents();
 	const currentStudents = await getCurrentStudents();
 	const currentStudentsNoDuplicates = currentStudents.filter(student => !doctorateStudents.some(doctorateStudent => doctorateStudent.name === student.name));
-	return [...doctorateStudents, ...currentStudentsNoDuplicates];
+
+	// remove Jonathan Kent Martin
+	const adjustedDoctorateStudents = doctorateStudents.filter(student => student.name !== "Jonathan Kent Martin");
+
+	return [...adjustedDoctorateStudents, ...currentStudentsNoDuplicates];
 }
 
 const getProfessors = async () => {
@@ -380,6 +384,14 @@ const getProfessors = async () => {
 			}
 		}
 	}
+
+	// add Scott Huddleston
+	professors.push({
+		name: "Scott Huddleston",
+		title: "Assistant Professor",
+		isEmeritus: true,
+		url: "https://www.linkedin.com/in/scott-huddleston-ba24461/",
+	});
 
 	return professors;
 }

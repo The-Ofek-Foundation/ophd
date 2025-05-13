@@ -5,6 +5,117 @@ class MaterialTheme {
 
   const MaterialTheme(this.textTheme);
 
+  // --- OKABE-ITO INSPIRED CHART COLORS (7 Colors) ---
+  // Light Mode
+  static const Color okabeItoOrangeLight = Color(0xFFE69F00);
+  static const Color okabeItoSkyBlueLight = Color(0xFF56B4E9);
+  static const Color okabeItoBluishGreenLight = Color(0xFF009E73);
+  static const Color okabeItoYellowLight = Color(0xFFF0E442);
+  static const Color okabeItoBlueLight = Color(0xFF0072B2);
+  static const Color okabeItoVermillionLight = Color(0xFFD55E00);
+  static const Color okabeItoReddishPurpleLight = Color(0xFFCC79A7);
+
+  // Dark Mode
+  static const Color okabeItoOrangeDark = Color(0xFFF3A712);
+  static const Color okabeItoSkyBlueDark = Color(0xFF65C2F0);
+  static const Color okabeItoBluishGreenDark = Color(0xFF00B08A);
+  static const Color okabeItoYellowDark = Color(0xFFF8EB56);
+  static const Color okabeItoBlueDark = Color(0xFF0082C8);
+  static const Color okabeItoVermillionDark = Color(0xFFE06C0F);
+  static const Color okabeItoReddishPurpleDark = Color(0xFFD88BCF);
+
+  List<Color> getOkabeItoChartColorList(BuildContext context) {
+    final brightness = Theme.of(context).brightness;
+    if (brightness == Brightness.dark) {
+      return [
+        okabeItoReddishPurpleDark, // 7
+        okabeItoBluishGreenDark, // 3
+        okabeItoOrangeDark,      // 1
+        okabeItoVermillionDark,  // 6
+        okabeItoSkyBlueDark,     // 2
+        okabeItoYellowDark,      // 4
+        okabeItoBlueDark,        // 5
+      ];
+    } else {
+      return [
+        okabeItoReddishPurpleLight,
+        okabeItoBluishGreenLight,
+        okabeItoOrangeLight,
+        okabeItoVermillionLight,
+        okabeItoSkyBlueLight,
+        okabeItoYellowLight,
+        okabeItoBlueLight,
+      ];
+    }
+  }
+
+  // --- REVISED PASTEL OKABE-ITO INSPIRED CHART COLORS (7 Colors) ---
+  // Light Mode - Pastel & Shifted
+  static const Color pastelChartColor1Light = Color(0xFFF3C88C); // Soft Gold
+  static const Color pastelChartColor2Light = Color(0xFF99D6F0); // Pastel Sky Blue
+  static const Color pastelChartColor3Light = Color(0xFF87D9C2); // Minty Aqua
+  static const Color pastelChartColor4Light = Color(0xFFFDF0A0); // Pale Yellow
+  static const Color pastelChartColor5Light = Color(0xFF8EADDD); // Dusty Blue
+  static const Color pastelChartColor6Light = Color(0xFFFFAAA5); // Pastel Coral
+  static const Color pastelChartColor7Light = Color(0xFFE0B6D9); // Soft Lavender
+
+  // Dark Mode - Pastel & Shifted (adjusted for dark backgrounds)
+  static const Color pastelChartColor1Dark = Color(0xFFE7BC7F); // Soft Gold
+  static const Color pastelChartColor2Dark = Color(0xFF8BC9E6); // Pastel Sky Blue
+  static const Color pastelChartColor3Dark = Color(0xFF75C7B0); // Minty Aqua
+  static const Color pastelChartColor4Dark = Color(0xFFFBEAA0); // Pale Yellow
+  static const Color pastelChartColor5Dark = Color(0xFF82A0D3); // Dusty Blue
+  static const Color pastelChartColor6Dark = Color(0xFFF89F99); // Pastel Coral
+  static const Color pastelChartColor7Dark = Color(0xFFD8A9CF); // Soft Lavender
+
+  static const Color onPastelChartColor = Color(0xFF000000); // Text color for pastel chart colors
+
+  List<Color> getPastelChartColorList(BuildContext context) {
+    final brightness = Theme.of(context).brightness;
+    if (brightness == Brightness.dark) {
+      return [
+        pastelChartColor7Dark,
+        pastelChartColor3Dark,
+        pastelChartColor1Dark,
+        pastelChartColor6Dark,
+        pastelChartColor2Dark,
+        pastelChartColor4Dark,
+        pastelChartColor5Dark,
+      ];
+    } else {
+      return [
+        pastelChartColor7Light,
+        pastelChartColor3Light,
+        pastelChartColor1Light,
+        pastelChartColor6Light,
+        pastelChartColor2Light,
+        pastelChartColor4Light,
+        pastelChartColor5Light,
+      ];
+    }
+  }
+
+  /// Returns a pastel chart color from the revised palette
+  /// based on the given index.
+  /// Uses modulus to cycle through colors if index exceeds the palette size (7).
+  Color getPastelChartColorByIndex(BuildContext context, int index) {
+    final chartColors = getPastelChartColorList(context);
+    if (chartColors.isEmpty) {
+      // Fallback, though it shouldn't happen with this setup.
+      return Colors.grey;
+    }
+    return chartColors[index % chartColors.length];
+  }
+
+  Color getOkabeItoChartColorByIndex(BuildContext context, int index) {
+    final chartColors = getOkabeItoChartColorList(context);
+    if (chartColors.isEmpty) {
+      // Fallback if the list is somehow empty, though it shouldn't be.
+      return Colors.grey;
+    }
+    return chartColors[index % chartColors.length];
+  }
+
   static ColorScheme lightScheme() {
     return const ColorScheme(
       brightness: Brightness.light,

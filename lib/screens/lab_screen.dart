@@ -10,9 +10,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:graphview/GraphView.dart';
 import 'package:ophd/api/fetch_publications.dart';
 import 'package:ophd/api/fetch_researchers.dart';
-import 'package:ophd/data/okabe_ito.dart';
 import 'package:ophd/models/publication.dart';
 import 'package:ophd/models/researcher.dart';
+import 'package:ophd/theme.dart';
 import 'package:ophd/utils/lab_utils.dart';
 import 'package:ophd/utils/screen_utils.dart';
 import 'package:ophd/widgets/card_header_icon.dart';
@@ -74,6 +74,7 @@ class _LabPageState extends State<LabPage> {
   Map<Researcher, Set<Publication>>? researcherToPublicationsMap;
   bool isLoading = true;
   String? errorMessage;
+  final bool debug = false;
 
   @override
   void initState() {
@@ -81,11 +82,23 @@ class _LabPageState extends State<LabPage> {
     _loadData();
   }
 
-  Future<void> _loadData() async {
+  Future<void> _loadData({bool forceUpdate = false}) async {
     setState(() {
       isLoading = true;
       errorMessage = null;
     });
+
+    if (debug && !forceUpdate) {
+      final allResearchers = LabScreenCache.getSampleAllResearchers();
+      final publications = LabScreenCache.getSamplePublications(allResearchers);
+      setState(() {
+        this.allResearchers = allResearchers;
+        this.publications = publications;
+        researcherToPublicationsMap = LabUtils.getResearcherToPublicationsMap(publications);
+        isLoading = false;
+      });
+      return;
+    }
 
     try {
       // First fetch researchers
@@ -200,7 +213,15 @@ class _LabPageState extends State<LabPage> {
                 },
                 tooltip: 'Sync Database',
                 key: UniqueKey(),
-              )
+              ),
+            if (debug)
+              RefreshButton(
+                onPressed: () async {
+                  await _loadData(forceUpdate: true);
+                },
+                tooltip: 'Fetch Real Data',
+                key: UniqueKey(),
+              ),
           ],
         ),
         const SizedBox(height: 16),
@@ -321,7 +342,7 @@ class LabGraph extends StatefulWidget {
 class _LabGraphState extends State<LabGraph> {
   Set<ProfessorResearcher> selectedProfessors = {};
   Map<ProfessorResearcher, Color> professorColors = {};
-  Set<Color> remainingColors = okabe.toSet();
+  late Set<Color> remainingColors;
   Map<Researcher, Map<Researcher, int>> researcherToWeightedEdgesMap = {};
   Set<StudentResearcher> unconnectedStudents = {};
   bool isLoading = true;
@@ -342,6 +363,10 @@ class _LabGraphState extends State<LabGraph> {
     if (!mounted) return;
 
     setState(() {
+      // Initialize the remainingColors set with Okabe-Ito colors
+      final materialTheme = MaterialTheme(Theme.of(context).textTheme);
+      remainingColors = materialTheme.getOkabeItoChartColorList(context).toSet();
+
       // Update the weighted collaborators map
       final researchers = <Researcher>{...widget.allResearchers.students};
       researchers.addAll(selectedProfessors);
@@ -441,6 +466,12 @@ class _LabGraphState extends State<LabGraph> {
 
   void _updateGraph() {
     setState(() {
+      // Make sure remainingColors is initialized
+      if (remainingColors.isEmpty) {
+        final materialTheme = MaterialTheme(Theme.of(context).textTheme);
+        remainingColors = materialTheme.getOkabeItoChartColorList(context).toSet();
+      }
+
       // Update the weighted collaborators map when professors are selected/deselected
       final researchers = <Researcher>{...widget.allResearchers.students};
       researchers.addAll(selectedProfessors);
@@ -545,7 +576,7 @@ class _LabGraphState extends State<LabGraph> {
                                 professorColors[researcher] = color;
 
                                 if (remainingColors.isEmpty) {
-                                  remainingColors = okabe.toSet();
+                                  remainingColors = MaterialTheme(Theme.of(context).textTheme).getOkabeItoChartColorList(context).toSet();
                                 }
                               } else {
                                 selectedProfessors.remove(researcher);
@@ -1209,6 +1240,7 @@ class LabHighlights extends StatelessWidget {
               _buildCollaborationsPerYearCard(context, uniqueCollaborations),
               _buildPublicationTypesPieChartCard(context, uniquePublications),
               _buildGraduationsPerYearCard(context),
+              _buildLabMembersDonutChartCard(context),
             ];
 
             // Build all other cards for the main grid
@@ -1293,13 +1325,15 @@ class LabHighlights extends StatelessWidget {
       publicationsPerYear.update(pub.year, (value) => value + 1, ifAbsent: () => 1);
     }
 
+    final materialTheme = MaterialTheme(Theme.of(context).textTheme);
+
     return LabUtils.buildYearlyLineChartCard(
       context: context,
       icon: Icons.show_chart,
       title: 'Publications Per Year',
       dataByYear: publicationsPerYear,
-      lineColor: Theme.of(context).colorScheme.secondary,
-      tooltipTextColor: Theme.of(context).colorScheme.onSecondary,
+      lineColor: materialTheme.getPastelChartColorByIndex(context, 0),
+      tooltipTextColor: Colors.white,
       yAxisLabel: 'Publications',
       height: 308,
     );
@@ -1314,13 +1348,15 @@ class LabHighlights extends StatelessWidget {
       collaborationsPerYear.update(pub.year, (value) => value + 1, ifAbsent: () => 1);
     }
 
+    final materialTheme = MaterialTheme(Theme.of(context).textTheme);
+
     return LabUtils.buildYearlyLineChartCard(
       context: context,
       icon: Icons.show_chart,
       title: 'Collaborations Per Year',
       dataByYear: collaborationsPerYear,
-      lineColor: Theme.of(context).colorScheme.secondary,
-      tooltipTextColor: Theme.of(context).colorScheme.onSecondary,
+      lineColor: materialTheme.getPastelChartColorByIndex(context, 1),
+      tooltipTextColor: Colors.white,
       yAxisLabel: 'Collaborations',
     );
   }
@@ -1336,13 +1372,15 @@ class LabHighlights extends StatelessWidget {
       }
     }
 
+    final materialTheme = MaterialTheme(Theme.of(context).textTheme);
+
     return LabUtils.buildYearlyLineChartCard(
       context: context,
       icon: Icons.school,
       title: 'Graduations Per Year',
       dataByYear: graduationsPerYear,
-      lineColor: Theme.of(context).colorScheme.tertiary,
-      tooltipTextColor: Theme.of(context).colorScheme.onTertiary,
+      lineColor: materialTheme.getPastelChartColorByIndex(context, 2),
+      tooltipTextColor: Colors.white,
       yAxisLabel: 'Graduations',
     );
   }
@@ -1660,6 +1698,42 @@ class LabHighlights extends StatelessWidget {
       icon: Icons.bar_chart,
       title: 'Publication Types Distribution',
       publicationsByType: publicationsByType,
+    );
+  }
+
+  Widget _buildLabMembersDonutChartCard(BuildContext context) {
+    // Count different types of lab members
+    final currentStudentCount = allResearchers.students.where(LabUtils.isCurrentStudent).length;
+    final graduatedStudentCount = allResearchers.students.where(LabUtils.isNonPostDocGraduated).length;
+    final postDocCount = allResearchers.students.where(LabUtils.isPostDoc).length;
+    final currentFacultyCount = allResearchers.professors.where(LabUtils.isCurrentFaculty).length;
+    final emeritusFacultyCount = allResearchers.professors.where(LabUtils.isEmeritusFaculty).length;
+
+    // Create data for the donut chart
+    final data = [
+      MapEntry('Current Students', currentStudentCount),
+      MapEntry('Graduated Students', graduatedStudentCount),
+      MapEntry('Postdocs', postDocCount),
+      MapEntry('Current Faculty', currentFacultyCount),
+      MapEntry('Emeritus Faculty', emeritusFacultyCount),
+    ];
+
+    // Colors for the chart sections
+    // final colors = [
+    //   Theme.of(context).colorScheme.primary,
+    //   Theme.of(context).colorScheme.secondary,
+    //   Theme.of(context).colorScheme.tertiary,
+    //   Theme.of(context).colorScheme.error,
+    //   Theme.of(context).colorScheme.surfaceTint,
+    // ];
+
+    return LabUtils.buildDonutChartCard(
+      context: context,
+      icon: Icons.pie_chart,
+      title: 'Lab Member Distribution',
+      subtitle: 'Breakdown of lab members by category',
+      data: data,
+      // colors: colors,
     );
   }
 

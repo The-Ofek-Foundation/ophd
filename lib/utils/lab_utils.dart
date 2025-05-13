@@ -9,6 +9,7 @@ import 'package:ophd/models/researcher.dart';
 import 'package:collection/collection.dart';
 
 import 'package:ophd/generated/l10n/app_localizations.dart';
+import 'package:ophd/theme.dart';
 
 class ResearcherYear {
   final Researcher researcher;
@@ -730,6 +731,28 @@ class LabUtils {
   // SPECIALIZED CHARTS
   //----------------------------------------------------------------------------
 
+  /// Creates a donut chart for displaying categorical data with labels on the right side
+  /// Used for displaying lab member distribution, publication types, etc.
+  static Widget buildDonutChartCard({
+    required BuildContext context,
+    required IconData icon,
+    required String title,
+    required List<MapEntry<String, int>> data,
+    // required List<Color> colors,
+    double height = 300,
+    String subtitle = '',
+  }) {
+    return _DonutChartCard(
+      context: context,
+      icon: icon,
+      title: title,
+      data: data,
+      // colors: colors,
+      height: height,
+      subtitle: subtitle,
+    );
+  }
+
   /// Creates a stacked horizontal bar chart for displaying publication types distribution
   /// with a logarithmic y-axis scale
   static Widget buildPublicationTypesBarChartCard({
@@ -744,16 +767,8 @@ class LabUtils {
       // Add 1 to avoid log(0) which is undefined
       return value <= 0 ? 0 : math.log(value) / math.ln10;
     }
-    // Define colors for each publication type
-    final typeColors = {
-      PublicationType.article: Theme.of(context).colorScheme.primary,
-      PublicationType.inproceedings: Theme.of(context).colorScheme.secondary,
-      PublicationType.proceedings: Theme.of(context).colorScheme.tertiary,
-      PublicationType.book: Theme.of(context).colorScheme.error,
-      PublicationType.incollection: Theme.of(context).colorScheme.surfaceTint,
-      PublicationType.phdthesis: Theme.of(context).colorScheme.inversePrimary,
-      PublicationType.unknown: Theme.of(context).colorScheme.outline,
-    };
+    // Use Okabe-Ito colors for publication types
+    final materialTheme = MaterialTheme(Theme.of(context).textTheme);
 
     // Calculate total publications for percentage
     final totalPublications = publicationsByType.values.fold(0, (sum, count) => sum + count);
@@ -784,7 +799,7 @@ class LabUtils {
         BarChartRodData(
           fromY: 0,
           toY: count.toDouble(),
-          color: typeColors[type] ?? Colors.grey,
+          color: materialTheme.getOkabeItoChartColorByIndex(context, i),
           width: 20,
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(4),
@@ -937,7 +952,6 @@ class LabUtils {
                             borderData: FlBorderData(show: false),
                             barGroups: List.generate(sortedTypes.length, (index) {
                               final entry = sortedTypes[index];
-                              final type = entry.key;
                               final count = entry.value;
 
                               return BarChartGroupData(
@@ -946,7 +960,7 @@ class LabUtils {
                                   BarChartRodData(
                                     // Apply logarithmic transformation to the bar height
                                     toY: logTransform(count.toDouble()),
-                                    color: typeColors[type] ?? Colors.grey,
+                                    color: materialTheme.getPastelChartColorByIndex(context, index),
                                     width: 30,
                                     borderRadius: BorderRadius.circular(4),
                                   ),
@@ -969,7 +983,6 @@ class LabUtils {
                           children: legendItems.asMap().entries.map((entry) {
                             final index = entry.key;
                             final item = entry.value;
-                            final type = sortedTypes[index].key;
                             return Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
@@ -977,7 +990,7 @@ class LabUtils {
                                   width: 12,
                                   height: 12,
                                   decoration: BoxDecoration(
-                                    color: typeColors[type] ?? Colors.grey,
+                                    color: materialTheme.getPastelChartColorByIndex(context, index),
                                     shape: BoxShape.rectangle,
                                     borderRadius: BorderRadius.circular(2),
                                   ),
@@ -999,6 +1012,241 @@ class LabUtils {
                               ],
                             );
                           }).toList(),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// A stateful widget to handle hover interactions for the donut chart
+class _DonutChartCard extends StatefulWidget {
+  final BuildContext context;
+  final IconData icon;
+  final String title;
+  final List<MapEntry<String, int>> data;
+  // final List<Color> colors;
+  final double height;
+  final String subtitle;
+
+  const _DonutChartCard({
+    required this.context,
+    required this.icon,
+    required this.title,
+    required this.data,
+    // required this.colors,
+    required this.height,
+    required this.subtitle,
+  });
+
+  @override
+  State<_DonutChartCard> createState() => _DonutChartCardState();
+}
+
+class _DonutChartCardState extends State<_DonutChartCard> {
+  int touchedIndex = -1;
+
+  @override
+  Widget build(BuildContext context) {
+    final materialTheme = MaterialTheme(Theme.of(context).textTheme);
+
+    // Create pie chart sections
+    final sections = <PieChartSectionData>[];
+    final legendItems = <MapEntry<String, String>>[];
+
+    // Calculate total for percentages
+    final total = widget.data.fold(0, (sum, item) => sum + item.value);
+
+    // Create sections and legend items
+    for (int i = 0; i < widget.data.length; i++) {
+      final item = widget.data[i];
+      final percentage = (item.value / total) * 100;
+      final isTouched = i == touchedIndex;
+      final radius = isTouched ? 70.0 : 60.0;
+      final fontSize = isTouched ? 14.0 : 12.0;
+
+      sections.add(
+        PieChartSectionData(
+          value: item.value.toDouble(),
+          title: '${LabUtils.formatNumber(item.value)}\n${percentage.toStringAsFixed(1)}%',
+          color: materialTheme.getPastelChartColorByIndex(context, i),
+          radius: radius,
+          titleStyle: TextStyle(
+            fontSize: fontSize,
+            fontWeight: FontWeight.bold,
+            // color: Colors.white,
+            color: MaterialTheme.onPastelChartColor,
+          ),
+          showTitle: true,
+        ),
+      );
+
+      legendItems.add(MapEntry(
+        item.key,
+        '${LabUtils.formatNumber(item.value)} (${percentage.toStringAsFixed(1)}%)'
+      ));
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: LabUtils.getCommonContainerDecoration(context),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(
+            widget.icon,
+            size: 24,
+            color: Theme.of(context).colorScheme.secondary,
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SelectableText(
+                  widget.title,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
+                ),
+                if (widget.subtitle.isNotEmpty) ...[
+                  const SizedBox(height: 4),
+                  SelectableText(
+                    widget.subtitle,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.secondary,
+                      fontFamily: 'RobotoMono',
+                    ),
+                  ),
+                ],
+                const SizedBox(height: 16),
+                SizedBox(
+                  height: widget.height,
+                  child: Row(
+                    children: [
+                      // Donut chart
+                      Expanded(
+                        flex: 3,
+                        child: PieChart(
+                          PieChartData(
+                            sectionsSpace: 2,
+                            centerSpaceRadius: 60, // This creates the donut hole
+                            pieTouchData: PieTouchData(
+                              enabled: true,
+                              touchCallback: (FlTouchEvent event, pieTouchResponse) {
+                                setState(() {
+                                  if (pieTouchResponse == null ||
+                                      pieTouchResponse.touchedSection == null) {
+                                    touchedIndex = -1;
+                                    return;
+                                  }
+                                  touchedIndex = pieTouchResponse.touchedSection!.touchedSectionIndex;
+                                });
+                              },
+                            ),
+                            sections: sections.asMap().map((index, section) {
+                              // Add tooltip data to each section
+                              final item = widget.data[index];
+                              final percentage = (item.value / total) * 100;
+
+                              return MapEntry(
+                                index,
+                                PieChartSectionData(
+                                  value: section.value,
+                                  title: section.title,
+                                  color: section.color,
+                                  radius: section.radius,
+                                  titleStyle: section.titleStyle,
+                                  showTitle: section.showTitle,
+                                  badgeWidget: index == touchedIndex ? Center(
+                                    child: Container(
+                                      padding: const EdgeInsets.all(8),
+                                      decoration: BoxDecoration(
+                                        color: Colors.black87,
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
+                                            item.key,
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 4),
+                                          Text(
+                                            '${LabUtils.formatNumber(item.value)} (${percentage.toStringAsFixed(1)}%)',
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 12,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ) : null,
+                                  badgePositionPercentageOffset: 0.8,
+                                ),
+                              );
+                            }).values.toList(),
+                          ),
+                        ),
+                      ),
+
+                      // Legend on the right side
+                      Expanded(
+                        flex: 2,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 16),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: legendItems.asMap().entries.map((entry) {
+                              final index = entry.key;
+                              final item = entry.value;
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      width: 16,
+                                      height: 16,
+                                      decoration: BoxDecoration(
+                                        color: materialTheme.getPastelChartColorByIndex(context, index),
+                                        shape: BoxShape.circle,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      child: SelectableText(
+                                        item.key,
+                                        style: const TextStyle(fontSize: 14),
+                                      ),
+                                    ),
+                                    SelectableText(
+                                      item.value,
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                        color: Theme.of(context).colorScheme.secondary,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }).toList(),
+                          ),
                         ),
                       ),
                     ],

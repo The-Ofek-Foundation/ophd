@@ -74,7 +74,7 @@ class _LabPageState extends State<LabPage> {
   Map<Researcher, Set<Publication>>? researcherToPublicationsMap;
   bool isLoading = true;
   String? errorMessage;
-  final bool debug = false;
+  final bool debug = true;
 
   @override
   void initState() {
@@ -1287,7 +1287,7 @@ class LabHighlights extends StatelessWidget {
     final List<Widget> cards = [];
 
     // Lab overview stats
-    cards.add(_buildLabOverviewStatsCard(context, uniquePublications.length, uniqueCollaborations.length));
+    // cards.add(_buildLabOverviewStatsCard(context, uniquePublications.length, uniqueCollaborations.length));
 
     cards.add(_buildRecentGraduatesCard(context));
 

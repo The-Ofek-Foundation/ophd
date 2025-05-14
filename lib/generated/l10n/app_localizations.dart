@@ -419,6 +419,12 @@ abstract class AppLocalizations {
   /// **'Graduation Year'**
   String get graduationYear;
 
+  /// No description provided for @advisorAndGraduation.
+  ///
+  /// In en, this message translates to:
+  /// **'Graduation Details'**
+  String get advisorAndGraduation;
+
   /// No description provided for @thesisTitle.
   ///
   /// In en, this message translates to:

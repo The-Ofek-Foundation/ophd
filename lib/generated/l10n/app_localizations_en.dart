@@ -259,6 +259,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get graduationYear => 'Graduation Year';
 
   @override
+  String get advisorAndGraduation => 'Graduation Details';
+
+  @override
   String get thesisTitle => 'Thesis Title';
 
   @override

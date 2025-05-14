@@ -885,24 +885,35 @@ class ResearcherDetailsModal extends StatelessWidget {
     // Add researcher-specific details
     if (researcher is StudentResearcher) {
       final student = researcher as StudentResearcher;
-      if (student.advisors != null && student.advisors!.isNotEmpty) {
-        details.add(LabUtils.buildLabelValueCard(
-          context: context,
-          icon: Icons.supervisor_account,
-          title: AppLocalizations.of(context)!.advisor(student.advisors!.length),
-          items: [MapEntry('', student.advisors!.map((a) => a.name).join(", "))],
-          maxItems: 1,
-          emphasizeNames: false,
-        ));
-      }
+      final bool hasAdvisor = student.advisors != null && student.advisors!.isNotEmpty;
+      final bool hasGraduation = student.hasDoctorate;
 
-      if (student.hasDoctorate) {
+      // Only add the combined card if at least one of advisor or graduation info exists
+      if (hasAdvisor || hasGraduation) {
+        // Create the combined card for advisor and graduation year
         details.add(LabUtils.buildLabelValueCard(
           context: context,
           icon: Icons.school,
-          title: AppLocalizations.of(context)!.graduationYear,
-          items: [MapEntry('', student.year != null ? '${student.year!} (PhD)' : 'Unknown (PhD)')],
-          maxItems: 1,
+          title: hasAdvisor && hasGraduation
+              ? AppLocalizations.of(context)!.advisorAndGraduation
+              : (hasAdvisor
+                  ? AppLocalizations.of(context)!.advisor(student.advisors!.length)
+                  : AppLocalizations.of(context)!.graduationYear),
+          items: [
+            // If has advisor info, add it as the first item
+            if (hasAdvisor)
+              MapEntry(
+                AppLocalizations.of(context)!.advisor(student.advisors!.length),
+                student.advisors!.map((a) => a.name).join(", ")
+              ),
+            // If has graduation info, add it as the second item
+            if (hasGraduation)
+              MapEntry(
+                AppLocalizations.of(context)!.graduationYear,
+                student.year != null ? '${student.year!} (PhD)' : 'Unknown (PhD)'
+              ),
+          ],
+          maxItems: 2, // Allow up to 2 items (advisor and graduation)
           emphasizeNames: false,
         ));
       }

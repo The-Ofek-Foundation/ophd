@@ -274,6 +274,9 @@ class AppLocalizationsHe extends AppLocalizations {
   String get graduationYear => 'שנת סיום';
 
   @override
+  String get advisorAndGraduation => 'פרטי סיום';
+
+  @override
   String get thesisTitle => 'כותרת התזה';
 
   @override

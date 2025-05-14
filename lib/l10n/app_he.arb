@@ -179,6 +179,8 @@
 	},
 	"graduationYear": "שנת סיום",
 	"@graduationYear": {},
+	"advisorAndGraduation": "פרטי סיום",
+	"@advisorAndGraduation": {},
 	"thesisTitle": "כותרת התזה",
 	"@thesisTitle": {},
 	"graduateStudents": "תלמידי מחקר",

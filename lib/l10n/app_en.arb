@@ -171,6 +171,8 @@
 	},
 	"graduationYear": "Graduation Year",
 	"@graduationYear": {},
+	"advisorAndGraduation": "Graduation Details",
+	"@advisorAndGraduation": {},
 	"thesisTitle": "Thesis Title",
 	"@thesisTitle": {},
 	"graduateStudents": "Graduate Students",

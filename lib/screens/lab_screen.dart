@@ -74,7 +74,7 @@ class _LabPageState extends State<LabPage> {
   Map<Researcher, Set<Publication>>? researcherToPublicationsMap;
   bool isLoading = true;
   String? errorMessage;
-  final bool debug = true;
+  final bool debug = false;
 
   @override
   void initState() {
@@ -1807,7 +1807,7 @@ class LabHighlights extends StatelessWidget {
       context: context,
       icon: Icons.people,
       title: 'Lab Members Per Paper',
-      subtitle: 'Distribution of papers by number of lab members',
+      subtitle: 'Distribution of papers by number of lab member collaborators',
       data: data,
       categoryIcons: categoryIcons,
     );

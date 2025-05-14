@@ -1231,17 +1231,31 @@ class LabHighlights extends StatelessWidget {
             final uniqueCollaborations = uniquePublications.where(LabUtils.isCollaboration);
 
             // Calculate column counts for both grids
-            int chartCrossAxisCount = max(1, constraints.maxWidth ~/ 600);
+            int chartCrossAxisCount = min(max(1, constraints.maxWidth ~/ 600), 3);
             int mainCrossAxisCount = max(1, constraints.maxWidth ~/ 400);
 
             // Create chart cards separately
-            final List<Widget> chartCards = [
-              _buildPublicationsPerYearCard(context, uniquePublications),
-              _buildCollaborationsPerYearCard(context, uniqueCollaborations),
-              _buildPublicationTypesPieChartCard(context, uniquePublications),
-              _buildGraduationsPerYearCard(context),
-              _buildLabMembersDonutChartCard(context),
-            ];
+            List<Widget> chartCards = [];
+
+            if (chartCrossAxisCount == 2) {
+              chartCards = [
+                _buildPublicationsPerYearCard(context, uniquePublications, 308),
+                _buildPublicationTypesPieChartCard(context, uniquePublications),
+                _buildLabMembersDonutChartCard(context),
+                _buildCollaborationsPerYearCard(context, uniqueCollaborations),
+                _buildLabMembersPerPaperDonutChartCard(context, uniquePublications),
+                _buildGraduationsPerYearCard(context),
+              ];
+            } else {
+              chartCards = [
+                _buildPublicationsPerYearCard(context, uniquePublications, 200),
+                _buildPublicationTypesPieChartCard(context, uniquePublications),
+                _buildCollaborationsPerYearCard(context, uniqueCollaborations),
+                _buildLabMembersDonutChartCard(context),
+                _buildLabMembersPerPaperDonutChartCard(context, uniquePublications),
+                _buildGraduationsPerYearCard(context),
+              ];
+            }
 
             // Build all other cards for the main grid
             final List<Widget> mainCards = _buildHighlightCards(context, uniquePublications, uniqueCollaborations, completeCollaboratorsMap);
@@ -1286,9 +1300,6 @@ class LabHighlights extends StatelessWidget {
   List<Widget> _buildHighlightCards(BuildContext context, Iterable<Publication> uniquePublications, Iterable<Publication> uniqueCollaborations, Map<Researcher, Map<Researcher, int>> completeCollaboratorsMap) {
     final List<Widget> cards = [];
 
-    // Lab overview stats
-    // cards.add(_buildLabOverviewStatsCard(context, uniquePublications.length, uniqueCollaborations.length));
-
     cards.add(_buildRecentGraduatesCard(context));
 
     cards.add(_buildRecentPapersCard(context, Icons.article, 'Recent Current Student Papers', LabUtils.isCurrentStudentPaper, uniquePublications));
@@ -1316,7 +1327,7 @@ class LabHighlights extends StatelessWidget {
     return cards;
   }
 
-  Widget _buildPublicationsPerYearCard(BuildContext context, Iterable<Publication> uniquePublications) {
+  Widget _buildPublicationsPerYearCard(BuildContext context, Iterable<Publication> uniquePublications, double height) {
     // Count publications per year
     final publicationsPerYear = <int, int>{};
 
@@ -1335,7 +1346,7 @@ class LabHighlights extends StatelessWidget {
       lineColor: materialTheme.getPastelChartColorByIndex(context, 0),
       tooltipTextColor: Colors.white,
       yAxisLabel: 'Publications',
-      height: 308,
+      height: height,
     );
   }
 
@@ -1382,31 +1393,6 @@ class LabHighlights extends StatelessWidget {
       lineColor: materialTheme.getPastelChartColorByIndex(context, 2),
       tooltipTextColor: Colors.white,
       yAxisLabel: 'Graduations',
-    );
-  }
-
-  Widget _buildLabOverviewStatsCard(BuildContext context, int publicationCount, int collaborationCount) {
-    final currentStudentCount = allResearchers.students.where(LabUtils.isCurrentStudent).length;
-    final graduatedStudentCount = allResearchers.students.where(LabUtils.isNonPostDocGraduated).length;
-    final postDocCount = allResearchers.students.where(LabUtils.isPostDoc).length;
-    final currentFacultyCount = allResearchers.professors.where(LabUtils.isCurrentFaculty).length;
-    final emeritusFacultyCount = allResearchers.professors.where(LabUtils.isEmeritusFaculty).length;
-
-    return LabUtils.buildLabelValueCard(
-      context: context,
-      icon: Icons.analytics,
-      title: 'Lab Overview',
-      items: [
-        MapEntry('Current Students', LabUtils.formatNumber(currentStudentCount)),
-        MapEntry('Graduated Students', LabUtils.formatNumber(graduatedStudentCount)),
-        MapEntry('Postdocs', LabUtils.formatNumber(postDocCount)),
-        MapEntry('Current Faculty', LabUtils.formatNumber(currentFacultyCount)),
-        MapEntry('Emeritus Faculty', LabUtils.formatNumber(emeritusFacultyCount)),
-        MapEntry('Distinct Publications', LabUtils.formatNumber(publicationCount)),
-        MapEntry('Lab Collaborations', LabUtils.formatNumber(collaborationCount)),
-        MapEntry('Years Active', '1975 – Present'),
-      ],
-      maxItems: 6,
     );
   }
 
@@ -1709,8 +1695,20 @@ class LabHighlights extends StatelessWidget {
     final currentFacultyCount = allResearchers.professors.where(LabUtils.isCurrentFaculty).length;
     final emeritusFacultyCount = allResearchers.professors.where(LabUtils.isEmeritusFaculty).length;
 
-    // Create data for the donut chart
-    final data = [
+    // Define icons for each category
+    final Map<String, IconData> categoryIcons = {
+      'Current Students': Icons.person,
+      'Graduated Students': FontAwesomeIcons.userGraduate,
+      'Postdocs': FontAwesomeIcons.userDoctor,
+      'Current Faculty': FontAwesomeIcons.chalkboardUser,
+      'Emeritus Faculty': FontAwesomeIcons.personCane,
+    };
+
+    // Create data for the donut chart, only including non-empty categories
+    final data = <MapEntry<String, int>>[];
+
+    // Create category info with labels
+    final categoryInfo = [
       MapEntry('Current Students', currentStudentCount),
       MapEntry('Graduated Students', graduatedStudentCount),
       MapEntry('Postdocs', postDocCount),
@@ -1718,14 +1716,12 @@ class LabHighlights extends StatelessWidget {
       MapEntry('Emeritus Faculty', emeritusFacultyCount),
     ];
 
-    // Colors for the chart sections
-    // final colors = [
-    //   Theme.of(context).colorScheme.primary,
-    //   Theme.of(context).colorScheme.secondary,
-    //   Theme.of(context).colorScheme.tertiary,
-    //   Theme.of(context).colorScheme.error,
-    //   Theme.of(context).colorScheme.surfaceTint,
-    // ];
+    // Only add categories with non-zero counts
+    for (final entry in categoryInfo) {
+      if (entry.value > 0) {
+        data.add(entry);
+      }
+    }
 
     return LabUtils.buildDonutChartCard(
       context: context,
@@ -1733,7 +1729,87 @@ class LabHighlights extends StatelessWidget {
       title: 'Lab Member Distribution',
       subtitle: 'Breakdown of lab members by category',
       data: data,
-      // colors: colors,
+      categoryIcons: categoryIcons,
+    );
+  }
+
+  Widget _buildLabMembersPerPaperDonutChartCard(BuildContext context, Iterable<Publication> publications) {
+    // Count papers by number of lab members
+    final Map<int, int> papersByLabMemberCount = {
+      1: 0, // One lab member
+      2: 0, // Two lab members
+      3: 0, // Three lab members
+      4: 0, // Four lab members
+      5: 0, // Five lab members
+      6: 0, // Six or more lab members
+    };
+
+    // Create a set of all lab members for quick lookup
+    final Set<String> allLabMemberNames = <String>{};
+    for (final student in allResearchers.students) {
+      allLabMemberNames.add(student.name);
+    }
+    for (final professor in allResearchers.professors) {
+      allLabMemberNames.add(professor.name);
+    }
+
+    // Count publications by number of lab members
+    for (final pub in publications) {
+      // Count how many authors are lab members
+      int labMemberCount = 0;
+      for (final author in pub.authors) {
+        if (allLabMemberNames.contains(author.name)) {
+          labMemberCount++;
+        }
+      }
+
+      // Only count papers that have at least one lab member
+      if (labMemberCount > 0) {
+        if (labMemberCount >= 6) {
+          papersByLabMemberCount.update(6, (value) => value + 1);
+        } else {
+          papersByLabMemberCount.update(labMemberCount, (value) => value + 1);
+        }
+      }
+    }
+
+    // Create data for the donut chart, only including non-empty categories
+    final data = <MapEntry<String, int>>[];
+
+    // Define labels and icons for each category
+    final Map<String, IconData> categoryIcons = {
+      'One Member': Icons.person,
+      'Two Members': Icons.people,
+      'Three Members': Icons.groups,
+      'Four Members': Icons.diversity_3,
+      'Five Members': Icons.groups_3,
+      'Six+ Members': Icons.diversity_1,
+    };
+
+    // Create category info with labels
+    final categoryInfo = [
+      MapEntry('One Member', papersByLabMemberCount[1]!),
+      MapEntry('Two Members', papersByLabMemberCount[2]!),
+      MapEntry('Three Members', papersByLabMemberCount[3]!),
+      MapEntry('Four Members', papersByLabMemberCount[4]!),
+      MapEntry('Five Members', papersByLabMemberCount[5]!),
+      MapEntry('Six+ Members', papersByLabMemberCount[6]!),
+    ];
+
+    // Only add categories with non-zero counts
+    for (final entry in categoryInfo) {
+      if (entry.value > 0) {
+        data.add(entry);
+      }
+    }
+
+    return LabUtils.buildDonutChartCard(
+      context: context,
+      icon: Icons.people,
+      title: 'Lab Members Per Paper',
+      subtitle: 'Distribution of papers by number of lab members',
+      data: data,
+      categoryIcons: categoryIcons,
     );
   }
 

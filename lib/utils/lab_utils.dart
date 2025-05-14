@@ -738,18 +738,18 @@ class LabUtils {
     required IconData icon,
     required String title,
     required List<MapEntry<String, int>> data,
-    // required List<Color> colors,
-    double height = 300,
+    double height = 276,
     String subtitle = '',
+    Map<String, IconData>? categoryIcons,
   }) {
     return _DonutChartCard(
       context: context,
       icon: icon,
       title: title,
       data: data,
-      // colors: colors,
       height: height,
       subtitle: subtitle,
+      categoryIcons: categoryIcons,
     );
   }
 
@@ -1032,18 +1032,18 @@ class _DonutChartCard extends StatefulWidget {
   final IconData icon;
   final String title;
   final List<MapEntry<String, int>> data;
-  // final List<Color> colors;
   final double height;
   final String subtitle;
+  final Map<String, IconData>? categoryIcons;
 
   const _DonutChartCard({
     required this.context,
     required this.icon,
     required this.title,
     required this.data,
-    // required this.colors,
     required this.height,
     required this.subtitle,
+    this.categoryIcons,
   });
 
   @override
@@ -1081,7 +1081,6 @@ class _DonutChartCardState extends State<_DonutChartCard> {
           titleStyle: TextStyle(
             fontSize: fontSize,
             fontWeight: FontWeight.bold,
-            // color: Colors.white,
             color: MaterialTheme.onPastelChartColor,
           ),
           showTitle: true,
@@ -1219,14 +1218,20 @@ class _DonutChartCardState extends State<_DonutChartCard> {
                                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                                 child: Row(
                                   children: [
-                                    Container(
-                                      width: 16,
-                                      height: 16,
-                                      decoration: BoxDecoration(
-                                        color: materialTheme.getPastelChartColorByIndex(context, index),
-                                        shape: BoxShape.circle,
-                                      ),
-                                    ),
+                                    widget.categoryIcons != null && widget.categoryIcons!.containsKey(item.key)
+                                      ? Icon(
+                                          widget.categoryIcons![item.key],
+                                          size: 20,
+                                          color: materialTheme.getPastelChartColorByIndex(context, index),
+                                        )
+                                      : Container(
+                                          width: 16,
+                                          height: 16,
+                                          decoration: BoxDecoration(
+                                            color: materialTheme.getPastelChartColorByIndex(context, index),
+                                            shape: BoxShape.circle,
+                                          ),
+                                        ),
                                     const SizedBox(width: 8),
                                     Expanded(
                                       child: SelectableText(

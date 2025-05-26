@@ -131,6 +131,51 @@ class AppLocalizationsEn extends AppLocalizations {
   String get labGraphInfo => 'If you are a lab member and have a missing connection, please try syncing the database from the reload button. If that doesn\'t work, it is possible that either your publication is too recent and does not (yet) appear in DBLP, I have an incorrect DBLP ID associated with you, or your publication is in an adjacent field and does not appear in DBLP. In either case, you can contact me to manually update the data.';
 
   @override
+  String get labInfoTitle => 'UCI Theory Lab';
+
+  @override
+  String get labInfoSubtitle => 'Exploring theoretical computer science since 1975';
+
+  @override
+  String get labInfoDescription => 'This page showcases the Theory Lab at the University of California, Irvine. It includes a visualization of lab collaborations, highlights of research achievements, and statistics about publications, students, and faculty members over the years.';
+
+  @override
+  String get loadingLabData => 'Loading Lab Data';
+
+  @override
+  String get syncDatabase => 'Sync Database';
+
+  @override
+  String get fetchRealData => 'Fetch Real Data';
+
+  @override
+  String get tryAgain => 'Try Again';
+
+  @override
+  String get error => 'Error';
+
+  @override
+  String get disclaimerTitle => 'Disclaimer';
+
+  @override
+  String get disclaimerSubtitle => 'Data may not be 100% accurate';
+
+  @override
+  String get disclaimerTextStart => 'Knowledge of lab members is taken from ';
+
+  @override
+  String get disclaimerLinkDavidPage => 'David Eppstein\'s fabulous UCI computer science theory page';
+
+  @override
+  String get disclaimerTextMiddle => '. The rest of the data is taken from ';
+
+  @override
+  String get disclaimerLinkDblp => 'DBLP';
+
+  @override
+  String get disclaimerTextEnd => ', which is a database of computer science publications. DBLP was chosen because it assigns each researcher a unique ID automatically, it includes historical data, and it is fairly comprehensive. Alternatives, such as Google Scholar and ORCID, require the user to manually create their profile. DBLP is not perfect, however, being less comprehensive than Google Scholar, and not containing citation information which would have been nice to have. That being said, if there are any publications or changes you would like me to manually add, please contact me.';
+
+  @override
   String get publicationsTheory => 'Theoretical Computer Science';
 
   @override
@@ -308,17 +353,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get recentPublications => 'Recent Publications';
 
   @override
-  String paperCount(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'papers',
-      one: 'paper',
-    );
-    return '$_temp0';
-  }
-
-  @override
   String get visitWebsite => 'Visit website';
 
   @override
@@ -350,4 +384,190 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noInformationAvailableDescription => 'There is currently no information available about this researcher in our database. This could be because they have not yet published any papers that appear in DBLP, or their publications have not been linked to their profile.';
+
+  @override
+  String get labHighlightsTitle => 'Lab Highlights';
+
+  @override
+  String get labHighlightsSubtitle => 'Key statistics and insights about the lab';
+
+  @override
+  String get mostTotalCollaborations => 'Most Total Collaborations';
+
+  @override
+  String get studentsLabel => 'Students:';
+
+  @override
+  String get labMembersCategorySubtitle => 'Breakdown of lab members by category';
+
+  @override
+  String get papersCollaborationSubtitle => 'Distribution of papers by number of lab member collaborators';
+
+  @override
+  String get labMemberDistributionTitle => 'Lab Member Distribution';
+
+  @override
+  String get labMembersPerPaperTitle => 'Lab Members Per Paper';
+
+  @override
+  String get mostStudentCollaborations => 'Most Student Collaborations';
+
+  @override
+  String get mostFacultyCollaborations => 'Most Faculty Collaborations';
+
+  @override
+  String get facultyLabel => 'Faculty:';
+
+  @override
+  String get collaborationsPerYearTitle => 'Collaborations Per Year';
+
+  @override
+  String get graduationsPerYearTitle => 'Graduations Per Year';
+
+  @override
+  String get publicationsPerYearTitle => 'Publications Per Year';
+
+  @override
+  String get recentGraduatesTitle => 'Recent Graduates';
+
+  @override
+  String get publicationTypesDistributionTitle => 'Publication Types Distribution';
+
+  @override
+  String get recentCurrentStudentPapers => 'Recent Current Student Papers';
+
+  @override
+  String get recentGraduatedStudentPapers => 'Recent Graduated Student Papers';
+
+  @override
+  String get recentPostdocPapers => 'Recent Postdoc Papers';
+
+  @override
+  String get recentCurrentFacultyPapers => 'Recent Current Faculty Papers';
+
+  @override
+  String get recentEmeritusFacultyPapers => 'Recent Emeritus Faculty Papers';
+
+  @override
+  String get recentLabCollaborations => 'Recent Lab Collaborations';
+
+  @override
+  String get prolificCurrentStudents => 'Prolific Current Students';
+
+  @override
+  String get prolificGraduatedStudents => 'Prolific Graduated Students';
+
+  @override
+  String get prolificPostdocs => 'Prolific Postdocs';
+
+  @override
+  String get prolificCurrentFaculty => 'Prolific Current Faculty';
+
+  @override
+  String get prolificEmeritusFaculty => 'Prolific Emeritus Faculty';
+
+  @override
+  String get studentsCategory => 'Students';
+
+  @override
+  String get unknownYear => 'Unknown';
+
+  @override
+  String get currentFacultyMostGraduates => 'Current Faculty with Most Graduates';
+
+  @override
+  String get emeritusFacultyMostGraduates => 'Emeritus Faculty with Most Graduates';
+
+  @override
+  String get publicationsAxis => 'Publications';
+
+  @override
+  String get collaborationsAxis => 'Collaborations';
+
+  @override
+  String get graduationsAxis => 'Graduations';
+
+  @override
+  String paper(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count papers',
+      one: '1 paper',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String graduate(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count graduates',
+      one: '1 graduate',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get currentStudentsCategory => 'Current Students';
+
+  @override
+  String get graduatedStudentsCategory => 'Graduated Students';
+
+  @override
+  String get postdocsCategory => 'Postdocs';
+
+  @override
+  String get currentFacultyCategory => 'Current Faculty';
+
+  @override
+  String get emeritusFacultyCategory => 'Emeritus Faculty';
+
+  @override
+  String get oneMemberCategory => 'One Member';
+
+  @override
+  String get twoMembersCategory => 'Two Members';
+
+  @override
+  String get threeMembersCategory => 'Three Members';
+
+  @override
+  String get fourMembersCategory => 'Four Members';
+
+  @override
+  String get fiveMembersCategory => 'Five Members';
+
+  @override
+  String get sixPlusMembersCategory => 'Six+ Members';
+
+  @override
+  String get wellConnectedCurrentStudents => 'Well-Connected Current Students';
+
+  @override
+  String get wellConnectedGraduatedStudents => 'Well-Connected Graduated Students';
+
+  @override
+  String get wellConnectedPostdocs => 'Well-Connected Postdocs';
+
+  @override
+  String get wellConnectedCurrentFaculty => 'Well-Connected Current Faculty';
+
+  @override
+  String get wellConnectedEmeritusFaculty => 'Well-Connected Emeritus Faculty';
+
+  @override
+  String get yearAxisLabel => 'Year';
+
+  @override
+  String collaborator(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count collaborators',
+      one: '1 collaborator',
+    );
+    return '$_temp0';
+  }
 }

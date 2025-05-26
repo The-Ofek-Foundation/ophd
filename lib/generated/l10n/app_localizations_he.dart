@@ -77,6 +77,7 @@ class AppLocalizationsHe extends AppLocalizations {
         'Education': 'השכלה',
         'Contact': 'צור קשר',
         'Industry': 'תעשייה',
+        'Lab': 'מעבדה',
         'other': '$key',
       },
     );
@@ -144,6 +145,51 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get labGraphInfo => 'אם אתה חבר מעבדה ואם חסר לך חיבור, אנא נסה לסנכרן את מסד הנתונים באמצעות כפתור הטעינה מחדש. אם זה לא עובד, ייתכן שהפרסום שלך חדש מדי ועדיין לא מופיע ב-DBLP, שיש לי מזהה DBLP שגוי המשויך אליך, או שהפרסום שלך בתחום משיק ואינו מופיע ב-DBLP. בכל אחד מהמקרים, תוכל ליצור איתי קשר כדי לעדכן את הנתונים באופן ידני.';
+
+  @override
+  String get labInfoTitle => 'מעבדת התיאוריה של UCI';
+
+  @override
+  String get labInfoSubtitle => 'חוקרים מדעי המחשב התיאורטיים מאז 1975';
+
+  @override
+  String get labInfoDescription => 'עמוד זה מציג את מעבדת התיאוריה באוניברסיטת קליפורניה, אירווין. הוא כולל ויזואליזציה של שיתופי פעולה במעבדה, הדגשה של הישגי מחקר, וסטטיסטיקות על פרסומים, סטודנטים וחברי סגל לאורך השנים.';
+
+  @override
+  String get loadingLabData => 'טוען נתוני מעבדה';
+
+  @override
+  String get syncDatabase => 'סנכרון מסד נתונים';
+
+  @override
+  String get fetchRealData => 'אחזר נתונים אמיתיים';
+
+  @override
+  String get tryAgain => 'נסה שוב';
+
+  @override
+  String get error => 'שגיאה';
+
+  @override
+  String get disclaimerTitle => 'הסתייגות';
+
+  @override
+  String get disclaimerSubtitle => 'הנתונים עלולים לא להיות מדויקים ב-100%';
+
+  @override
+  String get disclaimerTextStart => 'המידע על חברי המעבדה נלקח מ';
+
+  @override
+  String get disclaimerLinkDavidPage => 'עמוד התיאוריה המדהים של דייוויד אפשטיין מ-UCI';
+
+  @override
+  String get disclaimerTextMiddle => '. שאר הנתונים נלקחים מ';
+
+  @override
+  String get disclaimerLinkDblp => 'DBLP';
+
+  @override
+  String get disclaimerTextEnd => ', שהוא מסד נתונים של פרסומים במדעי המחשב. DBLP נבחר מכיוון שהוא מקצה לכל חוקר מזהה ייחודי באופן אוטומטי, הוא כולל נתונים היסטוריים, והוא מקיף למדי. חלופות, כמו Google Scholar ו-ORCID, דורשות מהמשתמש ליצור את הפרופיל שלו באופן ידני. DBLP אינו מושלם, עם זאת, הוא פחות מקיף מ-Google Scholar, ואינו מכיל מידע על ציטוטים שהיה נחמד שיהיה. עם זאת, אם יש פרסומים או שינויים שתרצו שאוסיף באופן ידני, אנא צרו איתי קשר.';
 
   @override
   String get publicationsTheory => 'מדעי המחשב התיאורטיים';
@@ -323,17 +369,6 @@ class AppLocalizationsHe extends AppLocalizations {
   String get recentPublications => 'פרסומים אחרונים';
 
   @override
-  String paperCount(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'מאמרים',
-      one: 'מאמר',
-    );
-    return '$_temp0';
-  }
-
-  @override
   String get visitWebsite => 'בקר באתר';
 
   @override
@@ -365,4 +400,190 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get noInformationAvailableDescription => 'אין כרגע מידע זמין על חוקר זה במאגר שלנו. ייתכן שהם עדיין לא פרסמו מאמרים שמופיעים ב-DBLP, או שהפרסומים שלהם לא קושרו לפרופיל שלהם.';
+
+  @override
+  String get labHighlightsTitle => 'דגשים של המעבדה';
+
+  @override
+  String get labHighlightsSubtitle => 'סטטיסטיקות מרכזיות ותובנות על המעבדה';
+
+  @override
+  String get mostTotalCollaborations => 'הכי הרבה שיתופי פעולה';
+
+  @override
+  String get studentsLabel => 'סטודנטים:';
+
+  @override
+  String get labMembersCategorySubtitle => 'פירוט חברי המעבדה לפי קטגוריה';
+
+  @override
+  String get papersCollaborationSubtitle => 'חלוקת מאמרים לפי מספר שותפי פעולה מחברי המעבדה';
+
+  @override
+  String get labMemberDistributionTitle => 'חלוקת חברי המעבדה';
+
+  @override
+  String get labMembersPerPaperTitle => 'חברי מעבדה למאמר';
+
+  @override
+  String get mostStudentCollaborations => 'הכי הרבה שיתופי פעולה עם סטודנטים';
+
+  @override
+  String get mostFacultyCollaborations => 'הכי הרבה שיתופי פעולה עם סגל';
+
+  @override
+  String get facultyLabel => 'סגל:';
+
+  @override
+  String get collaborationsPerYearTitle => 'שיתופי פעולה לפי שנה';
+
+  @override
+  String get graduationsPerYearTitle => 'סיום תואר לפי שנה';
+
+  @override
+  String get publicationsPerYearTitle => 'פרסומים לפי שנה';
+
+  @override
+  String get recentGraduatesTitle => 'בוגרים לאחרונה';
+
+  @override
+  String get publicationTypesDistributionTitle => 'חלוקת סוגי פרסומים';
+
+  @override
+  String get recentCurrentStudentPapers => 'מאמרים אחרונים של סטודנטים נוכחיים';
+
+  @override
+  String get recentGraduatedStudentPapers => 'מאמרים אחרונים של סטודנטים בוגרים';
+
+  @override
+  String get recentPostdocPapers => 'מאמרים אחרונים של פוסט דוקטורנטים';
+
+  @override
+  String get recentCurrentFacultyPapers => 'מאמרים אחרונים של סגל נוכחי';
+
+  @override
+  String get recentEmeritusFacultyPapers => 'מאמרים אחרונים של סגל אמריטוס';
+
+  @override
+  String get recentLabCollaborations => 'שיתופי פעולה אחרונים במעבדה';
+
+  @override
+  String get prolificCurrentStudents => 'סטודנטים נוכחיים פרודוקטיביים';
+
+  @override
+  String get prolificGraduatedStudents => 'סטודנטים בוגרים פרודוקטיביים';
+
+  @override
+  String get prolificPostdocs => 'פוסט דוקטורנטים פרודוקטיביים';
+
+  @override
+  String get prolificCurrentFaculty => 'סגל נוכחי פרודוקטיבי';
+
+  @override
+  String get prolificEmeritusFaculty => 'סגל אמריטוס פרודוקטיבי';
+
+  @override
+  String get studentsCategory => 'סטודנטים';
+
+  @override
+  String get unknownYear => 'לא ידוע';
+
+  @override
+  String get currentFacultyMostGraduates => 'סגל נוכחי עם הכי הרבה בוגרים';
+
+  @override
+  String get emeritusFacultyMostGraduates => 'סגל אמריטוס עם הכי הרבה בוגרים';
+
+  @override
+  String get publicationsAxis => 'פרסומים';
+
+  @override
+  String get collaborationsAxis => 'שיתופי פעולה';
+
+  @override
+  String get graduationsAxis => 'סיום תואר';
+
+  @override
+  String paper(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count מאמרים',
+      one: 'מאמר 1',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String graduate(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count בוגרים',
+      one: 'בוגר 1',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get currentStudentsCategory => 'סטודנטים נוכחיים';
+
+  @override
+  String get graduatedStudentsCategory => 'סטודנטים בוגרים';
+
+  @override
+  String get postdocsCategory => 'פוסט דוקטורנטים';
+
+  @override
+  String get currentFacultyCategory => 'סגל נוכחי';
+
+  @override
+  String get emeritusFacultyCategory => 'סגל אמריטוס';
+
+  @override
+  String get oneMemberCategory => 'חבר אחד';
+
+  @override
+  String get twoMembersCategory => 'שני חברים';
+
+  @override
+  String get threeMembersCategory => 'שלושה חברים';
+
+  @override
+  String get fourMembersCategory => 'ארבעה חברים';
+
+  @override
+  String get fiveMembersCategory => 'חמישה חברים';
+
+  @override
+  String get sixPlusMembersCategory => 'שישה חברים ויותר';
+
+  @override
+  String get wellConnectedCurrentStudents => 'סטודנטים נוכחיים מחוברים היטב';
+
+  @override
+  String get wellConnectedGraduatedStudents => 'סטודנטים בוגרים מחוברים היטב';
+
+  @override
+  String get wellConnectedPostdocs => 'פוסט דוקטורנטים מחוברים היטב';
+
+  @override
+  String get wellConnectedCurrentFaculty => 'סגל נוכחי מחובר היטב';
+
+  @override
+  String get wellConnectedEmeritusFaculty => 'סגל אמריטוס מחובר היטב';
+
+  @override
+  String get yearAxisLabel => 'שנה';
+
+  @override
+  String collaborator(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count שותפים',
+      one: 'שותף 1',
+    );
+    return '$_temp0';
+  }
 }

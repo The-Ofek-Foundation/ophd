@@ -499,7 +499,7 @@ class LabUtils {
                         ),
                         bottomTitles: AxisTitles(
                           axisNameWidget: SelectableText(
-                            'Year',
+                            AppLocalizations.of(context)!.yearAxisLabel,
                             style: TextStyle(
                               color: Theme.of(context).colorScheme.onSurface.withAlpha((0.7 * 255).round()),
                               fontSize: 10,
@@ -716,7 +716,6 @@ class LabUtils {
           ],
         ),
         maxLines: maxLines,
-        textAlign: TextAlign.left,
       );
     } else {
       return SelectableText(

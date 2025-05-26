@@ -19,7 +19,7 @@
 			}
 		}
 	},
-	"page": "{key, select, About {אודות} Research {מחקר} Publications {פרסומים} Education {השכלה} Contact {צור קשר} Industry {תעשייה} other {{key}}}",
+	"page": "{key, select, About {אודות} Research {מחקר} Publications {פרסומים} Education {השכלה} Contact {צור קשר} Industry {תעשייה} Lab {מעבדה} other {{key}}}",
 	"@page": {
 		"placeholders": {
 			"key": {
@@ -80,6 +80,44 @@
 	},
 	"labGraphInfo": "אם אתה חבר מעבדה ואם חסר לך חיבור, אנא נסה לסנכרן את מסד הנתונים באמצעות כפתור הטעינה מחדש. אם זה לא עובד, ייתכן שהפרסום שלך חדש מדי ועדיין לא מופיע ב-DBLP, שיש לי מזהה DBLP שגוי המשויך אליך, או שהפרסום שלך בתחום משיק ואינו מופיע ב-DBLP. בכל אחד מהמקרים, תוכל ליצור איתי קשר כדי לעדכן את הנתונים באופן ידני.",
 	"@labGraphInfo": {},
+	"labInfoTitle": "מעבדת התיאוריה של UCI",
+	"@labInfoTitle": {},
+	"labInfoSubtitle": "חוקרים מדעי המחשב התיאורטיים מאז 1975",
+	"@labInfoSubtitle": {},
+	"labInfoDescription": "עמוד זה מציג את מעבדת התיאוריה באוניברסיטת קליפורניה, אירווין. הוא כולל ויזואליזציה של שיתופי פעולה במעבדה, הדגשה של הישגי מחקר, וסטטיסטיקות על פרסומים, סטודנטים וחברי סגל לאורך השנים.",
+	"@labInfoDescription": {},
+	"loadingLabData": "טוען נתוני מעבדה",
+	"@loadingLabData": {},
+	"syncDatabase": "סנכרון מסד נתונים",
+	"@syncDatabase": {},
+	"fetchRealData": "אחזר נתונים אמיתיים",
+	"@fetchRealData": {},
+	"tryAgain": "נסה שוב",
+	"@tryAgain": {},
+	"error": "שגיאה",
+	"@error": {},
+	"disclaimerTitle": "הסתייגות",
+	"@disclaimerTitle": {},
+	"disclaimerSubtitle": "הנתונים עלולים לא להיות מדויקים ב-100%",
+	"@disclaimerSubtitle": {},
+	"disclaimerTextStart": "המידע על חברי המעבדה נלקח מ",
+	"@disclaimerTextStart": {},
+	"disclaimerLinkDavidPage": "עמוד התיאוריה המדהים של דייוויד אפשטיין מ-UCI",
+	"@disclaimerLinkDavidPage": {},
+	"disclaimerTextMiddle": ". שאר הנתונים נלקחים מ",
+	"@disclaimerTextMiddle": {},
+	"disclaimerLinkDblp": "DBLP",
+	"@disclaimerLinkDblp": {},
+	"disclaimerTextEnd": ", שהוא מסד נתונים של פרסומים במדעי המחשב. DBLP נבחר מכיוון שהוא מקצה לכל חוקר מזהה ייחודי באופן אוטומטי, הוא כולל נתונים היסטוריים, והוא מקיף למדי. חלופות, כמו Google Scholar ו-ORCID, דורשות מהמשתמש ליצור את הפרופיל שלו באופן ידני. DBLP אינו מושלם, עם זאת, הוא פחות מקיף מ-Google Scholar, ואינו מכיל מידע על ציטוטים שהיה נחמד שיהיה. עם זאת, אם יש פרסומים או שינויים שתרצו שאוסיף באופן ידני, אנא צרו איתי קשר.",
+	"@disclaimerTextEnd": {},
+	"labHighlightsTitle": "דגשים של המעבדה",
+	"@labHighlightsTitle": {},
+	"labHighlightsSubtitle": "סטטיסטיקות מרכזיות ותובנות על המעבדה",
+	"@labHighlightsSubtitle": {},
+	"mostTotalCollaborations": "הכי הרבה שיתופי פעולה",
+	"@mostTotalCollaborations": {},
+	"studentsLabel": "סטודנטים:",
+	"@studentsLabel": {},
 	"publicationsTheory": "מדעי המחשב התיאורטיים",
 	"@publicationsTheory": {},
 	"publicationsTheorySubtitle": "אלגוריתמים ומבני נתונים אקראיים",
@@ -217,14 +255,6 @@
 	"@recentLabCollaborators": {},
 	"recentPublications": "פרסומים אחרונים",
 	"@recentPublications": {},
-	"paperCount": "{count, plural, =1{מאמר} other{מאמרים}}",
-	"@paperCount": {
-		"placeholders": {
-			"count": {
-				"type": "int"
-			}
-		}
-	},
 	"visitWebsite": "בקר באתר",
 	"@visitWebsite": {},
 	"viewOnDblp": "צפה ב-DBLP",
@@ -242,5 +272,85 @@
 	"noInformationAvailable": "אין מידע זמין",
 	"@noInformationAvailable": {},
 	"noInformationAvailableDescription": "אין כרגע מידע זמין על חוקר זה במאגר שלנו. ייתכן שהם עדיין לא פרסמו מאמרים שמופיעים ב-DBLP, או שהפרסומים שלהם לא קושרו לפרופיל שלהם.",
-	"@noInformationAvailableDescription": {}
+	"@noInformationAvailableDescription": {},
+	"labMembersCategorySubtitle": "פירוט חברי המעבדה לפי קטגוריה",
+	"@labMembersCategorySubtitle": {},
+	"papersCollaborationSubtitle": "חלוקת מאמרים לפי מספר שותפי פעולה מחברי המעבדה",
+	"@papersCollaborationSubtitle": {},
+	"labMemberDistributionTitle": "חלוקת חברי המעבדה",
+	"@labMemberDistributionTitle": {},
+	"labMembersPerPaperTitle": "חברי מעבדה למאמר",
+	"@labMembersPerPaperTitle": {},
+	"mostStudentCollaborations": "הכי הרבה שיתופי פעולה עם סטודנטים",
+	"@mostStudentCollaborations": {},
+	"mostFacultyCollaborations": "הכי הרבה שיתופי פעולה עם סגל",
+	"@mostFacultyCollaborations": {},
+	"facultyLabel": "סגל:",
+	"@facultyLabel": {},
+	"collaborationsPerYearTitle": "שיתופי פעולה לפי שנה",
+	"@collaborationsPerYearTitle": {},
+	"graduationsPerYearTitle": "סיום תואר לפי שנה",
+	"@graduationsPerYearTitle": {},  "publicationsPerYearTitle": "פרסומים לפי שנה",
+	"recentGraduatesTitle": "בוגרים לאחרונה",
+	"publicationTypesDistributionTitle": "חלוקת סוגי פרסומים",
+	"recentCurrentStudentPapers": "מאמרים אחרונים של סטודנטים נוכחיים",
+	"recentGraduatedStudentPapers": "מאמרים אחרונים של סטודנטים בוגרים",
+	"recentPostdocPapers": "מאמרים אחרונים של פוסט דוקטורנטים",
+	"recentCurrentFacultyPapers": "מאמרים אחרונים של סגל נוכחי",
+	"recentEmeritusFacultyPapers": "מאמרים אחרונים של סגל אמריטוס",
+	"recentLabCollaborations": "שיתופי פעולה אחרונים במעבדה",
+	"prolificCurrentStudents": "סטודנטים נוכחיים פרודוקטיביים",
+	"prolificGraduatedStudents": "סטודנטים בוגרים פרודוקטיביים",
+	"prolificPostdocs": "פוסט דוקטורנטים פרודוקטיביים",
+	"prolificCurrentFaculty": "סגל נוכחי פרודוקטיבי",
+	"prolificEmeritusFaculty": "סגל אמריטוס פרודוקטיבי",
+	"studentsCategory": "סטודנטים",
+	"unknownYear": "לא ידוע",
+	"currentFacultyMostGraduates": "סגל נוכחי עם הכי הרבה בוגרים",
+	"emeritusFacultyMostGraduates": "סגל אמריטוס עם הכי הרבה בוגרים",
+	"publicationsAxis": "פרסומים",
+	"collaborationsAxis": "שיתופי פעולה",
+	"graduationsAxis": "סיום תואר",
+	"paper": "{count, plural, =1{מאמר 1} other{{count} מאמרים}}",
+	"@paper": {
+		"placeholders": {
+			"count": {
+				"type": "int"
+			}
+		}
+	},
+	"graduate": "{count, plural, =1{בוגר 1} other{{count} בוגרים}}",
+	"@graduate": {
+		"placeholders": {
+			"count": {
+				"type": "int"
+			}
+		}
+	},
+	"currentStudentsCategory": "סטודנטים נוכחיים",
+	"graduatedStudentsCategory": "סטודנטים בוגרים",
+	"postdocsCategory": "פוסט דוקטורנטים",
+	"currentFacultyCategory": "סגל נוכחי",
+	"emeritusFacultyCategory": "סגל אמריטוס",
+	"oneMemberCategory": "חבר אחד",
+	"twoMembersCategory": "שני חברים",
+	"threeMembersCategory": "שלושה חברים",
+	"fourMembersCategory": "ארבעה חברים",
+	"fiveMembersCategory": "חמישה חברים",
+	"sixPlusMembersCategory": "שישה חברים ויותר",
+	"wellConnectedCurrentStudents": "סטודנטים נוכחיים מחוברים היטב",
+	"wellConnectedGraduatedStudents": "סטודנטים בוגרים מחוברים היטב",
+	"wellConnectedPostdocs": "פוסט דוקטורנטים מחוברים היטב",
+	"wellConnectedCurrentFaculty": "סגל נוכחי מחובר היטב",
+	"@wellConnectedCurrentFaculty": {},
+	"wellConnectedEmeritusFaculty": "סגל אמריטוס מחובר היטב",
+	"yearAxisLabel": "שנה",
+	"collaborator": "{count, plural, =1{שותף 1} other{{count} שותפים}}",
+	"@collaborator": {
+		"placeholders": {
+			"count": {
+				"type": "int"
+			}
+		}
+	}
 }

@@ -183,14 +183,14 @@ class _LabPageState extends State<LabPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SelectableText(
-                    'UCI Theory Lab',
+                    AppLocalizations.of(context)!.labInfoTitle,
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 4),
                   SelectableText(
-                    'Exploring theoretical computer science since 1975',
+                    AppLocalizations.of(context)!.labInfoSubtitle,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       color: Theme.of(context).colorScheme.secondary,
                       fontFamily: 'RobotoMono',
@@ -202,7 +202,7 @@ class _LabPageState extends State<LabPage> {
             if (isLoading)
               RefreshButton(
                 forceLoading: true,
-                tooltip: 'Loading Lab Data',
+                tooltip: AppLocalizations.of(context)!.loadingLabData,
                 key: UniqueKey(),
               ),
             if (!isLoading && errorMessage == null)
@@ -211,7 +211,7 @@ class _LabPageState extends State<LabPage> {
                   await updateDatabase();
                   await _loadData();
                 },
-                tooltip: 'Sync Database',
+                tooltip: AppLocalizations.of(context)!.syncDatabase,
                 key: UniqueKey(),
               ),
             if (debug)
@@ -219,7 +219,7 @@ class _LabPageState extends State<LabPage> {
                 onPressed: () async {
                   await _loadData(forceUpdate: true);
                 },
-                tooltip: 'Fetch Real Data',
+                tooltip: AppLocalizations.of(context)!.fetchRealData,
                 key: UniqueKey(),
               ),
           ],
@@ -235,20 +235,18 @@ class _LabPageState extends State<LabPage> {
               children: [
                 Icon(Icons.error_outline, color: Theme.of(context).colorScheme.error, size: 48),
                 const SizedBox(height: 16),
-                Text('Error: $errorMessage', style: TextStyle(color: Theme.of(context).colorScheme.error)),
+                Text('${AppLocalizations.of(context)!.error}: $errorMessage', style: TextStyle(color: Theme.of(context).colorScheme.error)),
                 const SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: _loadData,
-                  child: const Text('Try Again'),
+                  child: Text(AppLocalizations.of(context)!.tryAgain),
                 ),
               ],
             ),
           )
         else
           SelectableText(
-            'This page showcases the Theory Lab at the University of California, Irvine. '
-            'It includes a visualization of lab collaborations, highlights of research achievements, '
-            'and statistics about publications, students, and faculty members over the years.',
+            AppLocalizations.of(context)!.labInfoDescription,
             style: Theme.of(context).textTheme.bodyLarge,
             textAlign: TextAlign.start,
           ),
@@ -271,14 +269,14 @@ class _LabPageState extends State<LabPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SelectableText(
-                    'Disclaimer',
+                    AppLocalizations.of(context)!.disclaimerTitle,
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 4),
                   SelectableText(
-                    'Data may not be 100% accurate',
+                    AppLocalizations.of(context)!.disclaimerSubtitle,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       color: Theme.of(context).colorScheme.secondary,
                       fontFamily: 'RobotoMono',
@@ -297,21 +295,21 @@ class _LabPageState extends State<LabPage> {
         SelectableText.rich(
           TextSpan(
             children: [
-              TextSpan(text: 'Knowledge of lab members is taken from '),
+              TextSpan(text: AppLocalizations.of(context)!.disclaimerTextStart),
               TextSpan(
-                text: 'David Eppstein\'s fabulous UCI computer science theory page',
+                text: AppLocalizations.of(context)!.disclaimerLinkDavidPage,
                 style: TextStyle(color: Theme.of(context).colorScheme.primary),
                 recognizer: TapGestureRecognizer()
                   ..onTap = () => launchURL('https://ics.uci.edu/~theory/'),
               ),
-              TextSpan(text: '. The rest of the data is taken from '),
+              TextSpan(text: AppLocalizations.of(context)!.disclaimerTextMiddle),
               TextSpan(
-                text: 'DBLP',
+                text: AppLocalizations.of(context)!.disclaimerLinkDblp,
                 style: TextStyle(color: Theme.of(context).colorScheme.primary),
                 recognizer: TapGestureRecognizer()
                   ..onTap = () => launchURL('https://dblp.org/'),
               ),
-              TextSpan(text: ', which is a database of computer science publications. DBLP was chosen because it assigns each researcher a unique ID automatically, it includes historical data, and it is fairly comprehensive. Alternatives, such as Google Scholar and ORCID, require the user to manually create their profile. DBLP is not perfect, however, being less comprehensive than Google Scholar, and not containing citation information which would have been nice to have. That being said, if there are any publications or changes you would like me to manually add, please contact me.'),
+              TextSpan(text: AppLocalizations.of(context)!.disclaimerTextEnd),
             ],
           ),
           style: Theme.of(context).textTheme.bodyLarge,
@@ -546,7 +544,7 @@ class _LabGraphState extends State<LabGraph> {
           if (isLoading)
             const Center(child: CircularProgressIndicator())
           else if (errorMessage != null)
-            Center(child: SelectableText('Error: $errorMessage'))
+            Center(child: SelectableText('${AppLocalizations.of(context)!.error}: $errorMessage'))
           else
             Column(
               children: [
@@ -944,7 +942,7 @@ class ResearcherDetailsModal extends StatelessWidget {
         icon: Icons.groups,
         title: AppLocalizations.of(context)!.graduateStudents,
         items: [MapEntry(
-          'Students',
+          AppLocalizations.of(context)!.studentsCategory,
           '${LabUtils.formatNumber(graduatedStudents.length)}${yearRange != null ? ' ($yearRange)' : ''}'
         )],
         maxItems: 1,
@@ -953,7 +951,7 @@ class ResearcherDetailsModal extends StatelessWidget {
 
       if (graduatedStudents.isNotEmpty) {
         final items = graduatedStudents.reversed.take(3).map((s) =>
-          MapEntry(s.name, s.year != null ? s.year!.toString() : 'Unknown')
+          MapEntry(s.name, s.year != null ? s.year!.toString() : AppLocalizations.of(context)!.unknownYear)
         ).toList();
 
         details.add(LabUtils.buildLabelValueCard(
@@ -1005,7 +1003,7 @@ class ResearcherDetailsModal extends StatelessWidget {
       // Add top collaborators
       if (weightedCollaborators.isNotEmpty) {
         final topCollaborationItems = weightedCollaborators.entries.take(3).map((entry) =>
-          MapEntry(entry.key.name, '${LabUtils.formatNumber(entry.value)} ${AppLocalizations.of(context)!.paperCount(entry.value)}')
+          MapEntry(entry.key.name, AppLocalizations.of(context)!.paper(entry.value))
         ).toList();
 
         details.add(LabUtils.buildLabelValueCard(
@@ -1211,14 +1209,14 @@ class LabHighlights extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SelectableText(
-                    'Lab Highlights',
+                    AppLocalizations.of(context)!.labHighlightsTitle,
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 4),
                   SelectableText(
-                    'Key statistics and insights about the lab',
+                    AppLocalizations.of(context)!.labHighlightsSubtitle,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       color: Theme.of(context).colorScheme.secondary,
                       fontFamily: 'RobotoMono',
@@ -1313,27 +1311,27 @@ class LabHighlights extends StatelessWidget {
 
     cards.add(_buildRecentGraduatesCard(context));
 
-    cards.add(_buildRecentPapersCard(context, Icons.article, 'Recent Current Student Papers', LabUtils.isCurrentStudentPaper, uniquePublications));
-    cards.add(_buildRecentPapersCard(context, Icons.article, 'Recent Graduated Student Papers', LabUtils.isNonPostDocGraduatedPaper, uniquePublications));
-    cards.add(_buildRecentPapersCard(context, Icons.article, 'Recent Postdoc Papers', LabUtils.isPostDocPaper, uniquePublications));
-    cards.add(_buildRecentPapersCard(context, Icons.article, 'Recent Current Faculty Papers', LabUtils.isCurrentFacultyPaper, uniquePublications));
-    cards.add(_buildRecentPapersCard(context, Icons.article, 'Recent Emeritus Faculty Papers', LabUtils.isEmeritusFacultyPaper, uniquePublications));
-    cards.add(_buildRecentPapersCard(context, Icons.people_alt, 'Recent Lab Collaborations', LabUtils.isCollaboration, uniqueCollaborations));
+    cards.add(_buildRecentPapersCard(context, Icons.article, AppLocalizations.of(context)!.recentCurrentStudentPapers, LabUtils.isCurrentStudentPaper, uniquePublications));
+    cards.add(_buildRecentPapersCard(context, Icons.article, AppLocalizations.of(context)!.recentGraduatedStudentPapers, LabUtils.isNonPostDocGraduatedPaper, uniquePublications));
+    cards.add(_buildRecentPapersCard(context, Icons.article, AppLocalizations.of(context)!.recentPostdocPapers, LabUtils.isPostDocPaper, uniquePublications));
+    cards.add(_buildRecentPapersCard(context, Icons.article, AppLocalizations.of(context)!.recentCurrentFacultyPapers, LabUtils.isCurrentFacultyPaper, uniquePublications));
+    cards.add(_buildRecentPapersCard(context, Icons.article, AppLocalizations.of(context)!.recentEmeritusFacultyPapers, LabUtils.isEmeritusFacultyPaper, uniquePublications));
+    cards.add(_buildRecentPapersCard(context, Icons.people_alt, AppLocalizations.of(context)!.recentLabCollaborations, LabUtils.isCollaboration, uniqueCollaborations));
 
-    cards.add(_buildWellConnectedCard(context, completeCollaboratorsMap, LabUtils.isCurrentStudent, 'Well-Connected Current Students'));
-    cards.add(_buildWellConnectedCard(context, completeCollaboratorsMap, LabUtils.isNonPostDocGraduated, 'Well-Connected Graduated Students'));
-    cards.add(_buildWellConnectedCard(context, completeCollaboratorsMap, LabUtils.isPostDoc, 'Well-Connected Postdocs'));
-    cards.add(_buildWellConnectedCard(context, completeCollaboratorsMap, LabUtils.isCurrentFaculty, 'Well-Connected Current Faculty'));
-    cards.add(_buildWellConnectedCard(context, completeCollaboratorsMap, LabUtils.isEmeritusFaculty, 'Well-Connected Emeritus Faculty'));
+    cards.add(_buildWellConnectedCard(context, completeCollaboratorsMap, LabUtils.isCurrentStudent, AppLocalizations.of(context)!.wellConnectedCurrentStudents));
+    cards.add(_buildWellConnectedCard(context, completeCollaboratorsMap, LabUtils.isNonPostDocGraduated, AppLocalizations.of(context)!.wellConnectedGraduatedStudents));
+    cards.add(_buildWellConnectedCard(context, completeCollaboratorsMap, LabUtils.isPostDoc, AppLocalizations.of(context)!.wellConnectedPostdocs));
+    cards.add(_buildWellConnectedCard(context, completeCollaboratorsMap, LabUtils.isCurrentFaculty, AppLocalizations.of(context)!.wellConnectedCurrentFaculty));
+    cards.add(_buildWellConnectedCard(context, completeCollaboratorsMap, LabUtils.isEmeritusFaculty, AppLocalizations.of(context)!.wellConnectedEmeritusFaculty));
 
-    cards.add(_buildProlificResearchersCard(context, LabUtils.isCurrentStudent, 'Prolific Current Students'));
-    cards.add(_buildProlificResearchersCard(context, LabUtils.isNonPostDocGraduated, 'Prolific Graduated Students'));
-    cards.add(_buildProlificResearchersCard(context, LabUtils.isPostDoc, 'Prolific Postdocs'));
-    cards.add(_buildProlificResearchersCard(context, LabUtils.isCurrentFaculty, 'Prolific Current Faculty'));
-    cards.add(_buildProlificResearchersCard(context, LabUtils.isEmeritusFaculty, 'Prolific Emeritus Faculty'));
+    cards.add(_buildProlificResearchersCard(context, LabUtils.isCurrentStudent, AppLocalizations.of(context)!.prolificCurrentStudents));
+    cards.add(_buildProlificResearchersCard(context, LabUtils.isNonPostDocGraduated, AppLocalizations.of(context)!.prolificGraduatedStudents));
+    cards.add(_buildProlificResearchersCard(context, LabUtils.isPostDoc, AppLocalizations.of(context)!.prolificPostdocs));
+    cards.add(_buildProlificResearchersCard(context, LabUtils.isCurrentFaculty, AppLocalizations.of(context)!.prolificCurrentFaculty));
+    cards.add(_buildProlificResearchersCard(context, LabUtils.isEmeritusFaculty, AppLocalizations.of(context)!.prolificEmeritusFaculty));
 
-    cards.add(_buildFacultyWithMostGraduatesCard(context, LabUtils.isCurrentFaculty, 'Current Faculty with Most Graduates'));
-    cards.add(_buildFacultyWithMostGraduatesCard(context, LabUtils.isEmeritusFaculty, 'Emeritus Faculty with Most Graduates'));
+    cards.add(_buildFacultyWithMostGraduatesCard(context, LabUtils.isCurrentFaculty, AppLocalizations.of(context)!.currentFacultyMostGraduates));
+    cards.add(_buildFacultyWithMostGraduatesCard(context, LabUtils.isEmeritusFaculty, AppLocalizations.of(context)!.emeritusFacultyMostGraduates));
 
     return cards;
   }
@@ -1352,11 +1350,11 @@ class LabHighlights extends StatelessWidget {
     return LabUtils.buildYearlyLineChartCard(
       context: context,
       icon: Icons.show_chart,
-      title: 'Publications Per Year',
+      title: AppLocalizations.of(context)!.publicationsPerYearTitle,
       dataByYear: publicationsPerYear,
       lineColor: materialTheme.getPastelChartColorByIndex(context, 0),
       tooltipTextColor: Colors.white,
-      yAxisLabel: 'Publications',
+      yAxisLabel: AppLocalizations.of(context)!.publicationsAxis,
       height: height,
     );
   }
@@ -1375,11 +1373,11 @@ class LabHighlights extends StatelessWidget {
     return LabUtils.buildYearlyLineChartCard(
       context: context,
       icon: Icons.show_chart,
-      title: 'Collaborations Per Year',
+      title: AppLocalizations.of(context)!.collaborationsPerYearTitle,
       dataByYear: collaborationsPerYear,
       lineColor: materialTheme.getPastelChartColorByIndex(context, 1),
       tooltipTextColor: Colors.white,
-      yAxisLabel: 'Collaborations',
+      yAxisLabel: AppLocalizations.of(context)!.collaborationsAxis,
     );
   }
 
@@ -1399,11 +1397,11 @@ class LabHighlights extends StatelessWidget {
     return LabUtils.buildYearlyLineChartCard(
       context: context,
       icon: Icons.school,
-      title: 'Graduations Per Year',
+      title: AppLocalizations.of(context)!.graduationsPerYearTitle,
       dataByYear: graduationsPerYear,
       lineColor: materialTheme.getPastelChartColorByIndex(context, 2),
       tooltipTextColor: Colors.white,
-      yAxisLabel: 'Graduations',
+      yAxisLabel: AppLocalizations.of(context)!.graduationsAxis,
     );
   }
 
@@ -1420,7 +1418,7 @@ class LabHighlights extends StatelessWidget {
     return LabUtils.buildLabelValueCard(
       context: context,
       icon: Icons.school,
-      title: 'Recent Graduates',
+      title: AppLocalizations.of(context)!.recentGraduatesTitle,
       items: items,
     );
   }
@@ -1460,7 +1458,7 @@ class LabHighlights extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SelectableText(
-                  'Most Total Collaborations',
+                  AppLocalizations.of(context)!.mostTotalCollaborations,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Theme.of(context).colorScheme.secondary,
@@ -1474,7 +1472,7 @@ class LabHighlights extends StatelessWidget {
                       child: LabUtils.emphasizedText(context, maxTotalOverview.researcher.name),
                     ),
                     SelectableText(
-                      '${LabUtils.formatNumber(maxTotalOverview.totalCollaborations)} ${maxTotalOverview.totalCollaborations == 1 ? 'collaborator' : 'collaborators'}',
+                      AppLocalizations.of(context)!.collaborator(maxTotalOverview.totalCollaborations),
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.secondary,
                       ),
@@ -1487,7 +1485,7 @@ class LabHighlights extends StatelessWidget {
                   children: [
                     Expanded(
                       child: SelectableText(
-                        'Students:',
+                        AppLocalizations.of(context)!.studentsLabel,
                         style: TextStyle(
                           fontSize: 12,
                           color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -1495,7 +1493,7 @@ class LabHighlights extends StatelessWidget {
                       ),
                     ),
                     SelectableText(
-                      '${LabUtils.formatNumber(maxTotalOverview.studentCollaborations)} ${maxTotalOverview.studentCollaborations == 1 ? 'collaborator' : 'collaborators'}',
+                      AppLocalizations.of(context)!.collaborator(maxTotalOverview.studentCollaborations),
                       style: TextStyle(
                         fontSize: 12,
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -1508,7 +1506,7 @@ class LabHighlights extends StatelessWidget {
                   children: [
                     Expanded(
                       child: SelectableText(
-                        'Faculty:',
+                        AppLocalizations.of(context)!.facultyLabel,
                         style: TextStyle(
                           fontSize: 12,
                           color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -1516,7 +1514,7 @@ class LabHighlights extends StatelessWidget {
                       ),
                     ),
                     SelectableText(
-                      '${LabUtils.formatNumber(maxTotalOverview.professorCollaborations)} ${maxProfessorOverview.professorCollaborations == 1 ? 'collaborator' : 'collaborators'}',
+                      AppLocalizations.of(context)!.collaborator(maxProfessorOverview.professorCollaborations),
                       style: TextStyle(
                         fontSize: 12,
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -1533,7 +1531,7 @@ class LabHighlights extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SelectableText(
-                  'Most Student Collaborations',
+                  AppLocalizations.of(context)!.mostStudentCollaborations,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Theme.of(context).colorScheme.secondary,
@@ -1547,7 +1545,7 @@ class LabHighlights extends StatelessWidget {
                       child: LabUtils.emphasizedText(context, maxStudentOverview.researcher.name),
                     ),
                     SelectableText(
-                      '${LabUtils.formatNumber(maxStudentOverview.studentCollaborations)} ${maxStudentOverview.studentCollaborations == 1 ? 'collaborator' : 'collaborators'}',
+                      AppLocalizations.of(context)!.collaborator(maxStudentOverview.studentCollaborations),
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.secondary,
                       ),
@@ -1560,7 +1558,7 @@ class LabHighlights extends StatelessWidget {
                   children: [
                     Expanded(
                       child: SelectableText(
-                        'Faculty:',
+                        AppLocalizations.of(context)!.facultyLabel,
                         style: TextStyle(
                           fontSize: 12,
                           color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -1568,7 +1566,7 @@ class LabHighlights extends StatelessWidget {
                       ),
                     ),
                     SelectableText(
-                      '${LabUtils.formatNumber(maxStudentOverview.professorCollaborations)} ${maxStudentOverview.professorCollaborations == 1 ? 'collaborator' : 'collaborators'}',
+                      AppLocalizations.of(context)!.collaborator(maxStudentOverview.professorCollaborations),
                       style: TextStyle(
                         fontSize: 12,
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -1585,7 +1583,7 @@ class LabHighlights extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SelectableText(
-                  'Most Faculty Collaborations',
+                  AppLocalizations.of(context)!.mostFacultyCollaborations,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Theme.of(context).colorScheme.secondary,
@@ -1599,7 +1597,7 @@ class LabHighlights extends StatelessWidget {
                       child: LabUtils.emphasizedText(context, maxProfessorOverview.researcher.name),
                     ),
                     SelectableText(
-                      '${LabUtils.formatNumber(maxProfessorOverview.professorCollaborations)} ${maxProfessorOverview.professorCollaborations == 1 ? 'collaborator' : 'collaborators'}',
+                      AppLocalizations.of(context)!.collaborator(maxProfessorOverview.professorCollaborations),
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.secondary,
                       ),
@@ -1612,7 +1610,7 @@ class LabHighlights extends StatelessWidget {
                   children: [
                     Expanded(
                       child: SelectableText(
-                        'Students:',
+                        AppLocalizations.of(context)!.studentsLabel,
                         style: TextStyle(
                           fontSize: 12,
                           color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -1620,7 +1618,7 @@ class LabHighlights extends StatelessWidget {
                       ),
                     ),
                     SelectableText(
-                      '${LabUtils.formatNumber(maxProfessorOverview.studentCollaborations)} ${maxProfessorOverview.studentCollaborations == 1 ? 'collaborator' : 'collaborators'}',
+                      AppLocalizations.of(context)!.collaborator(maxProfessorOverview.studentCollaborations),
                       style: TextStyle(
                         fontSize: 12,
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -1651,7 +1649,7 @@ class LabHighlights extends StatelessWidget {
       icon: Icons.auto_awesome,
       title: title,
       items: sortedResearchers.map((entry) =>
-        MapEntry(entry.key.name, '${LabUtils.formatNumber(entry.value)} ${entry.value == 1 ? 'paper' : 'papers'}')
+        MapEntry(entry.key.name, AppLocalizations.of(context)!.paper(entry.value))
       ).toList(),
     );
   }
@@ -1681,7 +1679,7 @@ class LabHighlights extends StatelessWidget {
       icon: Icons.school,
       title: title,
       items: sortedProfessors.map((entry) =>
-        MapEntry(entry.key.name, '${LabUtils.formatNumber(entry.value.length)} ${entry.value.length == 1 ? 'graduate' : 'graduates'}')
+        MapEntry(entry.key.name, AppLocalizations.of(context)!.graduate(entry.value.length))
       ).toList(),
     );
   }
@@ -1693,7 +1691,7 @@ class LabHighlights extends StatelessWidget {
     return LabUtils.buildPublicationTypesBarChartCard(
       context: context,
       icon: Icons.bar_chart,
-      title: 'Publication Types Distribution',
+      title: AppLocalizations.of(context)!.publicationTypesDistributionTitle,
       publicationsByType: publicationsByType,
     );
   }
@@ -1708,11 +1706,11 @@ class LabHighlights extends StatelessWidget {
 
     // Define icons for each category
     final Map<String, IconData> categoryIcons = {
-      'Current Students': Icons.person,
-      'Graduated Students': FontAwesomeIcons.userGraduate,
-      'Postdocs': FontAwesomeIcons.userDoctor,
-      'Current Faculty': FontAwesomeIcons.chalkboardUser,
-      'Emeritus Faculty': FontAwesomeIcons.personCane,
+      AppLocalizations.of(context)!.currentStudentsCategory: Icons.person,
+      AppLocalizations.of(context)!.graduatedStudentsCategory: FontAwesomeIcons.userGraduate,
+      AppLocalizations.of(context)!.postdocsCategory: FontAwesomeIcons.userDoctor,
+      AppLocalizations.of(context)!.currentFacultyCategory: FontAwesomeIcons.chalkboardUser,
+      AppLocalizations.of(context)!.emeritusFacultyCategory: FontAwesomeIcons.personCane,
     };
 
     // Create data for the donut chart, only including non-empty categories
@@ -1720,11 +1718,11 @@ class LabHighlights extends StatelessWidget {
 
     // Create category info with labels
     final categoryInfo = [
-      MapEntry('Current Students', currentStudentCount),
-      MapEntry('Graduated Students', graduatedStudentCount),
-      MapEntry('Postdocs', postDocCount),
-      MapEntry('Current Faculty', currentFacultyCount),
-      MapEntry('Emeritus Faculty', emeritusFacultyCount),
+      MapEntry(AppLocalizations.of(context)!.currentStudentsCategory, currentStudentCount),
+      MapEntry(AppLocalizations.of(context)!.graduatedStudentsCategory, graduatedStudentCount),
+      MapEntry(AppLocalizations.of(context)!.postdocsCategory, postDocCount),
+      MapEntry(AppLocalizations.of(context)!.currentFacultyCategory, currentFacultyCount),
+      MapEntry(AppLocalizations.of(context)!.emeritusFacultyCategory, emeritusFacultyCount),
     ];
 
     // Only add categories with non-zero counts
@@ -1737,8 +1735,8 @@ class LabHighlights extends StatelessWidget {
     return LabUtils.buildDonutChartCard(
       context: context,
       icon: Icons.pie_chart,
-      title: 'Lab Member Distribution',
-      subtitle: 'Breakdown of lab members by category',
+      title: AppLocalizations.of(context)!.labMemberDistributionTitle,
+      subtitle: AppLocalizations.of(context)!.labMembersCategorySubtitle,
       data: data,
       categoryIcons: categoryIcons,
     );
@@ -1789,22 +1787,22 @@ class LabHighlights extends StatelessWidget {
 
     // Define labels and icons for each category
     final Map<String, IconData> categoryIcons = {
-      'One Member': Icons.person,
-      'Two Members': Icons.people,
-      'Three Members': Icons.groups,
-      'Four Members': Icons.diversity_3,
-      'Five Members': Icons.groups_3,
-      'Six+ Members': Icons.diversity_1,
+      AppLocalizations.of(context)!.oneMemberCategory: Icons.person,
+      AppLocalizations.of(context)!.twoMembersCategory: Icons.people,
+      AppLocalizations.of(context)!.threeMembersCategory: Icons.groups,
+      AppLocalizations.of(context)!.fourMembersCategory: Icons.diversity_3,
+      AppLocalizations.of(context)!.fiveMembersCategory: Icons.groups_3,
+      AppLocalizations.of(context)!.sixPlusMembersCategory: Icons.diversity_1,
     };
 
     // Create category info with labels
     final categoryInfo = [
-      MapEntry('One Member', papersByLabMemberCount[1]!),
-      MapEntry('Two Members', papersByLabMemberCount[2]!),
-      MapEntry('Three Members', papersByLabMemberCount[3]!),
-      MapEntry('Four Members', papersByLabMemberCount[4]!),
-      MapEntry('Five Members', papersByLabMemberCount[5]!),
-      MapEntry('Six+ Members', papersByLabMemberCount[6]!),
+      MapEntry(AppLocalizations.of(context)!.oneMemberCategory, papersByLabMemberCount[1]!),
+      MapEntry(AppLocalizations.of(context)!.twoMembersCategory, papersByLabMemberCount[2]!),
+      MapEntry(AppLocalizations.of(context)!.threeMembersCategory, papersByLabMemberCount[3]!),
+      MapEntry(AppLocalizations.of(context)!.fourMembersCategory, papersByLabMemberCount[4]!),
+      MapEntry(AppLocalizations.of(context)!.fiveMembersCategory, papersByLabMemberCount[5]!),
+      MapEntry(AppLocalizations.of(context)!.sixPlusMembersCategory, papersByLabMemberCount[6]!),
     ];
 
     // Only add categories with non-zero counts
@@ -1817,8 +1815,8 @@ class LabHighlights extends StatelessWidget {
     return LabUtils.buildDonutChartCard(
       context: context,
       icon: Icons.people,
-      title: 'Lab Members Per Paper',
-      subtitle: 'Distribution of papers by number of lab member collaborators',
+      title: AppLocalizations.of(context)!.labMembersPerPaperTitle,
+      subtitle: AppLocalizations.of(context)!.papersCollaborationSubtitle,
       data: data,
       categoryIcons: categoryIcons,
     );

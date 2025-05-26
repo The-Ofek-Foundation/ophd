@@ -227,6 +227,96 @@ abstract class AppLocalizations {
   /// **'If you are a lab member and have a missing connection, please try syncing the database from the reload button. If that doesn\'t work, it is possible that either your publication is too recent and does not (yet) appear in DBLP, I have an incorrect DBLP ID associated with you, or your publication is in an adjacent field and does not appear in DBLP. In either case, you can contact me to manually update the data.'**
   String get labGraphInfo;
 
+  /// No description provided for @labInfoTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'UCI Theory Lab'**
+  String get labInfoTitle;
+
+  /// No description provided for @labInfoSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Exploring theoretical computer science since 1975'**
+  String get labInfoSubtitle;
+
+  /// No description provided for @labInfoDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'This page showcases the Theory Lab at the University of California, Irvine. It includes a visualization of lab collaborations, highlights of research achievements, and statistics about publications, students, and faculty members over the years.'**
+  String get labInfoDescription;
+
+  /// No description provided for @loadingLabData.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading Lab Data'**
+  String get loadingLabData;
+
+  /// No description provided for @syncDatabase.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync Database'**
+  String get syncDatabase;
+
+  /// No description provided for @fetchRealData.
+  ///
+  /// In en, this message translates to:
+  /// **'Fetch Real Data'**
+  String get fetchRealData;
+
+  /// No description provided for @tryAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Try Again'**
+  String get tryAgain;
+
+  /// No description provided for @error.
+  ///
+  /// In en, this message translates to:
+  /// **'Error'**
+  String get error;
+
+  /// No description provided for @disclaimerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Disclaimer'**
+  String get disclaimerTitle;
+
+  /// No description provided for @disclaimerSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Data may not be 100% accurate'**
+  String get disclaimerSubtitle;
+
+  /// No description provided for @disclaimerTextStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Knowledge of lab members is taken from '**
+  String get disclaimerTextStart;
+
+  /// No description provided for @disclaimerLinkDavidPage.
+  ///
+  /// In en, this message translates to:
+  /// **'David Eppstein\'s fabulous UCI computer science theory page'**
+  String get disclaimerLinkDavidPage;
+
+  /// No description provided for @disclaimerTextMiddle.
+  ///
+  /// In en, this message translates to:
+  /// **'. The rest of the data is taken from '**
+  String get disclaimerTextMiddle;
+
+  /// No description provided for @disclaimerLinkDblp.
+  ///
+  /// In en, this message translates to:
+  /// **'DBLP'**
+  String get disclaimerLinkDblp;
+
+  /// No description provided for @disclaimerTextEnd.
+  ///
+  /// In en, this message translates to:
+  /// **', which is a database of computer science publications. DBLP was chosen because it assigns each researcher a unique ID automatically, it includes historical data, and it is fairly comprehensive. Alternatives, such as Google Scholar and ORCID, require the user to manually create their profile. DBLP is not perfect, however, being less comprehensive than Google Scholar, and not containing citation information which would have been nice to have. That being said, if there are any publications or changes you would like me to manually add, please contact me.'**
+  String get disclaimerTextEnd;
+
   /// No description provided for @publicationsTheory.
   ///
   /// In en, this message translates to:
@@ -497,12 +587,6 @@ abstract class AppLocalizations {
   /// **'Recent Publications'**
   String get recentPublications;
 
-  /// No description provided for @paperCount.
-  ///
-  /// In en, this message translates to:
-  /// **'{count, plural, =1{paper} other{papers}}'**
-  String paperCount(int count);
-
   /// No description provided for @visitWebsite.
   ///
   /// In en, this message translates to:
@@ -538,6 +622,330 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'There is currently no information available about this researcher in our database. This could be because they have not yet published any papers that appear in DBLP, or their publications have not been linked to their profile.'**
   String get noInformationAvailableDescription;
+
+  /// No description provided for @labHighlightsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Lab Highlights'**
+  String get labHighlightsTitle;
+
+  /// No description provided for @labHighlightsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Key statistics and insights about the lab'**
+  String get labHighlightsSubtitle;
+
+  /// No description provided for @mostTotalCollaborations.
+  ///
+  /// In en, this message translates to:
+  /// **'Most Total Collaborations'**
+  String get mostTotalCollaborations;
+
+  /// No description provided for @studentsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Students:'**
+  String get studentsLabel;
+
+  /// No description provided for @labMembersCategorySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Breakdown of lab members by category'**
+  String get labMembersCategorySubtitle;
+
+  /// No description provided for @papersCollaborationSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Distribution of papers by number of lab member collaborators'**
+  String get papersCollaborationSubtitle;
+
+  /// No description provided for @labMemberDistributionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Lab Member Distribution'**
+  String get labMemberDistributionTitle;
+
+  /// No description provided for @labMembersPerPaperTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Lab Members Per Paper'**
+  String get labMembersPerPaperTitle;
+
+  /// No description provided for @mostStudentCollaborations.
+  ///
+  /// In en, this message translates to:
+  /// **'Most Student Collaborations'**
+  String get mostStudentCollaborations;
+
+  /// No description provided for @mostFacultyCollaborations.
+  ///
+  /// In en, this message translates to:
+  /// **'Most Faculty Collaborations'**
+  String get mostFacultyCollaborations;
+
+  /// No description provided for @facultyLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Faculty:'**
+  String get facultyLabel;
+
+  /// No description provided for @collaborationsPerYearTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Collaborations Per Year'**
+  String get collaborationsPerYearTitle;
+
+  /// No description provided for @graduationsPerYearTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Graduations Per Year'**
+  String get graduationsPerYearTitle;
+
+  /// No description provided for @publicationsPerYearTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Publications Per Year'**
+  String get publicationsPerYearTitle;
+
+  /// No description provided for @recentGraduatesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent Graduates'**
+  String get recentGraduatesTitle;
+
+  /// No description provided for @publicationTypesDistributionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Publication Types Distribution'**
+  String get publicationTypesDistributionTitle;
+
+  /// No description provided for @recentCurrentStudentPapers.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent Current Student Papers'**
+  String get recentCurrentStudentPapers;
+
+  /// No description provided for @recentGraduatedStudentPapers.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent Graduated Student Papers'**
+  String get recentGraduatedStudentPapers;
+
+  /// No description provided for @recentPostdocPapers.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent Postdoc Papers'**
+  String get recentPostdocPapers;
+
+  /// No description provided for @recentCurrentFacultyPapers.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent Current Faculty Papers'**
+  String get recentCurrentFacultyPapers;
+
+  /// No description provided for @recentEmeritusFacultyPapers.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent Emeritus Faculty Papers'**
+  String get recentEmeritusFacultyPapers;
+
+  /// No description provided for @recentLabCollaborations.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent Lab Collaborations'**
+  String get recentLabCollaborations;
+
+  /// No description provided for @prolificCurrentStudents.
+  ///
+  /// In en, this message translates to:
+  /// **'Prolific Current Students'**
+  String get prolificCurrentStudents;
+
+  /// No description provided for @prolificGraduatedStudents.
+  ///
+  /// In en, this message translates to:
+  /// **'Prolific Graduated Students'**
+  String get prolificGraduatedStudents;
+
+  /// No description provided for @prolificPostdocs.
+  ///
+  /// In en, this message translates to:
+  /// **'Prolific Postdocs'**
+  String get prolificPostdocs;
+
+  /// No description provided for @prolificCurrentFaculty.
+  ///
+  /// In en, this message translates to:
+  /// **'Prolific Current Faculty'**
+  String get prolificCurrentFaculty;
+
+  /// No description provided for @prolificEmeritusFaculty.
+  ///
+  /// In en, this message translates to:
+  /// **'Prolific Emeritus Faculty'**
+  String get prolificEmeritusFaculty;
+
+  /// No description provided for @studentsCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Students'**
+  String get studentsCategory;
+
+  /// No description provided for @unknownYear.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown'**
+  String get unknownYear;
+
+  /// No description provided for @currentFacultyMostGraduates.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Faculty with Most Graduates'**
+  String get currentFacultyMostGraduates;
+
+  /// No description provided for @emeritusFacultyMostGraduates.
+  ///
+  /// In en, this message translates to:
+  /// **'Emeritus Faculty with Most Graduates'**
+  String get emeritusFacultyMostGraduates;
+
+  /// No description provided for @publicationsAxis.
+  ///
+  /// In en, this message translates to:
+  /// **'Publications'**
+  String get publicationsAxis;
+
+  /// No description provided for @collaborationsAxis.
+  ///
+  /// In en, this message translates to:
+  /// **'Collaborations'**
+  String get collaborationsAxis;
+
+  /// No description provided for @graduationsAxis.
+  ///
+  /// In en, this message translates to:
+  /// **'Graduations'**
+  String get graduationsAxis;
+
+  /// No description provided for @paper.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 paper} other{{count} papers}}'**
+  String paper(int count);
+
+  /// No description provided for @graduate.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 graduate} other{{count} graduates}}'**
+  String graduate(int count);
+
+  /// No description provided for @currentStudentsCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Students'**
+  String get currentStudentsCategory;
+
+  /// No description provided for @graduatedStudentsCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Graduated Students'**
+  String get graduatedStudentsCategory;
+
+  /// No description provided for @postdocsCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Postdocs'**
+  String get postdocsCategory;
+
+  /// No description provided for @currentFacultyCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Faculty'**
+  String get currentFacultyCategory;
+
+  /// No description provided for @emeritusFacultyCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Emeritus Faculty'**
+  String get emeritusFacultyCategory;
+
+  /// No description provided for @oneMemberCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'One Member'**
+  String get oneMemberCategory;
+
+  /// No description provided for @twoMembersCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Two Members'**
+  String get twoMembersCategory;
+
+  /// No description provided for @threeMembersCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Three Members'**
+  String get threeMembersCategory;
+
+  /// No description provided for @fourMembersCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Four Members'**
+  String get fourMembersCategory;
+
+  /// No description provided for @fiveMembersCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Five Members'**
+  String get fiveMembersCategory;
+
+  /// No description provided for @sixPlusMembersCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Six+ Members'**
+  String get sixPlusMembersCategory;
+
+  /// No description provided for @wellConnectedCurrentStudents.
+  ///
+  /// In en, this message translates to:
+  /// **'Well-Connected Current Students'**
+  String get wellConnectedCurrentStudents;
+
+  /// No description provided for @wellConnectedGraduatedStudents.
+  ///
+  /// In en, this message translates to:
+  /// **'Well-Connected Graduated Students'**
+  String get wellConnectedGraduatedStudents;
+
+  /// No description provided for @wellConnectedPostdocs.
+  ///
+  /// In en, this message translates to:
+  /// **'Well-Connected Postdocs'**
+  String get wellConnectedPostdocs;
+
+  /// No description provided for @wellConnectedCurrentFaculty.
+  ///
+  /// In en, this message translates to:
+  /// **'Well-Connected Current Faculty'**
+  String get wellConnectedCurrentFaculty;
+
+  /// No description provided for @wellConnectedEmeritusFaculty.
+  ///
+  /// In en, this message translates to:
+  /// **'Well-Connected Emeritus Faculty'**
+  String get wellConnectedEmeritusFaculty;
+
+  /// No description provided for @yearAxisLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Year'**
+  String get yearAxisLabel;
+
+  /// No description provided for @collaborator.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 collaborator} other{{count} collaborators}}'**
+  String collaborator(int count);
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

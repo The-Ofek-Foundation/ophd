@@ -99,7 +99,8 @@ class AppLocalizationsHe extends AppLocalizations {
   }
 
   @override
-  String get researchDescription => 'עבודתי משלבת תיאוריה במדעי המחשב עם אימות ניסיוני, תוך התמקדות במבני נתונים אקראיים, כולל מודלים של גרפים ועצי חיפוש בינאריים.';
+  String get researchDescription =>
+      'עבודתי משלבת תיאוריה במדעי המחשב עם אימות ניסיוני, תוך התמקדות במבני נתונים אקראיים, כולל מודלים של גרפים ועצי חיפוש בינאריים.';
 
   @override
   String get erdosNumber => 'מספר ארדש';
@@ -111,7 +112,8 @@ class AppLocalizationsHe extends AppLocalizations {
   String get labGraphTitle => 'גרף שיתופי פעולה במעבדה';
 
   @override
-  String get labGraphSubtitle => 'ויזואליזציה אינטראקטיבית של שיתופי פעולה במחקר';
+  String get labGraphSubtitle =>
+      'ויזואליזציה אינטראקטיבית של שיתופי פעולה במחקר';
 
   @override
   String get labGraphDescriptionStart => 'לפניכם גרף של כל חברי המעבדה שלי, ';
@@ -120,7 +122,8 @@ class AppLocalizationsHe extends AppLocalizations {
   String get labGraphDescriptionLink => 'מעבדת התיאוריה';
 
   @override
-  String get labGraphDescriptionEnd => ', ב-UCI. הקשתות מייצגות כתיבה משותפת של מאמרי מחקר. אתם מוזמנים לבחור בחברי הסגל כדי לראות את שיתופי הפעולה שלהם, ועל כל אדם כדי לראות פרטים נוספים.';
+  String get labGraphDescriptionEnd =>
+      ', ב-UCI. הקשתות מייצגות כתיבה משותפת של מאמרי מחקר. אתם מוזמנים לבחור בחברי הסגל כדי לראות את שיתופי הפעולה שלהם, ועל כל אדם כדי לראות פרטים נוספים.';
 
   @override
   String get unconnectedLabMembersTitle => 'חברי מעבדה ללא קשרים';
@@ -144,7 +147,8 @@ class AppLocalizationsHe extends AppLocalizations {
   }
 
   @override
-  String get labGraphInfo => 'אם אתה חבר מעבדה ואם חסר לך חיבור, אנא נסה לסנכרן את מסד הנתונים באמצעות כפתור הטעינה מחדש. אם זה לא עובד, ייתכן שהפרסום שלך חדש מדי ועדיין לא מופיע ב-DBLP, שיש לי מזהה DBLP שגוי המשויך אליך, או שהפרסום שלך בתחום משיק ואינו מופיע ב-DBLP. בכל אחד מהמקרים, תוכל ליצור איתי קשר כדי לעדכן את הנתונים באופן ידני.';
+  String get labGraphInfo =>
+      'אם אתה חבר מעבדה ואם חסר לך חיבור, אנא נסה לסנכרן את מסד הנתונים באמצעות כפתור הטעינה מחדש. אם זה לא עובד, ייתכן שהפרסום שלך חדש מדי ועדיין לא מופיע ב-DBLP, שיש לי מזהה DBLP שגוי המשויך אליך, או שהפרסום שלך בתחום משיק ואינו מופיע ב-DBLP. בכל אחד מהמקרים, תוכל ליצור איתי קשר כדי לעדכן את הנתונים באופן ידני.';
 
   @override
   String get labInfoTitle => 'מעבדת התיאוריה של UCI';
@@ -153,7 +157,8 @@ class AppLocalizationsHe extends AppLocalizations {
   String get labInfoSubtitle => 'חוקרים מדעי המחשב התיאורטיים מאז 1975';
 
   @override
-  String get labInfoDescription => 'עמוד זה מציג את מעבדת התיאוריה באוניברסיטת קליפורניה, אירווין. הוא כולל ויזואליזציה של שיתופי פעולה במעבדה, הדגשה של הישגי מחקר, וסטטיסטיקות על פרסומים, סטודנטים וחברי סגל לאורך השנים.';
+  String get labInfoDescription =>
+      'עמוד זה מציג את מעבדת התיאוריה באוניברסיטת קליפורניה, אירווין. הוא כולל ויזואליזציה של שיתופי פעולה במעבדה, הדגשה של הישגי מחקר, וסטטיסטיקות על פרסומים, סטודנטים וחברי סגל לאורך השנים.';
 
   @override
   String get loadingLabData => 'טוען נתוני מעבדה';
@@ -180,7 +185,8 @@ class AppLocalizationsHe extends AppLocalizations {
   String get disclaimerTextStart => 'המידע על חברי המעבדה נלקח מ';
 
   @override
-  String get disclaimerLinkDavidPage => 'עמוד התיאוריה המדהים של דייוויד אפשטיין מ-UCI';
+  String get disclaimerLinkDavidPage =>
+      'עמוד התיאוריה המדהים של דייוויד אפשטיין מ-UCI';
 
   @override
   String get disclaimerTextMiddle => '. שאר הנתונים נלקחים מ';
@@ -189,7 +195,8 @@ class AppLocalizationsHe extends AppLocalizations {
   String get disclaimerLinkDblp => 'DBLP';
 
   @override
-  String get disclaimerTextEnd => ', שהוא מסד נתונים של פרסומים במדעי המחשב. DBLP נבחר מכיוון שהוא מקצה לכל חוקר מזהה ייחודי באופן אוטומטי, הוא כולל נתונים היסטוריים, והוא מקיף למדי. חלופות, כמו Google Scholar ו-ORCID, דורשות מהמשתמש ליצור את הפרופיל שלו באופן ידני. DBLP אינו מושלם, עם זאת, הוא פחות מקיף מ-Google Scholar, ואינו מכיל מידע על ציטוטים שהיה נחמד שיהיה. עם זאת, אם יש פרסומים או שינויים שתרצו שאוסיף באופן ידני, אנא צרו איתי קשר.';
+  String get disclaimerTextEnd =>
+      ', שהוא מסד נתונים של פרסומים במדעי המחשב. DBLP נבחר מכיוון שהוא מקצה לכל חוקר מזהה ייחודי באופן אוטומטי, הוא כולל נתונים היסטוריים, והוא מקיף למדי. חלופות, כמו Google Scholar ו-ORCID, דורשות מהמשתמש ליצור את הפרופיל שלו באופן ידני. DBLP אינו מושלם, עם זאת, הוא פחות מקיף מ-Google Scholar, ואינו מכיל מידע על ציטוטים שהיה נחמד שיהיה. עם זאת, אם יש פרסומים או שינויים שתרצו שאוסיף באופן ידני, אנא צרו איתי קשר.';
 
   @override
   String get publicationsTheory => 'מדעי המחשב התיאורטיים';
@@ -204,7 +211,8 @@ class AppLocalizationsHe extends AppLocalizations {
   String get publicationsEducationSubtitle => 'מחקר בחינוך במדעי המחשב ב-UCI';
 
   @override
-  String get publicationsEducationIntro => 'הייתה לי הזדמנות להשתתף בכמה מחקרים בתחום החינוך במדעי המחשב.';
+  String get publicationsEducationIntro =>
+      'הייתה לי הזדמנות להשתתף בכמה מחקרים בתחום החינוך במדעי המחשב.';
 
   @override
   String get educationJourney => 'מסע חינוכי';
@@ -222,7 +230,8 @@ class AppLocalizationsHe extends AppLocalizations {
   String get educationCurrentStudies => 'לימודים נוכחיים';
 
   @override
-  String get educationCurrentStudiesDetails => 'דוקטורט בתיאוריה של מדעי המחשב (אלגוריתמים בעולם האמיתי), UCI, מתמשך';
+  String get educationCurrentStudiesDetails =>
+      'דוקטורט בתיאוריה של מדעי המחשב (אלגוריתמים בעולם האמיתי), UCI, מתמשך';
 
   @override
   String get educationMasterNote => 'תואר שני הושג בדרך';
@@ -234,10 +243,12 @@ class AppLocalizationsHe extends AppLocalizations {
   String get educationStoryStart => 'גדלתי בקופרטינו, קליפורניה, וסיימתי את ';
 
   @override
-  String get educationStoryMid => '. התשוקה שלי לתכנות התעוררה במהלך שנת הלימודים הראשונה שלי עם קורס התכנות הראשון שלי. המשכתי להשתתף ב-AP Computer Science A הן כתלמיד והן כעוזר הוראה. בשנת 2017, התחלתי ב-';
+  String get educationStoryMid =>
+      '. התשוקה שלי לתכנות התעוררה במהלך שנת הלימודים הראשונה שלי עם קורס התכנות הראשון שלי. המשכתי להשתתף ב-AP Computer Science A הן כתלמיד והן כעוזר הוראה. בשנת 2017, התחלתי ב-';
 
   @override
-  String get educationStoryEnd => ', בתואר כפול במדעי המחשב ופיזיקה, וסיימתי בשנת 2021. כיום, אני לומד לדוקטורט ב-UCI.';
+  String get educationStoryEnd =>
+      ', בתואר כפול במדעי המחשב ופיזיקה, וסיימתי בשנת 2021. כיום, אני לומד לדוקטורט ב-UCI.';
 
   @override
   String get montaVistaHS => 'תיכון מונטה ויסטה';
@@ -399,7 +410,8 @@ class AppLocalizationsHe extends AppLocalizations {
   String get noInformationAvailable => 'אין מידע זמין';
 
   @override
-  String get noInformationAvailableDescription => 'אין כרגע מידע זמין על חוקר זה במאגר שלנו. ייתכן שהם עדיין לא פרסמו מאמרים שמופיעים ב-DBLP, או שהפרסומים שלהם לא קושרו לפרופיל שלהם.';
+  String get noInformationAvailableDescription =>
+      'אין כרגע מידע זמין על חוקר זה במאגר שלנו. ייתכן שהם עדיין לא פרסמו מאמרים שמופיעים ב-DBLP, או שהפרסומים שלהם לא קושרו לפרופיל שלהם.';
 
   @override
   String get labHighlightsTitle => 'דגשים של המעבדה';
@@ -417,7 +429,8 @@ class AppLocalizationsHe extends AppLocalizations {
   String get labMembersCategorySubtitle => 'פירוט חברי המעבדה לפי קטגוריה';
 
   @override
-  String get papersCollaborationSubtitle => 'חלוקת מאמרים לפי מספר שותפי פעולה מחברי המעבדה';
+  String get papersCollaborationSubtitle =>
+      'חלוקת מאמרים לפי מספר שותפי פעולה מחברי המעבדה';
 
   @override
   String get labMemberDistributionTitle => 'חלוקת חברי המעבדה';
@@ -453,7 +466,8 @@ class AppLocalizationsHe extends AppLocalizations {
   String get recentCurrentStudentPapers => 'מאמרים אחרונים של סטודנטים נוכחיים';
 
   @override
-  String get recentGraduatedStudentPapers => 'מאמרים אחרונים של סטודנטים בוגרים';
+  String get recentGraduatedStudentPapers =>
+      'מאמרים אחרונים של סטודנטים בוגרים';
 
   @override
   String get recentPostdocPapers => 'מאמרים אחרונים של פוסט דוקטורנטים';

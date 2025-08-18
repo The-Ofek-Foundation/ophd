@@ -83,7 +83,8 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get researchDescription => 'My work combines computer science theory with experimental validation, focusing on randomized data structures including graph models and binary search trees.';
+  String get researchDescription =>
+      'My work combines computer science theory with experimental validation, focusing on randomized data structures including graph models and binary search trees.';
 
   @override
   String get erdosNumber => 'Erdős Number';
@@ -95,16 +96,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get labGraphTitle => 'Lab Collaboration Graph';
 
   @override
-  String get labGraphSubtitle => 'Interactive visualization of research collaborations';
+  String get labGraphSubtitle =>
+      'Interactive visualization of research collaborations';
 
   @override
-  String get labGraphDescriptionStart => 'Here is a graph of all the members of my lab, the ';
+  String get labGraphDescriptionStart =>
+      'Here is a graph of all the members of my lab, the ';
 
   @override
   String get labGraphDescriptionLink => 'theory lab';
 
   @override
-  String get labGraphDescriptionEnd => ', at UCI. Edges correspond to co-authorship on research papers. Feel free to select faculty members to see their collaborations, and on any person to see more details.';
+  String get labGraphDescriptionEnd =>
+      ', at UCI. Edges correspond to co-authorship on research papers. Feel free to select faculty members to see their collaborations, and on any person to see more details.';
 
   @override
   String get unconnectedLabMembersTitle => 'Unconnected Lab Members';
@@ -128,16 +132,19 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get labGraphInfo => 'If you are a lab member and have a missing connection, please try syncing the database from the reload button. If that doesn\'t work, it is possible that either your publication is too recent and does not (yet) appear in DBLP, I have an incorrect DBLP ID associated with you, or your publication is in an adjacent field and does not appear in DBLP. In either case, you can contact me to manually update the data.';
+  String get labGraphInfo =>
+      'If you are a lab member and have a missing connection, please try syncing the database from the reload button. If that doesn\'t work, it is possible that either your publication is too recent and does not (yet) appear in DBLP, I have an incorrect DBLP ID associated with you, or your publication is in an adjacent field and does not appear in DBLP. In either case, you can contact me to manually update the data.';
 
   @override
   String get labInfoTitle => 'UCI Theory Lab';
 
   @override
-  String get labInfoSubtitle => 'Exploring theoretical computer science since 1975';
+  String get labInfoSubtitle =>
+      'Exploring theoretical computer science since 1975';
 
   @override
-  String get labInfoDescription => 'This page showcases the Theory Lab at the University of California, Irvine. It includes a visualization of lab collaborations, highlights of research achievements, and statistics about publications, students, and faculty members over the years.';
+  String get labInfoDescription =>
+      'This page showcases the Theory Lab at the University of California, Irvine. It includes a visualization of lab collaborations, highlights of research achievements, and statistics about publications, students, and faculty members over the years.';
 
   @override
   String get loadingLabData => 'Loading Lab Data';
@@ -164,7 +171,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get disclaimerTextStart => 'Knowledge of lab members is taken from ';
 
   @override
-  String get disclaimerLinkDavidPage => 'David Eppstein\'s fabulous UCI computer science theory page';
+  String get disclaimerLinkDavidPage =>
+      'David Eppstein\'s fabulous UCI computer science theory page';
 
   @override
   String get disclaimerTextMiddle => '. The rest of the data is taken from ';
@@ -173,13 +181,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get disclaimerLinkDblp => 'DBLP';
 
   @override
-  String get disclaimerTextEnd => ', which is a database of computer science publications. DBLP was chosen because it assigns each researcher a unique ID automatically, it includes historical data, and it is fairly comprehensive. Alternatives, such as Google Scholar and ORCID, require the user to manually create their profile. DBLP is not perfect, however, being less comprehensive than Google Scholar, and not containing citation information which would have been nice to have. That being said, if there are any publications or changes you would like me to manually add, please contact me.';
+  String get disclaimerTextEnd =>
+      ', which is a database of computer science publications. DBLP was chosen because it assigns each researcher a unique ID automatically, it includes historical data, and it is fairly comprehensive. Alternatives, such as Google Scholar and ORCID, require the user to manually create their profile. DBLP is not perfect, however, being less comprehensive than Google Scholar, and not containing citation information which would have been nice to have. That being said, if there are any publications or changes you would like me to manually add, please contact me.';
 
   @override
   String get publicationsTheory => 'Theoretical Computer Science';
 
   @override
-  String get publicationsTheorySubtitle => 'Randomized Algorithms and Data Structures';
+  String get publicationsTheorySubtitle =>
+      'Randomized Algorithms and Data Structures';
 
   @override
   String get publicationsEducation => 'Computer Science Education';
@@ -188,7 +198,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get publicationsEducationSubtitle => 'Research in CS Education at UCI';
 
   @override
-  String get publicationsEducationIntro => 'I\'ve had the opportunity to tag along on some CS ed research projects.';
+  String get publicationsEducationIntro =>
+      'I\'ve had the opportunity to tag along on some CS ed research projects.';
 
   @override
   String get educationJourney => 'Educational Journey';
@@ -200,13 +211,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get educationBackground => 'Academic Background';
 
   @override
-  String get educationBackgroundSubtitle => 'Computer Science and Physics at UCI';
+  String get educationBackgroundSubtitle =>
+      'Computer Science and Physics at UCI';
 
   @override
   String get educationCurrentStudies => 'Current Studies';
 
   @override
-  String get educationCurrentStudiesDetails => 'PhD in CS Theory (Algorithms in the Real World), UCI, ongoing';
+  String get educationCurrentStudiesDetails =>
+      'PhD in CS Theory (Algorithms in the Real World), UCI, ongoing';
 
   @override
   String get educationMasterNote => 'Masters attained on the way';
@@ -215,13 +228,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get educationUndergrad => 'Undergraduate Studies';
 
   @override
-  String get educationStoryStart => 'I was raised in Cupertino, CA, and graduated from ';
+  String get educationStoryStart =>
+      'I was raised in Cupertino, CA, and graduated from ';
 
   @override
-  String get educationStoryMid => '. My passion for programming ignited during my freshman year with my first programming course. I continued to engage with AP Computer Science A as both a student and teaching assistant. In 2017, I started at ';
+  String get educationStoryMid =>
+      '. My passion for programming ignited during my freshman year with my first programming course. I continued to engage with AP Computer Science A as both a student and teaching assistant. In 2017, I started at ';
 
   @override
-  String get educationStoryEnd => ', pursuing a double major in Computer Science and Physics, graduating in 2021. Currently, I am pursuing a PhD at UCI.';
+  String get educationStoryEnd =>
+      ', pursuing a double major in Computer Science and Physics, graduating in 2021. Currently, I am pursuing a PhD at UCI.';
 
   @override
   String get montaVistaHS => 'Monta Vista High School';
@@ -259,7 +275,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get industryExperience => 'Industry Experience';
 
   @override
-  String get industryExperienceSubtitle => 'From Startups to Large Corporations';
+  String get industryExperienceSubtitle =>
+      'From Startups to Large Corporations';
 
   @override
   String conference(String key) {
@@ -383,13 +400,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noInformationAvailable => 'No Information Available';
 
   @override
-  String get noInformationAvailableDescription => 'There is currently no information available about this researcher in our database. This could be because they have not yet published any papers that appear in DBLP, or their publications have not been linked to their profile.';
+  String get noInformationAvailableDescription =>
+      'There is currently no information available about this researcher in our database. This could be because they have not yet published any papers that appear in DBLP, or their publications have not been linked to their profile.';
 
   @override
   String get labHighlightsTitle => 'Lab Highlights';
 
   @override
-  String get labHighlightsSubtitle => 'Key statistics and insights about the lab';
+  String get labHighlightsSubtitle =>
+      'Key statistics and insights about the lab';
 
   @override
   String get mostTotalCollaborations => 'Most Total Collaborations';
@@ -398,10 +417,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get studentsLabel => 'Students:';
 
   @override
-  String get labMembersCategorySubtitle => 'Breakdown of lab members by category';
+  String get labMembersCategorySubtitle =>
+      'Breakdown of lab members by category';
 
   @override
-  String get papersCollaborationSubtitle => 'Distribution of papers by number of lab member collaborators';
+  String get papersCollaborationSubtitle =>
+      'Distribution of papers by number of lab member collaborators';
 
   @override
   String get labMemberDistributionTitle => 'Lab Member Distribution';
@@ -431,7 +452,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get recentGraduatesTitle => 'Recent Graduates';
 
   @override
-  String get publicationTypesDistributionTitle => 'Publication Types Distribution';
+  String get publicationTypesDistributionTitle =>
+      'Publication Types Distribution';
 
   @override
   String get recentCurrentStudentPapers => 'Recent Current Student Papers';
@@ -473,10 +495,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get unknownYear => 'Unknown';
 
   @override
-  String get currentFacultyMostGraduates => 'Current Faculty with Most Graduates';
+  String get currentFacultyMostGraduates =>
+      'Current Faculty with Most Graduates';
 
   @override
-  String get emeritusFacultyMostGraduates => 'Emeritus Faculty with Most Graduates';
+  String get emeritusFacultyMostGraduates =>
+      'Emeritus Faculty with Most Graduates';
 
   @override
   String get publicationsAxis => 'Publications';
@@ -546,7 +570,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get wellConnectedCurrentStudents => 'Well-Connected Current Students';
 
   @override
-  String get wellConnectedGraduatedStudents => 'Well-Connected Graduated Students';
+  String get wellConnectedGraduatedStudents =>
+      'Well-Connected Graduated Students';
 
   @override
   String get wellConnectedPostdocs => 'Well-Connected Postdocs';

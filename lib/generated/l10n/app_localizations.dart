@@ -125,7 +125,7 @@ abstract class AppLocalizations {
   /// No description provided for @name.
   ///
   /// In en, this message translates to:
-  /// **'{key, select, ofek {Ofek Gila} mikeg {Michael Goodrich} bob {Robert Tarjan} evrim {Evrim Ozel} mikes {Michael Shindler} miked {Michael Dillencourt} nero {Nero Li} shahar {Shahar Broner} yubin {Yubin Kim} katrina {Katrina Mizuo} elijah {Elijah Sauder} claire {Claire To} albert {Albert Wang} abraham {Abraham Illickan} vinesh {Vinesh Sridhar} paul {Paul Erdős} hedet {Stephan Hedetniemi} other {{key}}}'**
+  /// **'{key, select, ofek {Ofek Gila} mikeg {Michael Goodrich} bob {Robert Tarjan} evrim {Evrim Ozel} mikes {Michael Shindler} miked {Michael Dillencourt} nero {Nero Li} shahar {Shahar Broner} yubin {Yubin Kim} katrina {Katrina Mizuo} elijah {Elijah Sauder} claire {Claire To} albert {Albert Wang} abraham {Abraham Illickan} vinesh {Vinesh Sridhar} paul {Paul Erdős} hedet {Stephan Hedetniemi} david {David Eppstein} ryuto {Ryuto Kitagawa} other {{key}}}'**
   String name(String key);
 
   /// No description provided for @page.
@@ -491,13 +491,13 @@ abstract class AppLocalizations {
   /// No description provided for @conference.
   ///
   /// In en, this message translates to:
-  /// **'{key, select, COCOA {Conference on Combinatorial Optimization and Applications} WADS {Algorithms and Data Structures Symposium} CCSC {Journal of Computing Sciences in Colleges} SIGCSE {Special Interest Group on Computer Science Education} CIAC {International Conference on Algorithms and Complexity} other {{key}}}'**
+  /// **'{key, select, COCOA {Conference on Combinatorial Optimization and Applications} WADS {Algorithms and Data Structures Symposium} CCSC {Journal of Computing Sciences in Colleges} SIGCSE {Special Interest Group on Computer Science Education} CIAC {International Conference on Algorithms and Complexity} ACDA {SIAM Conference on Applied and Computational Discrete Algorithms} other {{key}}}'**
   String conference(String key);
 
   /// No description provided for @award.
   ///
   /// In en, this message translates to:
-  /// **'{key, select, Best_Paper {Best Paper} other {{key}}}'**
+  /// **'{key, select, Best_Paper {Best Paper} Best_Student_Presentation {Best Student Presentation} other {{key}}}'**
   String award(String key);
 
   /// No description provided for @advisor.
@@ -949,6 +949,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count, plural, =1{1 collaborator} other{{count} collaborators}}'**
   String collaborator(int count);
+
+  /// No description provided for @city.
+  ///
+  /// In en, this message translates to:
+  /// **'{key, select, Honolulu_Hawaii {Honolulu, Hawaii} Montreal_Quebec {Montréal, Québec} Irvine_California {Irvine, California} Pittsburgh_Pennsylvania {Pittsburgh, Pennsylvania} Rome_Italy {Rome, Italy} Toronto_Ontario {Toronto, Ontario} other {{key}}}'**
+  String city(String key);
+
+  /// No description provided for @venue.
+  ///
+  /// In en, this message translates to:
+  /// **'{key, select, Prince_Waikiki {Prince Waikiki} Concordia_University {Concordia University} University_of_California_Irvine {University of California, Irvine} David_L_Lawrence_Convention_Center {David L. Lawrence Convention Center} Luiss_University {Luiss University} Montreal_Convention_Center {Montréal Convention Center} York_University {York University} other {{key}}}'**
+  String venue(String key);
 }
 
 class _AppLocalizationsDelegate

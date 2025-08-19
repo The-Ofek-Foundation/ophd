@@ -11,6 +11,7 @@ import 'package:ophd/widgets/clickable_markdown.dart';
 import 'package:ophd/widgets/expandable_image.dart';
 import 'package:ophd/widgets/launchable_icon_button.dart';
 import 'package:ophd/widgets/standard_card.dart';
+import 'package:diacritic/diacritic.dart';
 
 class PublicationPage extends StatelessWidget {
   const PublicationPage({super.key});
@@ -125,6 +126,35 @@ class PublicationPage extends StatelessWidget {
                           ),
                         ),
                       ),
+                      // City and Venue Row
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          InkWell(
+                            onTap: () => launchURL(_mapsUrl(paper.conference.city)),
+                            child: Text(
+                              AppLocalizations.of(context)!.city(_normalizeKey(paper.conference.city)),
+                              style: TextStyle(
+                                decoration: TextDecoration.underline,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 6),
+                          Text('·', style: TextStyle(color: Theme.of(context).textTheme.bodyMedium!.color!)),
+                          const SizedBox(width: 6),
+                          InkWell(
+                            onTap: () => launchURL(paper.conference.venueLink),
+                            child: Text(
+                              AppLocalizations.of(context)!.venue(_normalizeKey(paper.conference.venue)),
+                              style: TextStyle(
+                                decoration: TextDecoration.underline,
+                                color: Theme.of(context).colorScheme.secondary,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ]
                   )
                 ],
@@ -166,7 +196,7 @@ class PublicationPage extends StatelessWidget {
                 child: Wrap(
                   spacing: 8.0,
                   children: paper.awards!.map((award) => Chip(
-                    label: Text(AppLocalizations.of(context)!.award(award.replaceAll(' ', '_'))),
+                    label: Text(AppLocalizations.of(context)!.award(_normalizeKey(award))),
                     avatar: Icon(Icons.star, color: Theme.of(context).colorScheme.tertiary),
                   )).toList(),
                 ),
@@ -234,4 +264,15 @@ class PublicationPage extends StatelessWidget {
     }
     return DateFormat('MMM d, yyyy', locale).format(date);
   }
+
+  String _mapsUrl(String city) {
+    final query = Uri.encodeComponent(city);
+    return 'https://www.google.com/maps/search/?api=1&query=$query';
+  }
+
+  String _normalizeKey(String input) => removeDiacritics(input)
+      .replaceAll(RegExp(r'[.,\-]'), ' ')
+      .replaceAll(RegExp(r"['’]"), '')
+      .trim()
+      .replaceAll(RegExp(r'\s+'), '_');
 }

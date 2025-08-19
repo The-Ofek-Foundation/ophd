@@ -83,4 +83,14 @@ final Map<String, Author> authors = {
     link: 'mailto:vineshs1@uci.edu',
     i10nKey: 'vinesh',
   ),
+  'david': Author(
+    name: 'David Eppstein',
+    link: 'https://ics.uci.edu/~eppstein/',
+    i10nKey: 'david',
+  ),
+  'ryuto': Author(
+    name: 'Ryuto Kitagawa',
+    link: 'https://ryutokitagawa.github.io/',
+    i10nKey: 'ryuto',
+  )
 };

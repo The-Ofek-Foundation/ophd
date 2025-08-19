@@ -11,7 +11,7 @@
 			}
 		}
 	},
-	"name": "{key, select, ofek {אופק גילה} mikeg {מייקל גודריץ'} bob {רוברט טרג'אן} evrim {אברים אוזל} mikes {מייקל שינדלר} miked {מייקל דילנקורט} nero {נירו לי} shahar {שחר ברונר} yubin {יובין קים} katrina {קתרינה מיזאו} elijah {אליהו סאדר} claire {קלייר טו} albert {אלברט וואנג} abraham {אברהם איליקן} vinesh {וינש סרידהאר} paul {פול ארדש} hedet {סטפן הדטנימי} other {{key}}}",
+	"name": "{key, select, ofek {אופק גילה} mikeg {מייקל גודריץ'} bob {רוברט טרג'אן} evrim {אברים אוזל} mikes {מייקל שינדלר} miked {מייקל דילנקורט} nero {נירו לי} shahar {שחר ברונר} yubin {יובין קים} katrina {קתרינה מיזאו} elijah {אליהו סאדר} claire {קלייר טו} albert {אלברט וואנג} abraham {אברהם איליקן} vinesh {וינש סרידהאר} paul {פול ארדש} hedet {סטפן הדטנימי} david {דייוויד אפשטיין} ryuto {ריוטו קיטגאווה} other {{key}}}",
 	"@name": {
 		"placeholders": {
 			"key": {
@@ -191,7 +191,7 @@
 	"@industryExperience": {},
 	"industryExperienceSubtitle": "מסטארט-אפים ועד תאגידים גדולים",
 	"@industryExperienceSubtitle": {},
-	"conference": "{key, select, COCOA {כנס לאופטימיזציה קומבינטורית ויישומים} WADS {הסימפוזיון לאלגוריתמים ומבני נתונים} CCSC {כתב העת למדעי המחשב במכללות} SIGCSE {קבוצת העניין המיוחדת בחינוך מדעי המחשב} CIAC {הכנס הבינלאומי לאלגוריתמים ומורכבות} other {{key}}}",
+	"conference": "{key, select, COCOA {הכנס לאופטימיזציה קומבינטורית ויישומים} WADS {הסימפוזיון לאלגוריתמים ומבני נתונים} CCSC {כתב העת למדעי המחשב במכללות} SIGCSE {קבוצת העניין המיוחדת בחינוך מדעי המחשב} CIAC {הכנס הבינלאומי לאלגוריתמים ומורכבות} ACDA {הכנס של סיאם לאלגוריתמים בדידים יישומיים וחישוביים} other {{key}}}",
 	"@conference": {
 		"placeholders": {
 			"key": {
@@ -199,7 +199,7 @@
 			}
 		}
 	},
-	"award": "{key, select, Best_Paper {מאמר מצטיין} other {{key}}}",
+	"award": "{key, select, Best_Paper {מאמר מצטיין} Best_Student_Presentation {הרצאת הסטודנט המצטיינת} other {{key}}}",
 	"@award": {
 		"placeholders": {
 			"key": {
@@ -352,5 +352,9 @@
 				"type": "int"
 			}
 		}
-	}
+	},
+	"city": "{key, select, Honolulu_Hawaii {הונולולו, הוואי} Montreal_Quebec {מונטריאול, קוויבק} Irvine_California {אירווין, קליפורניה} Pittsburgh_Pennsylvania {פיטסבורג, פנסילבניה} Rome_Italy {רומא, איטליה} Toronto_Ontario {טורונטו, אונטריו} other {{key}}}",
+	"@city": {"placeholders": {"key": {"type": "String"}}},
+	"venue": "{key, select, Prince_Waikiki {פרינס וויקיקי} Concordia_University {אוניברסיטת קונקורדיה} University_of_California_Irvine {אוניברסיטת קליפורניה, אירווין} David_L_Lawrence_Convention_Center {מרכז הכנסים דייוויד ל. לורנס} Luiss_University {אוניברסיטת לואיס} Montreal_Convention_Center {מרכז הכנסים של מונטריאול} York_University {אוניברסיטת יורק} other {{key}}}",
+	"@venue": {"placeholders": {"key": {"type": "String"}}}
 }

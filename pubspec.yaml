@@ -63,6 +63,7 @@ dependencies:
   collection: ^1.18.0
   fl_chart: ^0.66.2
   skeletonizer: ^2.1.0+1
+  diacritic: ^0.1.4
 
 dev_dependencies:
   flutter_test:

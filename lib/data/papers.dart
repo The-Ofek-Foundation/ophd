@@ -5,11 +5,21 @@ import 'package:ophd/models/paper.dart';
 
 final List<Paper> papers = [
   Paper(
+    title: 'Zip-Tries: Simple Dynamic Data Structures for Strings',
+    authors: ['david', 'ofek', 'mikeg', 'ryuto'].map((a) => authors[a]!).toList(),
+    link: 'https://arxiv.org/pdf/2505.04953',
+    description: zipTriesDescription,
+    date: DateTime(2025, 8, 1),
+    conference: ACDA2025,
+    researchCategory: ResearchCategory.theory,
+    awards: ['Best Student Presentation'],
+  ),
+  Paper(
     title: 'Fast Geographic Routing in Fixed-Growth Graphs',
     authors: ['ofek', 'mikeg', 'abraham', 'vinesh'].map((a) => authors[a]!).toList(),
     link: 'https://arxiv.org/pdf/2502.03663',
     description: 'After my previous paper with Evrim and Mike about fast geographic routing, we searched for a way to prove more general results that extend beyond perfect lattice graphs, and could explain the good performance on road networks (which are certainly not perfect, infinite lattices). We ultimately decided on a graph property we call _fixed-growth_, and show that any graph with this property (such as lattices) can add a highway to it and achieve great greedy routing and diameter results. We were able to prove tight bounds for all our results. We then applied our findings to road networks and were able to route much better, especially in states whose road networks least resembled 2D lattices (such as Alaska). Evrim finished his PhD before we were able to prove most of our results, so the work was picked up by two new lab members, Vinesh and Abraham.',
-    date: DateTime(2025, 6, 10), // not correct
+    date: DateTime(2025, 6, 12),
     conference: CIAC2025,
     researchCategory: ResearchCategory.theory,
   ),
@@ -59,6 +69,12 @@ final Map<String, List<Paper>> papersWithAuthor = {
   for (Author author in authors.values)
     author.name: papers.where((p) => p.authors.contains(author)).toList()
 };
+
+const String zipTriesDescription = '''
+This paper drilled down the importance of thoroughly checking the history and literature before spending too much time on a problem. And this happened three times during my research! The first time it happened was when, after David and Mike asked me to consider a quad-trie data structure, I ended up re-inventing the string skip-list with its bidirectional searches. The second time was when Mike invented a novel method using a perfect binary search tree to compute the MSB (most significant bit) operation using linear work and constant span (under PRAM), when arguably simpler solutions existed for decades for an identical problem (called left-most prisoner). Finally, when working on applying this problem to the zip-tree, I ended up reinventing a paradigm of adapting data structures that work for one-dimensional data to work for higher dimensional data. Despite these missteps, we ended up creating a data structure which is in my opinion very simple (we have code!) and very fast, and therefore I believe it has great potential for practical applications.
+
+We saw the potential for this data structure to work well under parallel processing, so we brought along our resident parallel processing expert, Ryuto, to help us out. Together with his help, we were able to not only make our zip-trie parallel, but were also able to show great theoretical PRAM results for the string B-tree, that to the extent of our knowledge are state-of-the-art. I am not sure how practical these results are currently, since the cost to invoke the GPU is very high, and modern GPUs do not contain _that_ many concurrent threads, but hopefully by the time you are reading this the above statements are no longer true and our algorithms are competitive for long strings. We also provide code to benchmark our data structures for yourself using your own (NVIDIA) GPUs. For now, I recommend the sequential algorithms.
+''';
 
 const String highwayPreferentialAttachmentDescription = '''
 [Evrim Ozel], a fellow PhD student in my UCI lab, had recently published an experimental paper on a great geographical routing idea that combines elements of _preferential attachment_ (where people prefer to befriend popular people over nobodies), and a geographic model called _Kleinberg's model_, where people prefer to befriend people who are located closer to them. They showed that such a paper produces great empirical results, but were unable to either provide theoretical guarantees nor provide an efficient way to construct such a graph. I joined the team, and for around a year we were unable to make much progress. After nearly giving up hope (on several occasions), I had a breakthrough and was able to prove great theoretical results on a very closely related model. Our decision to submit to COCOA was in no way influenced by our desire to take a vacation in Hawaii. My girlfriend and I had a great time there, also with Mike and his wife, and we won the best paper award from over 70 accepted papers.

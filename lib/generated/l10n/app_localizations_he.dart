@@ -60,6 +60,8 @@ class AppLocalizationsHe extends AppLocalizations {
         'vinesh': 'וינש סרידהאר',
         'paul': 'פול ארדש',
         'hedet': 'סטפן הדטנימי',
+        'david': 'דייוויד אפשטיין',
+        'ryuto': 'ריוטו קיטגאווה',
         'other': '$key',
       },
     );
@@ -293,11 +295,12 @@ class AppLocalizationsHe extends AppLocalizations {
     String _temp0 = intl.Intl.selectLogic(
       key,
       {
-        'COCOA': 'כנס לאופטימיזציה קומבינטורית ויישומים',
+        'COCOA': 'הכנס לאופטימיזציה קומבינטורית ויישומים',
         'WADS': 'הסימפוזיון לאלגוריתמים ומבני נתונים',
         'CCSC': 'כתב העת למדעי המחשב במכללות',
         'SIGCSE': 'קבוצת העניין המיוחדת בחינוך מדעי המחשב',
         'CIAC': 'הכנס הבינלאומי לאלגוריתמים ומורכבות',
+        'ACDA': 'הכנס של סיאם לאלגוריתמים בדידים יישומיים וחישוביים',
         'other': '$key',
       },
     );
@@ -310,6 +313,7 @@ class AppLocalizationsHe extends AppLocalizations {
       key,
       {
         'Best_Paper': 'מאמר מצטיין',
+        'Best_Student_Presentation': 'הרצאת הסטודנט המצטיינת',
         'other': '$key',
       },
     );
@@ -597,6 +601,41 @@ class AppLocalizationsHe extends AppLocalizations {
       locale: localeName,
       other: '$count שותפים',
       one: 'שותף 1',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String city(String key) {
+    String _temp0 = intl.Intl.selectLogic(
+      key,
+      {
+        'Honolulu_Hawaii': 'הונולולו, הוואי',
+        'Montreal_Quebec': 'מונטריאול, קוויבק',
+        'Irvine_California': 'אירווין, קליפורניה',
+        'Pittsburgh_Pennsylvania': 'פיטסבורג, פנסילבניה',
+        'Rome_Italy': 'רומא, איטליה',
+        'Toronto_Ontario': 'טורונטו, אונטריו',
+        'other': '$key',
+      },
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String venue(String key) {
+    String _temp0 = intl.Intl.selectLogic(
+      key,
+      {
+        'Prince_Waikiki': 'פרינס וויקיקי',
+        'Concordia_University': 'אוניברסיטת קונקורדיה',
+        'University_of_California_Irvine': 'אוניברסיטת קליפורניה, אירווין',
+        'David_L_Lawrence_Convention_Center': 'מרכז הכנסים דייוויד ל. לורנס',
+        'Luiss_University': 'אוניברסיטת לואיס',
+        'Montreal_Convention_Center': 'מרכז הכנסים של מונטריאול',
+        'York_University': 'אוניברסיטת יורק',
+        'other': '$key',
+      },
     );
     return '$_temp0';
   }

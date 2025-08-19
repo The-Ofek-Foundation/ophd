@@ -51,6 +51,8 @@ class AppLocalizationsEn extends AppLocalizations {
         'vinesh': 'Vinesh Sridhar',
         'paul': 'Paul Erdős',
         'hedet': 'Stephan Hedetniemi',
+        'david': 'David Eppstein',
+        'ryuto': 'Ryuto Kitagawa',
         'other': '$key',
       },
     );
@@ -288,6 +290,8 @@ class AppLocalizationsEn extends AppLocalizations {
         'CCSC': 'Journal of Computing Sciences in Colleges',
         'SIGCSE': 'Special Interest Group on Computer Science Education',
         'CIAC': 'International Conference on Algorithms and Complexity',
+        'ACDA':
+            'SIAM Conference on Applied and Computational Discrete Algorithms',
         'other': '$key',
       },
     );
@@ -300,6 +304,7 @@ class AppLocalizationsEn extends AppLocalizations {
       key,
       {
         'Best_Paper': 'Best Paper',
+        'Best_Student_Presentation': 'Best Student Presentation',
         'other': '$key',
       },
     );
@@ -592,6 +597,42 @@ class AppLocalizationsEn extends AppLocalizations {
       locale: localeName,
       other: '$count collaborators',
       one: '1 collaborator',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String city(String key) {
+    String _temp0 = intl.Intl.selectLogic(
+      key,
+      {
+        'Honolulu_Hawaii': 'Honolulu, Hawaii',
+        'Montreal_Quebec': 'Montréal, Québec',
+        'Irvine_California': 'Irvine, California',
+        'Pittsburgh_Pennsylvania': 'Pittsburgh, Pennsylvania',
+        'Rome_Italy': 'Rome, Italy',
+        'Toronto_Ontario': 'Toronto, Ontario',
+        'other': '$key',
+      },
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String venue(String key) {
+    String _temp0 = intl.Intl.selectLogic(
+      key,
+      {
+        'Prince_Waikiki': 'Prince Waikiki',
+        'Concordia_University': 'Concordia University',
+        'University_of_California_Irvine': 'University of California, Irvine',
+        'David_L_Lawrence_Convention_Center':
+            'David L. Lawrence Convention Center',
+        'Luiss_University': 'Luiss University',
+        'Montreal_Convention_Center': 'Montréal Convention Center',
+        'York_University': 'York University',
+        'other': '$key',
+      },
     );
     return '$_temp0';
   }

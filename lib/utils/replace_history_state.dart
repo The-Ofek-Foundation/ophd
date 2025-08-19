@@ -1,5 +1,3 @@
-import 'package:universal_html/html.dart';
-
-void replaceHistoryState(String title, String url) {
-  window.history.replaceState(null, title, url);
-}
+// Conditional export for web-specific history state replacement.
+export 'replace_history_state_stub.dart'
+  if (dart.library.html) 'replace_history_state_web.dart';

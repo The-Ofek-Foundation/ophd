@@ -1,5 +1,6 @@
-import 'package:flutter/services.dart';
-import 'package:universal_html/html.dart';
+// Shared utilities with conditional platform-specific implementation for web-only features.
+import 'screen_utils_stub.dart'
+    if (dart.library.html) 'screen_utils_web.dart' as _impl;
 import 'package:url_launcher/url_launcher_string.dart';
 
 Future<void> launchURL(String url) async {
@@ -10,11 +11,5 @@ Future<void> launchURL(String url) async {
   }
 }
 
-Future<void> launchAssetInNewTab(String assetPath, String fileType) async {
-  final bytes = await rootBundle.load(assetPath);
-
-  final blob = Blob([bytes], fileType);
-  final url = Url.createObjectUrlFromBlob(blob);
-  window.open(url, '_blank');
-  Url.revokeObjectUrl(url);
-}
+Future<void> launchAssetInNewTab(String assetPath, String fileType) =>
+    _impl.launchAssetInNewTab(assetPath, fileType);

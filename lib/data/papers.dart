@@ -24,6 +24,7 @@ final List<Paper> papers = [
     conference: CCCG2025,
     researchCategory: ResearchCategory.theory,
     slidesPath: 'assets/pdfs/RectLin.pdf',
+    imagePath: 'assets/images/CCCGTable.JPG',
   ),
   Paper(
     title: 'Zip-Tries: Simple Dynamic Data Structures for Strings',

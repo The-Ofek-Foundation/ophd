@@ -28,6 +28,7 @@ class AppLocalizationsHe extends AppLocalizations {
         'LinkedIn': 'לינקדאין',
         'Email': 'אימייל',
         'Paper': 'מאמר',
+        'Slides': 'מצגת',
         'WhatsApp': 'וואטסאפ',
         'Resume': 'קורות החיים',
         'Sync': 'אחזר שיתופי פעולה חדשים',

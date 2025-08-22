@@ -23,6 +23,7 @@ class AppLocalizationsEn extends AppLocalizations {
       key,
       {
         'GoogleScholar': 'Google Scholar',
+        'Slides': 'Slides',
         'other': '$key',
       },
     );

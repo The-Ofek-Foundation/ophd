@@ -6,7 +6,7 @@
 	"@title": {},
 	"mySubtitle": "PhD Student, Computer Science @ UCI",
 	"@mySubtitle": {},
-	"label": "{key, select, GoogleScholar {Google Scholar} other {{key}}}",
+	"label": "{key, select, GoogleScholar {Google Scholar} Slides {Slides} other {{key}}}",
 	"@label": {
 		"placeholders": {
 			"key": {

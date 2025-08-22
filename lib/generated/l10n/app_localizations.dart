@@ -119,7 +119,7 @@ abstract class AppLocalizations {
   /// No description provided for @label.
   ///
   /// In en, this message translates to:
-  /// **'{key, select, GoogleScholar {Google Scholar} other {{key}}}'**
+  /// **'{key, select, GoogleScholar {Google Scholar} Slides {Slides} other {{key}}}'**
   String label(String key);
 
   /// No description provided for @name.

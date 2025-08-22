@@ -293,7 +293,7 @@ class _SlidesButton extends StatelessWidget {
     final isAsset = url.startsWith('assets/');
     if (isAsset) {
       return LaunchableIconButton(
-        icon: FontAwesomeIcons.filePdf,
+        icon: Icons.co_present,
         url: url,
         tooltip: 'Slides',
         fileType: 'application/pdf',

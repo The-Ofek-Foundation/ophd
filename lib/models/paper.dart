@@ -17,6 +17,7 @@ class Paper {
   final List<String>? awards;
   final Conference conference;
   final ResearchCategory researchCategory;
+  final String? slidesPath;
 
   Paper({
     required this.title,
@@ -28,5 +29,6 @@ class Paper {
     this.awards,
     required this.conference,
     required this.researchCategory,
+    this.slidesPath,
   });
 }

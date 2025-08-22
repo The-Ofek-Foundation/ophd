@@ -13,6 +13,7 @@ final List<Paper> papers = [
     conference: CCCG2025,
     researchCategory: ResearchCategory.theory,
     imagePath: 'assets/images/cccg_mp.jpg',
+    slidesPath: 'assets/pdfs/Marco1.pdf',
   ),
   Paper(
     title: 'The Rectilinear Marco Polo Problem',
@@ -22,6 +23,7 @@ final List<Paper> papers = [
     date: DateTime(2025, 8, 15),
     conference: CCCG2025,
     researchCategory: ResearchCategory.theory,
+    slidesPath: 'assets/pdfs/RectLin.pdf',
   ),
   Paper(
     title: 'Zip-Tries: Simple Dynamic Data Structures for Strings',
@@ -32,6 +34,7 @@ final List<Paper> papers = [
     conference: ACDA2025,
     researchCategory: ResearchCategory.theory,
     awards: ['Best Student Presentation'],
+    slidesPath: 'assets/pdfs/ZipTries.pdf',
   ),
   Paper(
     title: 'Fast Geographic Routing in Fixed-Growth Graphs',
@@ -41,6 +44,7 @@ final List<Paper> papers = [
     date: DateTime(2025, 6, 12),
     conference: CIAC2025,
     researchCategory: ResearchCategory.theory,
+    slidesPath: 'assets/pdfs/FastGeographicRouting.pdf',
   ),
   Paper(
     title: 'Investigating the Capabilities of Generative AI in Solving Data Structures, Algorithms, and Computability Problems',
@@ -61,6 +65,7 @@ final List<Paper> papers = [
     awards: ['Best Paper'],
     imagePath: 'assets/images/cocoa_nicole.jpg',
     researchCategory: ResearchCategory.theory,
+    slidesPath: 'assets/pdfs/HighwayPref.pdf',
   ),
   Paper(
     title: 'Zip-zip Trees: Making Zip Trees More Balanced, Biased, Compact, or Persistent',
@@ -72,6 +77,7 @@ final List<Paper> papers = [
     awards: ['Best Paper'],
     imagePath: 'assets/images/wads_best_paper.jpg',
     researchCategory: ResearchCategory.theory,
+    slidesPath: 'assets/pdfs/ZipZip.pdf',
   ),
   Paper(
     title: 'Beyond Big O: Teaching Experimental Algorithmics',

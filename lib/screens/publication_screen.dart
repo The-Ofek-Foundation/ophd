@@ -159,10 +159,17 @@ class PublicationPage extends StatelessWidget {
                   )
                 ],
               ),
-              trailing: LaunchableIconButton(
-                icon: FontAwesomeIcons.scroll,
-                url: paper.link,
-                tooltip: 'Paper',
+              trailing: Wrap(
+                spacing: 8,
+                children: [
+                  if (paper.slidesPath != null)
+                    _SlidesButton(url: paper.slidesPath!),
+                  LaunchableIconButton(
+                    icon: FontAwesomeIcons.scroll,
+                    url: paper.link,
+                    tooltip: 'Paper',
+                  ),
+                ],
               ),
             ),
             Padding(
@@ -275,4 +282,27 @@ class PublicationPage extends StatelessWidget {
       .replaceAll(RegExp(r"['’]"), '')
       .trim()
       .replaceAll(RegExp(r'\s+'), '_');
+}
+
+class _SlidesButton extends StatelessWidget {
+  final String url;
+  const _SlidesButton({required this.url});
+
+  @override
+  Widget build(BuildContext context) {
+    final isAsset = url.startsWith('assets/');
+    if (isAsset) {
+      return LaunchableIconButton(
+        icon: FontAwesomeIcons.filePdf,
+        url: url,
+        tooltip: 'Slides',
+        fileType: 'application/pdf',
+      );
+    }
+    return LaunchableIconButton(
+      icon: FontAwesomeIcons.filePdf,
+      url: url,
+      tooltip: 'Slides',
+    );
+  }
 }

@@ -120,36 +120,8 @@ flutter:
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
   assets:
-    - assets/images/profile.jpg
-    - assets/images/avatar_scholar_256.png
-    - assets/images/acm_icon_256.png
-    - assets/images/acm_icon.svg
-    - assets/images/arxiv_logo.jpg
-    - assets/images/arxiv-logo.svg
-    - assets/images/UCI_logo_256.png
-    - assets/images/UCI_logo.svg
-    - assets/images/CATOC.png
-    - assets/images/wads_best_paper.jpg
-    - assets/images/cocoa_nicole.jpg
-    - assets/images/dblp_icon_256.png
-    - assets/images/dblp_icon.svg
-    - assets/images/Flag_of_Israel.svg
-    - assets/images/Flag_of_the_United_States.svg
-    - assets/images/Google_Scholar_logo.svg
-    - assets/images/snowflake_logo.png
-    - assets/images/snowflake_logo.svg
-    - assets/images/cloudera_logo.jpeg
-    - assets/images/optical_research_associates_logo.jpeg
-    - assets/images/recruiter_ai.jpeg
-    - assets/images/trueskills_logo.jpeg
-    - assets/images/snowflake_intern.jpg
-    - assets/images/amp_steps.png
-    - assets/images/amp_catalog.png
-    - assets/images/amp_documentation.png
-    - assets/images/amp_patent.png
-    - assets/images/synopsys_team.jpg
-    - assets/images/cccg_mp.jpg
-    - assets/pdfs/resume.pdf
+    - assets/images/
+    - assets/pdfs/
 
   fonts:
     - family: RobotoMono

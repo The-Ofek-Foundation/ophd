@@ -62,6 +62,9 @@ class AppLocalizationsHe extends AppLocalizations {
         'hedet': 'סטפן הדטנימי',
         'david': 'דייוויד אפשטיין',
         'ryuto': 'ריוטו קיטגאווה',
+        'dan': 'דניאל הירשברג',
+        'shayan': 'שיאן טהריג\'אם',
+        'zahra': 'זהרא האדיזאדה',
         'other': '$key',
       },
     );
@@ -301,6 +304,7 @@ class AppLocalizationsHe extends AppLocalizations {
         'SIGCSE': 'קבוצת העניין המיוחדת בחינוך מדעי המחשב',
         'CIAC': 'הכנס הבינלאומי לאלגוריתמים ומורכבות',
         'ACDA': 'הכנס של סיאם לאלגוריתמים בדידים יישומיים וחישוביים',
+        'CCCG': 'הכנס הקנדי לגאומטריה חישובית',
         'other': '$key',
       },
     );

@@ -11,7 +11,7 @@
 			}
 		}
 	},
-	"name": "{key, select, ofek {אופק גילה} mikeg {מייקל גודריץ'} bob {רוברט טרג'אן} evrim {אברים אוזל} mikes {מייקל שינדלר} miked {מייקל דילנקורט} nero {נירו לי} shahar {שחר ברונר} yubin {יובין קים} katrina {קתרינה מיזאו} elijah {אליהו סאדר} claire {קלייר טו} albert {אלברט וואנג} abraham {אברהם איליקן} vinesh {וינש סרידהאר} paul {פול ארדש} hedet {סטפן הדטנימי} david {דייוויד אפשטיין} ryuto {ריוטו קיטגאווה} other {{key}}}",
+	"name": "{key, select, ofek {אופק גילה} mikeg {מייקל גודריץ'} bob {רוברט טרג'אן} evrim {אברים אוזל} mikes {מייקל שינדלר} miked {מייקל דילנקורט} nero {נירו לי} shahar {שחר ברונר} yubin {יובין קים} katrina {קתרינה מיזאו} elijah {אליהו סאדר} claire {קלייר טו} albert {אלברט וואנג} abraham {אברהם איליקן} vinesh {וינש סרידהאר} paul {פול ארדש} hedet {סטפן הדטנימי} david {דייוויד אפשטיין} ryuto {ריוטו קיטגאווה} dan {דניאל הירשברג} shayan {שיאן טהריג'אם} zahra {זהרא האדיזאדה} other {{key}}}",
 	"@name": {
 		"placeholders": {
 			"key": {
@@ -191,7 +191,7 @@
 	"@industryExperience": {},
 	"industryExperienceSubtitle": "מסטארט-אפים ועד תאגידים גדולים",
 	"@industryExperienceSubtitle": {},
-	"conference": "{key, select, COCOA {הכנס לאופטימיזציה קומבינטורית ויישומים} WADS {הסימפוזיון לאלגוריתמים ומבני נתונים} CCSC {כתב העת למדעי המחשב במכללות} SIGCSE {קבוצת העניין המיוחדת בחינוך מדעי המחשב} CIAC {הכנס הבינלאומי לאלגוריתמים ומורכבות} ACDA {הכנס של סיאם לאלגוריתמים בדידים יישומיים וחישוביים} other {{key}}}",
+	"conference": "{key, select, COCOA {הכנס לאופטימיזציה קומבינטורית ויישומים} WADS {הסימפוזיון לאלגוריתמים ומבני נתונים} CCSC {כתב העת למדעי המחשב במכללות} SIGCSE {קבוצת העניין המיוחדת בחינוך מדעי המחשב} CIAC {הכנס הבינלאומי לאלגוריתמים ומורכבות} ACDA {הכנס של סיאם לאלגוריתמים בדידים יישומיים וחישוביים} CCCG {הכנס הקנדי לגאומטריה חישובית} other {{key}}}",
 	"@conference": {
 		"placeholders": {
 			"key": {

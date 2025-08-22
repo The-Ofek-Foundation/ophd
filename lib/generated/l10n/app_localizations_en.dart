@@ -53,6 +53,9 @@ class AppLocalizationsEn extends AppLocalizations {
         'hedet': 'Stephan Hedetniemi',
         'david': 'David Eppstein',
         'ryuto': 'Ryuto Kitagawa',
+        'dan': 'Daniel Hirschberg',
+        'shayan': 'Shayan Taherijam',
+        'zahra': 'Zahra Hadizadeh',
         'other': '$key',
       },
     );
@@ -292,6 +295,7 @@ class AppLocalizationsEn extends AppLocalizations {
         'CIAC': 'International Conference on Algorithms and Complexity',
         'ACDA':
             'SIAM Conference on Applied and Computational Discrete Algorithms',
+        'CCCG': 'Canadian Conference on Computational Geometry',
         'other': '$key',
       },
     );

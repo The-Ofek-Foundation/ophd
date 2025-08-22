@@ -148,6 +148,7 @@ flutter:
     - assets/images/amp_documentation.png
     - assets/images/amp_patent.png
     - assets/images/synopsys_team.jpg
+    - assets/images/cccg_mp.jpg
     - assets/pdfs/resume.pdf
 
   fonts:

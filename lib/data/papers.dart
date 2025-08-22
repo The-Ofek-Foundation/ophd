@@ -5,6 +5,25 @@ import 'package:ophd/models/paper.dart';
 
 final List<Paper> papers = [
   Paper(
+    title: 'The Marco Polo Problem: A Combinatorial Approach to Geometric Localization',
+    authors: ['ofek', 'mikeg', 'zahra', 'dan', 'shayan'].map((a) => authors[a]!).toList(),
+    link: 'https://arxiv.org/pdf/2504.17955',
+    description: 'Right after my advancement to candidacy in June 2024, Professor Daniel Hirschberg posed a simple geometric problem to myself and others in my cohort. We didn\'t think much of it, but he spent much time over the summer break not only developing several iteratively better strategies. While he had no intention to publish these results, after some nagging I convinced him to let me try to get this published. With the help of my co-authors, we were able to refine the results, extend them in several ways, run experiments, and create not one but two papers out of this (and counting, potentially). While these results were not necessarily the hardest nor the most impressive/practical out of my papers, they solicited the most questions and discussion out of any of my conference presentations by far.',
+    date: DateTime(2025, 8, 15),
+    conference: CCCG2025,
+    researchCategory: ResearchCategory.theory,
+    imagePath: 'assets/images/cccg_mp.jpg',
+  ),
+  Paper(
+    title: 'The Rectilinear Marco Polo Problem',
+    authors: ['ofek', 'mikeg', 'zahra', 'dan', 'shayan'].map((a) => authors[a]!).toList(),
+    link: 'https://arxiv.org/pdf/2508.14820',
+    description: 'This paper contains results that were discovered concurrently to the previous work (above). After summer break, when Dan presented his results to me, he also presented results for square probes rather than circular probes (which we then reframed as L1, L2, and L∞ norms). I thought that while those results were neat, they were rather clunky, so Dan challenged me to improve them. After less than 5 minutes, I came up with an entirely different approach which was optimal for 2D (see the 2D domino algorithm). Several minutes afterwards I came up with the 3D extension (originally with a bug). Extending to greater dimensions proved very hard, but after some effort, we (mostly Shayan and Zahra) were able to not only develop many new techniques (most of which did not make it into the final paper), but also a technique that would extend to k-dimensional space in general. We spent much more work trying to reduce the number of queries further, but most of it did not make its way to the final results. Strategies that greatly reduced the distance traveled, however, did. Programming this strategy (the Central Binary Search strategy) was the first time I programmed an algorithm that runs in higher (spatial) dimensions. That was an experience although the end result is rather clean.',
+    date: DateTime(2025, 8, 15),
+    conference: CCCG2025,
+    researchCategory: ResearchCategory.theory,
+  ),
+  Paper(
     title: 'Zip-Tries: Simple Dynamic Data Structures for Strings',
     authors: ['david', 'ofek', 'mikeg', 'ryuto'].map((a) => authors[a]!).toList(),
     link: 'https://arxiv.org/pdf/2505.04953',

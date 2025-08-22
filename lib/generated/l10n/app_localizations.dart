@@ -125,7 +125,7 @@ abstract class AppLocalizations {
   /// No description provided for @name.
   ///
   /// In en, this message translates to:
-  /// **'{key, select, ofek {Ofek Gila} mikeg {Michael Goodrich} bob {Robert Tarjan} evrim {Evrim Ozel} mikes {Michael Shindler} miked {Michael Dillencourt} nero {Nero Li} shahar {Shahar Broner} yubin {Yubin Kim} katrina {Katrina Mizuo} elijah {Elijah Sauder} claire {Claire To} albert {Albert Wang} abraham {Abraham Illickan} vinesh {Vinesh Sridhar} paul {Paul Erdős} hedet {Stephan Hedetniemi} david {David Eppstein} ryuto {Ryuto Kitagawa} other {{key}}}'**
+  /// **'{key, select, ofek {Ofek Gila} mikeg {Michael Goodrich} bob {Robert Tarjan} evrim {Evrim Ozel} mikes {Michael Shindler} miked {Michael Dillencourt} nero {Nero Li} shahar {Shahar Broner} yubin {Yubin Kim} katrina {Katrina Mizuo} elijah {Elijah Sauder} claire {Claire To} albert {Albert Wang} abraham {Abraham Illickan} vinesh {Vinesh Sridhar} paul {Paul Erdős} hedet {Stephan Hedetniemi} david {David Eppstein} ryuto {Ryuto Kitagawa} dan {Daniel Hirschberg} shayan {Shayan Taherijam} zahra {Zahra Hadizadeh} other {{key}}}'**
   String name(String key);
 
   /// No description provided for @page.
@@ -491,7 +491,7 @@ abstract class AppLocalizations {
   /// No description provided for @conference.
   ///
   /// In en, this message translates to:
-  /// **'{key, select, COCOA {Conference on Combinatorial Optimization and Applications} WADS {Algorithms and Data Structures Symposium} CCSC {Journal of Computing Sciences in Colleges} SIGCSE {Special Interest Group on Computer Science Education} CIAC {International Conference on Algorithms and Complexity} ACDA {SIAM Conference on Applied and Computational Discrete Algorithms} other {{key}}}'**
+  /// **'{key, select, COCOA {Conference on Combinatorial Optimization and Applications} WADS {Algorithms and Data Structures Symposium} CCSC {Journal of Computing Sciences in Colleges} SIGCSE {Special Interest Group on Computer Science Education} CIAC {International Conference on Algorithms and Complexity} ACDA {SIAM Conference on Applied and Computational Discrete Algorithms} CCCG {Canadian Conference on Computational Geometry} other {{key}}}'**
   String conference(String key);
 
   /// No description provided for @award.

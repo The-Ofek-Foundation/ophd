@@ -34,18 +34,18 @@ final Map<String, Author> authors = {
   ),
   'nero': Author(
     name: 'Nero Li',
-    link: 'mailto:yimil31@uci.edu',
+    link: 'https://www.linkedin.com/in/neroli2000',
     i10nKey: 'nero',
     show: false,
   ),
   'shahar': Author(
     name: 'Shahar Broner',
-    link: 'mailto:sbroner@uci.edu',
+    link: 'https://www.linkedin.com/in/shahar-broner',
     i10nKey: 'shahar',
   ),
   'yubin': Author(
     name: 'Yubin Kim',
-    link: 'mailto:yubk1@uci.edu',
+    link: 'https://www.linkedin.com/in/yu-bin-kim-0a58171b7',
     i10nKey: 'yubin',
     show: false,
   ),
@@ -75,12 +75,12 @@ final Map<String, Author> authors = {
   ),
   'abraham': Author(
     name: 'Abraham Illickan',
-    link: 'mailto:aillicka@uci.edu',
+    link: 'https://scholar.google.com/citations?user=7OqTFMYAAAAJ&hl=en',
     i10nKey: 'abraham',
   ),
   'vinesh': Author(
     name: 'Vinesh Sridhar',
-    link: 'mailto:vineshs1@uci.edu',
+    link: 'https://scholar.google.com/citations?user=SX73kHUAAAAJ&hl=en',
     i10nKey: 'vinesh',
   ),
   'david': Author(
@@ -92,5 +92,20 @@ final Map<String, Author> authors = {
     name: 'Ryuto Kitagawa',
     link: 'https://ryutokitagawa.github.io/',
     i10nKey: 'ryuto',
+  ),
+  'dan': Author(
+    name: 'Daniel Hirschberg',
+    link: 'https://ics.uci.edu/~dhirschb/',
+    i10nKey: 'dan',
+  ),
+  'shayan': Author(
+    name: 'Shayan Taherijam',
+    link: 'https://ics.uci.edu/~staherij/index.html',
+    i10nKey: 'shayan',
+  ),
+  'zahra': Author(
+    name: 'Zahra Hadizadeh',
+    link: 'https://scholar.google.com/citations?user=-vB0_BMAAAAJ&hl=en',
+    i10nKey: 'zahra',
   )
 };
